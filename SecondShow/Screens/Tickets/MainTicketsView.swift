@@ -68,8 +68,8 @@ struct MainTicketsView: View {
 
 struct MainTicketsVIew_Previews: PreviewProvider {
     static var previews: some View {
-        TicketsTabView(selectedTab: .constant(0))
-        TicketsTabView(selectedTab: .constant(0))
+        TabBarView(showLoginView: .constant(false), selectedTab: .constant(0))
+        TabBarView(showLoginView: .constant(false), selectedTab: .constant(0))
             .preferredColorScheme(.dark)
     }
 }

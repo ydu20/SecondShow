@@ -11,7 +11,7 @@ import SwiftUI
 struct SecondShowApp: App {
     var body: some Scene {
         WindowGroup {
-            MainTicketsView()
+            RootView()
         }
     }
 }

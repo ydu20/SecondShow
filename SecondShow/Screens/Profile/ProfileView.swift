@@ -9,21 +9,38 @@ import SwiftUI
 
 struct ProfileView: View {
     
+    @Binding var showLoginView: Bool
+    
+    @State private var showOptionsMenu = false;
+    @State private var showErrorMessage = false;
+    @State private var errorMessage = ""
+    
     @State private var isAlerts = false
     @State private var textFieldInput = ""
-    
+        
     var body: some View {
         VStack {
             NavBar(
                 title: "Me",
-                subtitle: "User since 11/12/2023",
+                subtitle: "User since \(FirebaseManager.shared.currentUser?.createDateString ?? "")",
                 buttonLabel: {
                     Image(systemName: "gearshape")
                         .font(.system(size: 20, weight: .light))
                         .foregroundColor(Color(.label))
                 },
-                buttonAction: {}
+                buttonAction: {
+                    showOptionsMenu.toggle()
+                }
             )
+            .confirmationDialog("Settings", isPresented: $showOptionsMenu) {
+                Button ("Log Out", role: .destructive) {
+                    handleLogout()
+                }
+                Button ("Cancel", role: .cancel) {}
+            } message: {
+                Text("Settings")
+            }
+            
             Picker(selection: $isAlerts, label: EmptyView()) {
                 Text("Alerts")
                     .tag(true)
@@ -39,7 +56,51 @@ struct ProfileView: View {
                 feedbackForm
             }
             Spacer()
-        }.padding()
+        }
+        .padding()
+        
+        .alert(isPresented: $showErrorMessage) {
+            Alert(
+                title: Text("Error"),
+                message: Text(errorMessage),
+                dismissButton: .default(Text("Close")) {errorMessage = ""}
+            )
+        }
+    }
+    
+//    private func fetchCurrentUser() {
+        
+//        guard let currentUser = FirebaseManager.shared.currentUser else {
+//            self.errorMessage = "Not logged in"
+//            self.showErrorMessage.toggle()
+//            return
+//        }
+        
+        
+        
+//        guard let uid = FirebaseManager.shared.auth.currentUser?.uid else {
+//            self.errorMessage = "Not logged in"
+//            self.showErrorMessage.toggle()
+//            return
+//        }
+//
+//        FirebaseManager.shared.firestore.collection("users").document(uid).getDocument { result, err in
+//            if let err = err {
+//                self.errorMessage = err.localizedDescription
+//                self.showErrorMessage.toggle()
+//                return
+//            }
+//
+//            if let user = try? result?.data(as: User.self) {
+//                FirebaseManager.shared.currentUser = user
+//            }
+//        }
+//    }
+    
+    private func handleLogout() {
+        try? FirebaseManager.shared.auth.signOut()
+        FirebaseManager.shared.currentUser = nil
+        showLoginView.toggle()
     }
     
     private var feedbackForm: some View {
@@ -66,13 +127,10 @@ struct ProfileView: View {
                     .foregroundColor(Color(.white))
                     .background(Color(.systemBlue))
                     .cornerRadius(10)
-                
             }
-
         }
         .padding(.horizontal, 10)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        
     }
     
     private var alertsList: some View {
@@ -120,6 +178,6 @@ struct ProfileView: View {
 struct ProfileView_Previews: PreviewProvider {
     static var previews: some View {
 //        ProfileView()
-        TicketsTabView(selectedTab: .constant(3))
+        TabBarView(showLoginView: .constant(false), selectedTab: .constant(3))
     }
 }
