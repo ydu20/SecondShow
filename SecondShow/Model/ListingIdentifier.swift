@@ -6,13 +6,13 @@
 //
 
 import Foundation
-import FirebaseFirestoreSwift
+import FirebaseFirestore
 
 struct ListingIdentifier: Codable, Identifiable {
     
     @DocumentID var id: String?
     
-    let showId: String
+    let eventId: String
     let listingNumber: Int
     
 }

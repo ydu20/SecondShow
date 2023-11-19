@@ -6,3 +6,26 @@
 //
 
 import Foundation
+import FirebaseFirestore
+
+struct Listing: Codable, Identifiable {
+    
+    @DocumentID var id: String?
+    
+    let eventId, eventName, eventDate: String
+    let listingNumber, price, totalQuantity, availableQuantity, popularity: Int
+    let createTime: Date
+    
+    var eventDateMMMMdd: String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MM-dd-yyyy"
+        
+        let dateObj = formatter.date(from: eventDate)
+        if let dateObj = dateObj {
+            formatter.dateFormat = "MMMM dd"
+            return formatter.string(from: dateObj)
+        } else {
+            return "ERROR DATE"
+        }
+    }
+}

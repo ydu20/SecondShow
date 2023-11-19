@@ -24,7 +24,7 @@ struct RootView: View {
                 return
             }
             if (FirebaseManager.shared.currentUser == nil) {
-                // Update FirebaseManager CurrentUser
+                // Load FirebaseManager CurrentUser
                 FirebaseManager.shared.firestore.collection("users").document(authCurrentUser.uid).getDocument { document, err in
                     if let err = err {
                         print("Error retrieving user info: \(err)")

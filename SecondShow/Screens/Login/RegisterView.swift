@@ -19,76 +19,74 @@ struct RegisterView: View {
     @State private var signupStatusMessage = ""
     @State private var showSignUpCompleteAlert = false
     
-        
+    
     var body: some View {
-        ScrollView {
-            VStack(spacing: 20) {
-                HStack {
-                    Text("Sign Up")
+        VStack(spacing: 20) {
+            HStack {
+                Text("Sign Up")
                     .font(.system(size: 32, weight: .semibold))
-                    Spacer()
-                }
-                .padding(.bottom, 20)
-
-                Group {
-                    TextField("Email", text: $registerEmail)
-                        .font(.system(size: 18))
-                        .keyboardType(.emailAddress)
-                        .autocapitalization(.none)
-                        .padding(.vertical, 14)
-                        .padding(.horizontal, 10)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 10)
-                                .stroke(Color(.quaternaryLabel), lineWidth: 2)
-                        )
-
-                    SecureField("Password", text: $registerPassword)
-                        .font(.system(size: 18))
-                        .padding(.vertical, 14)
-                        .padding(.horizontal, 10)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 10)
-                                .stroke(Color(.quaternaryLabel), lineWidth: 2)
-                        )
-                    
-                    SecureField("Confirm password", text: $registerConfirmPassword)
-                        .font(.system(size: 18))
-                        .padding(.vertical, 14)
-                        .padding(.horizontal, 10)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 10)
-                                .stroke(Color(.quaternaryLabel), lineWidth: 2)
-                        )
-                }
-                .background(Color.white)
-                .cornerRadius(10)
-                
-                Button {
-                    createAccount()
-                } label: {
-                    Text("Sign Up")
-                        .frame(height: 45)
-                        .frame(maxWidth: .infinity)
-                        .foregroundColor(Color(.white))
-                        .background(Color(.systemBlue))
-                        .cornerRadius(10)
-                }
-                
-                Text(self.signupStatusMessage)
-                    .foregroundColor(Color(red: 0.8, green: 0, blue: 0))
-                
                 Spacer()
             }
-            .padding()
-            .alert(isPresented: $showSignUpCompleteAlert) {
-                Alert(
-                    title: Text("Email Verification"),
-                    message: Text("Thank you for signing up! Please check your email for a verification link."),
-                    dismissButton: .default(Text("Close")) {
-                        presentationMode.wrappedValue.dismiss()
-                    }
-                )
+            .padding(.bottom, 20)
+
+            Group {
+                TextField("Email", text: $registerEmail)
+                    .font(.system(size: 18))
+                    .keyboardType(.emailAddress)
+                    .autocapitalization(.none)
+                    .padding(.vertical, 14)
+                    .padding(.horizontal, 10)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 10)
+                            .stroke(Color(.quaternaryLabel), lineWidth: 2)
+                    )
+
+                SecureField("Password", text: $registerPassword)
+                    .font(.system(size: 18))
+                    .padding(.vertical, 14)
+                    .padding(.horizontal, 10)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 10)
+                            .stroke(Color(.quaternaryLabel), lineWidth: 2)
+                    )
+                
+                SecureField("Confirm password", text: $registerConfirmPassword)
+                    .font(.system(size: 18))
+                    .padding(.vertical, 14)
+                    .padding(.horizontal, 10)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 10)
+                            .stroke(Color(.quaternaryLabel), lineWidth: 2)
+                    )
             }
+            .background(Color.white)
+            .cornerRadius(10)
+            
+            Button {
+                createAccount()
+            } label: {
+                Text("Sign Up")
+                    .frame(height: 45)
+                    .frame(maxWidth: .infinity)
+                    .foregroundColor(Color(.white))
+                    .background(Color(.systemBlue))
+                    .cornerRadius(10)
+            }
+            
+            Text(self.signupStatusMessage)
+                .foregroundColor(Color(red: 0.8, green: 0, blue: 0))
+            
+            Spacer()
+        }
+        .padding()
+        .alert(isPresented: $showSignUpCompleteAlert) {
+            Alert(
+                title: Text("Email Verification"),
+                message: Text("Thank you for signing up! Please check your email for a verification link."),
+                dismissButton: .default(Text("Close")) {
+                    presentationMode.wrappedValue.dismiss()
+                }
+            )
         }
     }
     
@@ -121,7 +119,7 @@ struct RegisterView: View {
             guard let currentUser = FirebaseManager.shared.auth.currentUser else {return}
             
             // Upload user to FireStore
-            let userData = [FirebaseConstants.uid: currentUser.uid, FirebaseConstants.email: registerEmail, FirebaseConstants.createDate: Timestamp()] as [String: Any]
+            let userData = [FirebaseConstants.uid: currentUser.uid, FirebaseConstants.email: registerEmail, FirebaseConstants.createTime: Timestamp()] as [String: Any]
             
             FirebaseManager.shared.firestore.collection("users")
                 .document(currentUser.uid).setData(userData) { err in

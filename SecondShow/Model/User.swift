@@ -6,18 +6,18 @@
 //
 
 import Foundation
-import FirebaseFirestoreSwift
+import FirebaseFirestore
 
 struct User: Codable, Identifiable {
 
     @DocumentID var id: String?
 
     let uid, email: String
-    let createDate: Date
-
+    let createTime: Date
+    
     var createDateString: String {
         let formatter = DateFormatter()
         formatter.dateFormat = "MM/dd/yyyy"
-        return (formatter.string(from: createDate))
+        return (formatter.string(from: createTime))
     }
 }

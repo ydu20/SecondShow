@@ -9,14 +9,12 @@ import SwiftUI
 
 struct ProfileView: View {
     
+    let notifyUser: (String, Color) -> ()
     @Binding var showLoginView: Bool
     
     @State private var showOptionsMenu = false;
-    @State private var showErrorMessage = false;
-    @State private var errorMessage = ""
-    
-    @State private var isAlerts = false
-    @State private var textFieldInput = ""
+    @State private var isAlerts = true
+    @State private var feedbackInput = ""
         
     var body: some View {
         VStack {
@@ -58,44 +56,7 @@ struct ProfileView: View {
             Spacer()
         }
         .padding()
-        
-        .alert(isPresented: $showErrorMessage) {
-            Alert(
-                title: Text("Error"),
-                message: Text(errorMessage),
-                dismissButton: .default(Text("Close")) {errorMessage = ""}
-            )
-        }
     }
-    
-//    private func fetchCurrentUser() {
-        
-//        guard let currentUser = FirebaseManager.shared.currentUser else {
-//            self.errorMessage = "Not logged in"
-//            self.showErrorMessage.toggle()
-//            return
-//        }
-        
-        
-        
-//        guard let uid = FirebaseManager.shared.auth.currentUser?.uid else {
-//            self.errorMessage = "Not logged in"
-//            self.showErrorMessage.toggle()
-//            return
-//        }
-//
-//        FirebaseManager.shared.firestore.collection("users").document(uid).getDocument { result, err in
-//            if let err = err {
-//                self.errorMessage = err.localizedDescription
-//                self.showErrorMessage.toggle()
-//                return
-//            }
-//
-//            if let user = try? result?.data(as: User.self) {
-//                FirebaseManager.shared.currentUser = user
-//            }
-//        }
-//    }
     
     private func handleLogout() {
         try? FirebaseManager.shared.auth.signOut()
@@ -110,7 +71,7 @@ struct ProfileView: View {
                 .font(.system(size: 24, weight: .bold))
                 .padding(.bottom, 10)
 
-            TextEditor(text:$textFieldInput)
+            TextEditor(text: $feedbackInput)
                 .overlay(
                     RoundedRectangle(cornerRadius: 8) // Use RoundedRectangle for rounded corners
                         .stroke(Color(.secondarySystemFill), lineWidth: 1)

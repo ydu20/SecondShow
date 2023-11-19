@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct MainMessagesView: View {
+    
+    let notifyUser: (String, Color) -> ()
+    
     var body: some View {
         VStack {
             NavBar<EmptyView>(title: "Messages", subtitle: nil)
