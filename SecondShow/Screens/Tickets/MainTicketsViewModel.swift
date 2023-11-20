@@ -24,7 +24,8 @@ class MainTicketsViewModel: ObservableObject {
         
         eventListener = FirebaseManager.shared.firestore
             .collection("events")
-            .order(by: EventConstants.date)
+            .whereField(EventConstants.listingCount, isNotEqualTo: 0)
+//            .order(by: EventConstants.date)
             .addSnapshotListener { querySnapshot, error in
                 if let error = error {
                     print(error.localizedDescription)
@@ -74,7 +75,6 @@ class MainTicketsViewModel: ObservableObject {
                         print("Failure codifying event object")
                     }
                 })
-                print(self.eventDates)
             }
         
     }

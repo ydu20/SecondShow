@@ -33,7 +33,7 @@ struct MyListingsView: View {
                         .contentShape(Rectangle())
                         .edgesIgnoringSafeArea(.all)
 
-                    SoldPopupView(showPopupView: $showPopupView, listing: selectedListing)
+                    SoldPopupView(showPopupView: $showPopupView, listing: selectedListing, notifyUser: notifyUser)
                 }
             }
         }.padding()

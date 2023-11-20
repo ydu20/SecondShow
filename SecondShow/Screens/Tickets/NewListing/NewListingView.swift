@@ -206,26 +206,6 @@ struct NewListingView: View {
         
     }
     
-//    private func addEventToUser(eventDoc: DocumentReference, listingNumber: Int) {
-//        let listingIdentifierData = [
-//            ListingIdentifierConstants.eventId: eventDoc.documentID,
-//            ListingIdentifierConstants.listingNumber: listingNumber
-//        ] as [String: Any]
-//
-//        guard let user = FirebaseManager.shared.currentUser else {
-//            notifyUser("Error retrievinig local user information", Color(.systemRed))
-//            return
-//        }
-//
-//        FirebaseManager.shared.firestore.collection("users").document(user.uid).collection("listings").addDocument(data: listingIdentifierData) { error in
-//            if let error = error {
-//                notifyUser("Error associating listing with user: \(error.localizedDescription)", Color(.systemRed))
-//            } else {
-//                notifyUser("Listing posted! Your listing number is: \(listingNumber)", Color(.systemGreen))
-//            }
-//        }
-//    }
-    
 }
 
 struct NewListingView_Previews: PreviewProvider {

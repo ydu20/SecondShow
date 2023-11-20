@@ -80,10 +80,10 @@ class MyListingsViewModel: ObservableObject {
                 })
                 
                 // For debugging
-                print("Snapshot change processed")
-                self.myAvailableListings.forEach { myListing in
-                    print("\(String(myListing.eventName)): \(String(myListing.price))")
-                }
+//                print("Snapshot change processed")
+//                self.myAvailableListings.forEach { myListing in
+//                    print("\(String(myListing.eventName)): \(String(myListing.price))")
+//                }
             }
     }
     

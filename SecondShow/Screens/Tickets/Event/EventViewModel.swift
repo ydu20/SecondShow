@@ -37,7 +37,8 @@ class EventViewModel: ObservableObject {
             .collection("events")
             .document(eventId)
             .collection("listings")
-            .order(by: ListingConstants.listingNumber, descending: true)
+            .whereField(ListingConstants.availableQuantity, isNotEqualTo: 0)
+//            .order(by: ListingConstants.listingNumber, descending: true)
             .addSnapshotListener { querySnapshot, error in
                 if let error = error {
                     print("Failed to listen for events: \(error.localizedDescription)")

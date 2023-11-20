@@ -6,17 +6,18 @@
 //
 
 import SwiftUI
+import FirebaseFirestore
 
 struct SoldPopupView: View {
     
     @Binding var showPopupView: Bool
     let listing: Listing?
+    let notifyUser: (String, Color) -> ()
     
     @State private var numSold: Double = 1
     
     var body: some View {
         VStack {
-
             if let listing = self.listing {
                     
                     if (listing.availableQuantity == 1) {
@@ -46,7 +47,6 @@ struct SoldPopupView: View {
                     .padding(.bottom, 20)
             }
             
-            
             HStack {
                 Button {
                     showPopupView.toggle()
@@ -65,7 +65,8 @@ struct SoldPopupView: View {
                     Button {
                         if listing != nil {
                             // TODO
-
+                            showPopupView.toggle()
+                            updateListing()
                         }
                     } label: {
                         Text("Confirm")
@@ -87,14 +88,99 @@ struct SoldPopupView: View {
         .background(Color.white)
         .cornerRadius(12)
         .shadow(radius: 5)
+    }
+    
+    private func updateListing() {
+        guard let listing = listing else {
+            notifyUser("Cannot load local listing", Color(.systemRed))
+            return
+        }
+        if listing.availableQuantity - Int(numSold) < 0 {
+            notifyUser("Error: negative availability after selling", Color(.systemRed))
+            return
+        }
         
+        let eventRef = FirebaseManager.shared.firestore.collection("events").document(listing.eventId)
+        let listingRef = eventRef.collection("listings").document(String(listing.listingNumber))
+        
+        // Update listing
+        listingRef.getDocument { (doc, err) in
+            if let err = err {
+                notifyUser("Error retrieving listing: \(err.localizedDescription)", Color(.systemRed))
+                return
+            }
+            
+            if let doc = doc, doc.exists {
+                let listingUpdate = [
+                    ListingConstants.availableQuantity: listing.availableQuantity - Int(numSold)
+                ]
+                listingRef.updateData(listingUpdate) { err in
+                    if let err = err {
+                        notifyUser("Error updating listing: \(err.localizedDescription)", Color(.systemRed))
+                        return
+                    }
+                    
+                    // Update user listing
+                    updateUserListing(listing: listing, listingUpdate: listingUpdate)
+                    
+                    // Update event if listing sells out
+                    if listing.availableQuantity - Int(numSold) == 0 {
+                        decreaseEventListingCount(eventRef: eventRef)
+                    }
+                }
+                
+            } else {
+                notifyUser("Error: listing not found in database", Color(.systemRed))
+                return
+            }
+        }
+    }
+    
+    private func decreaseEventListingCount(eventRef: DocumentReference) {
+        let eventUpdate = [
+            EventConstants.listingCount: FieldValue.increment(Int64(-1))
+        ]
+        eventRef.updateData(eventUpdate) { err in
+            if let err = err {
+                notifyUser("Error updating event: \(err.localizedDescription)", Color(.systemRed))
+                return
+            }
+        }
+    }
+    
+    private func updateUserListing(listing: Listing, listingUpdate: [String: Int]) {
+        guard let user = FirebaseManager.shared.currentUser else {
+            notifyUser("Error retrieving local user information", Color(.systemRed))
+            return
+        }
+        
+        let userListingRef = FirebaseManager.shared.firestore.collection("users").document(user.uid).collection("listings").document(listing.id ?? "")
+        
+        userListingRef.getDocument { (doc, err) in
+            if let err = err {
+                notifyUser("Error retrieving user listing: \(err.localizedDescription)", Color(.systemRed))
+                return
+            }
+            
+            if let doc = doc, doc.exists {
+                userListingRef.updateData(listingUpdate) { err in
+                    if let err = err {
+                        notifyUser("Error updating listing: \(err.localizedDescription)", Color(.systemRed))
+                        return
+                    }
+                }
+            } else {
+                notifyUser("Error: user listing not found in database", Color(.systemRed))
+                return
+            }
+        }
     }
 }
 
 struct SoldPopupView_Previews: PreviewProvider {
     static var previews: some View {
-        SoldPopupView(showPopupView: .constant(true), listing: Listing(eventId: "testtesttest", eventName: "Test Event", eventDate: "11-26-2023", listingNumber: 1, price: 15, totalQuantity: 4, availableQuantity: 1, popularity: 14, createTime: Date()))
+        SoldPopupView(showPopupView: .constant(true), listing: Listing(eventId: "testtesttest", eventName: "Test Event", eventDate: "11-26-2023", listingNumber: 1, price: 15, totalQuantity: 4, availableQuantity: 1, popularity: 14, createTime: Date()), notifyUser: {msg, _ in print(msg)})
         
-        SoldPopupView(showPopupView: .constant(true), listing: nil)
+//        SoldPopupView(showPopupView: .constant(true), listing: nil, notifyUser: {msg, _ in print(msg)})
     }
 }
