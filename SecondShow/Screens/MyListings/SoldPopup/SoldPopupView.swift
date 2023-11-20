@@ -90,6 +90,38 @@ struct SoldPopupView: View {
         .shadow(radius: 5)
     }
     
+    private func deleteListing() {
+        guard let listing = listing else {
+            notifyUser("Cannot load local listing", Color(.systemRed))
+            return
+        }
+        
+        guard let user = FirebaseManager.shared.currentUser else {
+            notifyUser("Error retrieving local user information", Color(.systemRed))
+            return
+        }
+        
+        let eventRef = FirebaseManager.shared.firestore.collection("events").document(listing.eventId)
+        
+        let listingRef = eventRef.collection("listings").document(String(listing.listingNumber))
+        
+        let userListingRef = FirebaseManager.shared.firestore.collection("users").document(user.uid).collection("listings").document(listing.id ?? "")
+        
+        listingRef.delete { err in
+            if let err = err {
+                notifyUser("Error deleting listing: \(err.localizedDescription)", Color(.systemRed))
+                return
+            }
+        }
+        userListingRef.delete { err in
+            if let err = err {
+                notifyUser("Error deleting user listing: \(err.localizedDescription)", Color(.systemRed))
+            }
+            return
+        }
+        decreaseEventListingCount(eventRef: eventRef)
+    }
+    
     private func updateListing() {
         guard let listing = listing else {
             notifyUser("Cannot load local listing", Color(.systemRed))

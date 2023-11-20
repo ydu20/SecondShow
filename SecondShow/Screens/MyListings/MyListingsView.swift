@@ -13,7 +13,8 @@ struct MyListingsView: View {
     
     @StateObject private var vm = MyListingsViewModel()
     
-    @State private var showPopupView = false
+    @State private var showSoldPopupView = false
+    @State private var showDeletePopupView = false
     @State private var selectedListing: Listing? = nil
 
     var body: some View {
@@ -24,16 +25,23 @@ struct MyListingsView: View {
                     myAvailableListingsView
                     mySoldOutListingsView
                 }
-                .blur(radius: showPopupView ? 3 : 0)
-                .disabled(showPopupView)
+                .blur(radius: showSoldPopupView || showDeletePopupView ? 3 : 0)
+                .disabled(showSoldPopupView || showDeletePopupView)
 
-                if showPopupView {
+                if showSoldPopupView || showDeletePopupView {
                     Color.clear
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                         .contentShape(Rectangle())
                         .edgesIgnoringSafeArea(.all)
+                }
+                
+                if showSoldPopupView {
+                    SoldPopupView(showPopupView: $showSoldPopupView, listing: selectedListing, notifyUser: notifyUser)
+                }
+                
+                if showDeletePopupView {
 
-                    SoldPopupView(showPopupView: $showPopupView, listing: selectedListing, notifyUser: notifyUser)
+                    DeletePopupView(showPopupView: $showDeletePopupView, listing: selectedListing, notifyUser: notifyUser)
                 }
             }
         }.padding()
@@ -76,9 +84,8 @@ struct MyListingsView: View {
                     }
                     Spacer()
                     Button {
-                        // TODO
                         selectedListing = listing
-                        showPopupView.toggle()
+                        showSoldPopupView.toggle()
                     } label: {
                         Text("Sold")
                             .font(.system(size: 15))
@@ -89,7 +96,8 @@ struct MyListingsView: View {
                             .cornerRadius(6)
                     }
                     Button {
-                        // TODO
+                        selectedListing = listing
+                        showDeletePopupView.toggle()
                     } label: {
                         VStack {
                             Circle()

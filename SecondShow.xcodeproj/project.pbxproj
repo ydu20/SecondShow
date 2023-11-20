@@ -26,6 +26,7 @@
 		8788CBA92B05A3F100419385 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 8788CBA82B05A3F100419385 /* FirebaseAnalytics */; };
 		8788CBAB2B05A3F100419385 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 8788CBAA2B05A3F100419385 /* FirebaseAuth */; };
 		8788CBAD2B05A3F100419385 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 8788CBAC2B05A3F100419385 /* FirebaseFirestore */; };
+		878D05762B0BE16B00E1A01D /* DeletePopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 878D05752B0BE16B00E1A01D /* DeletePopupView.swift */; };
 		87B2D35C2B01CA9C003FB28B /* SecondShowApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87B2D35B2B01CA9C003FB28B /* SecondShowApp.swift */; };
 		87B2D3602B01CA9E003FB28B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 87B2D35F2B01CA9E003FB28B /* Assets.xcassets */; };
 		87B2D3632B01CA9E003FB28B /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 87B2D3622B01CA9E003FB28B /* Preview Assets.xcassets */; };
@@ -80,6 +81,7 @@
 		8788CB802B05368A00419385 /* ListingIdentifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListingIdentifier.swift; sourceTree = "<group>"; };
 		8788CB822B0536BC00419385 /* Listing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Listing.swift; sourceTree = "<group>"; };
 		8788CBA52B059BE100419385 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		878D05752B0BE16B00E1A01D /* DeletePopupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeletePopupView.swift; sourceTree = "<group>"; };
 		87B2D3582B01CA9C003FB28B /* SecondShow.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SecondShow.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		87B2D35B2B01CA9C003FB28B /* SecondShowApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondShowApp.swift; sourceTree = "<group>"; };
 		87B2D35F2B01CA9E003FB28B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -161,6 +163,14 @@
 			children = (
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		878D05722B0BE13B00E1A01D /* DeletePopup */ = {
+			isa = PBXGroup;
+			children = (
+				878D05752B0BE16B00E1A01D /* DeletePopupView.swift */,
+			);
+			path = DeletePopup;
 			sourceTree = "<group>";
 		};
 		87B2D34F2B01CA9C003FB28B = {
@@ -294,6 +304,7 @@
 		87B2D38D2B026B5A003FB28B /* MyListings */ = {
 			isa = PBXGroup;
 			children = (
+				878D05722B0BE13B00E1A01D /* DeletePopup */,
 				87DBCACC2B0ACB5C0062720A /* SoldPopup */,
 				87B2D3A12B026D59003FB28B /* MyListingsView.swift */,
 				87DBCACA2B0942140062720A /* MyListingsViewModel.swift */,
@@ -507,6 +518,7 @@
 				87DBCACB2B0942140062720A /* MyListingsViewModel.swift in Sources */,
 				8788CB832B0536BC00419385 /* Listing.swift in Sources */,
 				8747E2B02B06BCAD00CCD723 /* EventViewModel.swift in Sources */,
+				878D05762B0BE16B00E1A01D /* DeletePopupView.swift in Sources */,
 				8788CB6F2B03EAEB00419385 /* LoginView.swift in Sources */,
 				87B2D3A82B029FF3003FB28B /* NavBar.swift in Sources */,
 				871E80072B05C9D90061F357 /* MainTicketsViewModel.swift in Sources */,
