@@ -13,7 +13,11 @@ struct EventView: View {
     
     var body: some View {
         VStack {
-            listingsView
+            if self.vm.listings.count == 0 {
+                Text("No events currently. Post a listing to create an event!")
+            } else {
+                listingsView
+            }
         }
         .navigationTitle(vm.eventName)
         .navigationBarTitleDisplayMode(.inline)

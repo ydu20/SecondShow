@@ -16,13 +16,13 @@ struct Listing: Codable, Identifiable {
     let listingNumber, price, totalQuantity, availableQuantity, popularity: Int
     let createTime: Date
     
-    var eventDateMMMMdd: String {
+    var eventDateMMMdd: String {
         let formatter = DateFormatter()
         formatter.dateFormat = "MM-dd-yyyy"
         
         let dateObj = formatter.date(from: eventDate)
         if let dateObj = dateObj {
-            formatter.dateFormat = "MMMM dd"
+            formatter.dateFormat = "MMM. dd"
             return formatter.string(from: dateObj)
         } else {
             return "ERROR DATE"

@@ -28,7 +28,6 @@ struct MyListingsView: View {
                 .disabled(showPopupView)
 
                 if showPopupView {
-                    
                     Color.clear
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                         .contentShape(Rectangle())
@@ -50,8 +49,15 @@ struct MyListingsView: View {
                         Text(listing.eventName)
                             .font(.system(size: 20, weight: .bold))
                         HStack(spacing: 12) {
-                            Text(listing.eventDateMMMMdd)
+                            Text(listing.eventDateMMMdd)
                                 .font(.system(size: 15))
+                            HStack(spacing: 2) {
+                                Text("#")
+                                    .font(.system(size: 13, weight: .semibold))
+                                    .padding(.bottom, 1)
+                                Text("\(listing.listingNumber)")
+                                    .font(.system(size: 15))
+                            }
                             HStack(spacing: 3) {
                                 Image(systemName: "flame")
                                     .font(.system(size: 15))
@@ -107,33 +113,39 @@ struct MyListingsView: View {
     }
     
     private var mySoldOutListingsView: some View {
-        ForEach(self.vm.mySoldOutListings) { mySoldOutListing in
+        ForEach(self.vm.mySoldOutListings) { listing in
             HStack {
                 HStack(spacing: 15) {
                     VStack(alignment: .leading, spacing: 8) {
-                        Text(mySoldOutListing.eventName)
+                        Text(listing.eventName)
                             .font(.system(size: 20, weight: .bold))
                         HStack(spacing: 12) {
-                            Text(mySoldOutListing.eventDateMMMMdd)
+                            Text(listing.eventDateMMMdd)
                                 .font(.system(size: 15))
+                            HStack(spacing: 2) {
+                                Text("#")
+                                    .font(.system(size: 13, weight: .semibold))
+                                    .padding(.bottom, 1)
+                                Text("\(listing.listingNumber)")
+                                    .font(.system(size: 15))
+                            }
                             HStack(spacing: 3) {
                                 Image(systemName: "flame")
                                     .font(.system(size: 15))
                                     .foregroundColor(Color.black.opacity(0.3))
-                                Text(String(mySoldOutListing.popularity))
+                                Text(String(listing.popularity))
                                     .font(.system(size: 15))
                             }
                             HStack(spacing: 2) {
                                 Text("x")
                                     .font(.system(size: 13, weight: .semibold))
                                     .padding(.bottom, 1)
-                                Text("0/\(mySoldOutListing.totalQuantity)")
+                                Text("0/\(listing.totalQuantity)")
                                     .font(.system(size: 15))
                             }
                         }
                     }
                     Spacer()
-
                     Text("Sold Out")
                         .font(.system(size: 15))
                         .foregroundColor(Color.white)
