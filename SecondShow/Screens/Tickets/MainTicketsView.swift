@@ -93,5 +93,6 @@ struct MainTicketsView_Previews: PreviewProvider {
         TabBarView(showLoginView: .constant(false), selectedTab: .constant(0))
         TabBarView(showLoginView: .constant(false), selectedTab: .constant(0))
             .preferredColorScheme(.dark)
+        
     }
 }

@@ -12,16 +12,35 @@ struct MyListingsView: View {
     let notifyUser: (String, Color) -> ()
     
     @StateObject private var vm = MyListingsViewModel()
+    
+    @State private var showPopupView = false
+    @State private var selectedListing: Listing? = nil
 
     var body: some View {
         VStack {
             NavBar<EmptyView>(title: "My Listings", subtitle: nil)
-            ScrollView {
-                myAvailableListingsView
-                mySoldOutListingsView
+            ZStack {
+                ScrollView {
+                    myAvailableListingsView
+                    mySoldOutListingsView
+                }
+                .blur(radius: showPopupView ? 3 : 0)
+                .disabled(showPopupView)
+
+                if showPopupView {
+                    
+                    Color.clear
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .contentShape(Rectangle())
+                        .edgesIgnoringSafeArea(.all)
+
+                    SoldPopupView(showPopupView: $showPopupView, listing: selectedListing)
+                }
             }
         }.padding()
+        
     }
+
     
     private var myAvailableListingsView: some View {
         ForEach(self.vm.myAvailableListings) { listing in
@@ -52,7 +71,8 @@ struct MyListingsView: View {
                     Spacer()
                     Button {
                         // TODO
-                        
+                        selectedListing = listing
+                        showPopupView.toggle()
                     } label: {
                         Text("Sold")
                             .font(.system(size: 15))

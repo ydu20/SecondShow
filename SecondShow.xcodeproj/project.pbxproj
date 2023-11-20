@@ -43,6 +43,7 @@
 		87B2D3A82B029FF3003FB28B /* NavBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87B2D3A72B029FF3003FB28B /* NavBar.swift */; };
 		87DBCAC72B0939B00062720A /* ListingIdentifierConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87DBCAC62B0939B00062720A /* ListingIdentifierConstants.swift */; };
 		87DBCACB2B0942140062720A /* MyListingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87DBCACA2B0942140062720A /* MyListingsViewModel.swift */; };
+		87DBCACF2B0ACB7E0062720A /* SoldPopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87DBCACE2B0ACB7E0062720A /* SoldPopupView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -99,6 +100,7 @@
 		87B2D3A72B029FF3003FB28B /* NavBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavBar.swift; sourceTree = "<group>"; };
 		87DBCAC62B0939B00062720A /* ListingIdentifierConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListingIdentifierConstants.swift; sourceTree = "<group>"; };
 		87DBCACA2B0942140062720A /* MyListingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyListingsViewModel.swift; sourceTree = "<group>"; };
+		87DBCACE2B0ACB7E0062720A /* SoldPopupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoldPopupView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -292,6 +294,7 @@
 		87B2D38D2B026B5A003FB28B /* MyListings */ = {
 			isa = PBXGroup;
 			children = (
+				87DBCACC2B0ACB5C0062720A /* SoldPopup */,
 				87B2D3A12B026D59003FB28B /* MyListingsView.swift */,
 				87DBCACA2B0942140062720A /* MyListingsViewModel.swift */,
 			);
@@ -337,6 +340,14 @@
 				87B2D3A72B029FF3003FB28B /* NavBar.swift */,
 			);
 			path = NavBar;
+			sourceTree = "<group>";
+		};
+		87DBCACC2B0ACB5C0062720A /* SoldPopup */ = {
+			isa = PBXGroup;
+			children = (
+				87DBCACE2B0ACB7E0062720A /* SoldPopupView.swift */,
+			);
+			path = SoldPopup;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -489,6 +500,7 @@
 				87DBCAC72B0939B00062720A /* ListingIdentifierConstants.swift in Sources */,
 				8788CB812B05368A00419385 /* ListingIdentifier.swift in Sources */,
 				87B2D39B2B026CB2003FB28B /* NewListingView.swift in Sources */,
+				87DBCACF2B0ACB7E0062720A /* SoldPopupView.swift in Sources */,
 				8788CB6D2B03E36900419385 /* FirebaseManager.swift in Sources */,
 				8788CB732B040BCF00419385 /* FirebaseConstants.swift in Sources */,
 				87B2D3A02B026D3B003FB28B /* ChatLogView.swift in Sources */,
