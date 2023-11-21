@@ -16,7 +16,12 @@ struct MainTicketsView: View {
     @State private var showEventView = false
     
     @StateObject private var vm = MainTicketsViewModel()
-    var eventVm = EventViewModel(event: nil)
+    var eventVm: EventViewModel
+    
+    init(notifyUser: @escaping (String, Color) -> Void) {
+        self.notifyUser = notifyUser
+        self.eventVm = EventViewModel(event: nil, notifyUser: notifyUser)
+    }
     
     var body: some View {
         NavigationStack {

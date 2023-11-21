@@ -14,6 +14,7 @@ struct User: Codable, Identifiable {
 
     let uid, email: String
     let createTime: Date
+    let alerts: [String]?
     
     var createDateString: String {
         let formatter = DateFormatter()

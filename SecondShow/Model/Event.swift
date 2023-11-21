@@ -18,4 +18,16 @@ struct Event: Codable, Identifiable {
     var listingCount: Int
 //    var listings: [Listing]?
     
+    var dateMMMdd: String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MM-dd-yyyy"
+        
+        let dateObj = formatter.date(from: date)
+        if let dateObj = dateObj {
+            formatter.dateFormat = "MMM. dd"
+            return formatter.string(from: dateObj)
+        } else {
+            return "ERROR DATE"
+        }
+    }
 }

@@ -36,6 +36,7 @@ struct RootView: View {
                     if let currentUser = try? document?.data(as: User.self) {
                         // Great success
                         FirebaseManager.shared.currentUser = currentUser
+                        attachFirebaseUserSnapshot()
                         print("Successfully logged in")
                     } else {
                         try? FirebaseManager.shared.auth.signOut()
@@ -46,6 +47,24 @@ struct RootView: View {
         }
         .fullScreenCover(isPresented: $showLoginView) {
             LoginView(showLoginView: $showLoginView)
+        }
+    }
+    
+    private func attachFirebaseUserSnapshot () {
+        guard let currentUser = FirebaseManager.shared.currentUser else {return}
+
+        FirebaseManager.shared.firestore.collection("users").document(currentUser.uid).addSnapshotListener { snapshot, err in
+            if let err = err {
+                print("Error retrieving user info: \(err)")
+                return
+            }
+            
+            if let currentUser = try? snapshot?.data(as: User.self) {
+                // Great success
+                FirebaseManager.shared.currentUser = currentUser
+            } else {
+                print("Error fetching user snapshot")
+            }
         }
     }
 }

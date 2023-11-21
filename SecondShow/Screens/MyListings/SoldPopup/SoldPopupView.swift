@@ -49,7 +49,9 @@ struct SoldPopupView: View {
             
             HStack {
                 Button {
-                    showPopupView.toggle()
+                    withAnimation(.easeInOut(duration: 0.15)) {
+                        showPopupView.toggle()
+                    }
                 } label: {
                     Text("Cancel")
                         .frame(height: 30)
@@ -65,7 +67,9 @@ struct SoldPopupView: View {
                     Button {
                         if listing != nil {
                             // TODO
-                            showPopupView.toggle()
+                            withAnimation(.easeInOut(duration: 0.15)) {
+                                showPopupView.toggle()
+                            }
                             updateListing()
                         }
                     } label: {
@@ -87,7 +91,6 @@ struct SoldPopupView: View {
         .padding(.vertical, 30)
         .background(Color.white)
         .cornerRadius(12)
-        .shadow(radius: 5)
     }
     
     private func deleteListing() {

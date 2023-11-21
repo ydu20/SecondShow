@@ -15,7 +15,9 @@ struct ProfileView: View {
     @State private var showOptionsMenu = false;
     @State private var isAlerts = true
     @State private var feedbackInput = ""
-        
+
+    @StateObject private var vm = ProfileViewModel()
+
     var body: some View {
         VStack {
             NavBar(
@@ -96,42 +98,50 @@ struct ProfileView: View {
     
     private var alertsList: some View {
         ScrollView {
-            ForEach(0..<2, id: \.self) { num in
-                HStack {
-                    HStack(spacing: 15) {
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text("Concert Show")
-                                .font(.system(size: 20, weight: .bold))
-                            HStack(spacing: 12) {
-                                Text("Nov. 16")
-                                    .font(.system(size: 15))
+            if vm.myAlerts.count > 0 {
+                ForEach(vm.myAlerts) { event in
+                    HStack {
+                        HStack(spacing: 15) {
+                            VStack(alignment: .leading, spacing: 8) {
+                                Text(event.name)
+                                    .font(.system(size: 20, weight: .bold))
+                                HStack(spacing: 12) {
+                                    Text(event.dateMMMdd)
+                                        .font(.system(size: 15))
+                                }
+                            }
+                            Spacer()
+                            Button {
+                                vm.deregisterAlert(event: event)
+                            } label: {
+                                VStack {
+                                    Circle()
+                                        .fill(Color(.white))
+                                        .frame(width: 23, height: 23)
+                                        .overlay(
+                                            Image(systemName: "x.circle.fill")
+                                                .font(.system(size: 24))
+                                                .foregroundColor(Color(.systemRed))
+                                        )
+                                }
                             }
                         }
-                        Spacer()
-                        Button {
-                            // TODO
-                        } label: {
-                            VStack {
-                                Circle()
-                                    .fill(Color(.white))
-                                    .frame(width: 23, height: 23)
-                                    .overlay(
-                                        Image(systemName: "x.circle.fill")
-                                            .font(.system(size: 24))
-                                            .foregroundColor(Color(.systemRed))
-                                    )
-                            }
-                        }
+                        .foregroundColor(Color(.white))
+                        .padding(.horizontal, 15)
+                        .padding(.vertical, 10)
+                        .background(Color(.systemBlue))
+                        .cornerRadius(10)
                     }
-                    .foregroundColor(Color(.white))
-                    .padding(.horizontal, 15)
-                    .padding(.vertical, 10)
-                    .background(Color(.systemBlue))
-                    .cornerRadius(10)
+                    .padding(.vertical, 3)
                 }
-                .padding(.vertical, 3)
-                
             }
+            else {
+                Text("Go to an event's page to add an alert")
+                    .padding(.top, 40)
+            }
+        }
+        .onAppear {
+            vm.fetchMyAlerts()
         }
     }
 }

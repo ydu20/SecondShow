@@ -8,19 +8,70 @@
 import Foundation
 import Firebase
 import FirebaseFirestore
+import SwiftUI
 
 class EventViewModel: ObservableObject {
     
     @Published var eventName = ""
     @Published var listings = [Listing]()
-    
+    @Published var eventAlerts = false
+
     private var event: Event?
     private var listingListener: ListenerRegistration?
+    private var notifyUser: ((String, Color) -> ())?
 
-
-    init(event: Event?) {
+    init(event: Event?, notifyUser: @escaping (String, Color) -> ()) {
+        self.notifyUser = notifyUser
+        
         setEvent(event: event)
         fetchListings()
+    }
+    
+//    private func setEventAlerts() {
+//        guard let userAlerts = FirebaseManager.shared.currentUser?.alerts else {return}
+//        guard let eventId = self.event?.id else {return}
+//
+//        eventAlerts = userAlerts.contains(eventId)
+//    }
+    
+    func registerEventAlerts() {
+        guard let user = FirebaseManager.shared.currentUser else {return}
+        guard let eventId = self.event?.id else {return}
+        
+        let userRef = FirebaseManager.shared.firestore.collection("users").document(user.uid)
+        userRef.updateData([
+            FirebaseConstants.alerts: FieldValue.arrayUnion([eventId])
+        ]) {err in
+            if let err = err {
+                if let notifyUser = self.notifyUser {
+                    notifyUser(err.localizedDescription, Color(.systemRed))
+                } else {
+                    print(err.localizedDescription)
+                }
+                return
+            }
+            self.eventAlerts = true
+        }
+    }
+    
+    func deregisterEventAlerts() {
+        guard let user = FirebaseManager.shared.currentUser else {return}
+        guard let eventId = self.event?.id else {return}
+        
+        let userRef = FirebaseManager.shared.firestore.collection("users").document(user.uid)
+        userRef.updateData([
+            FirebaseConstants.alerts: FieldValue.arrayRemove([eventId])
+        ]) {err in
+            if let err = err {
+                if let notifyUser = self.notifyUser {
+                    notifyUser(err.localizedDescription, Color(.systemRed))
+                } else {
+                    print(err.localizedDescription)
+                }
+                return
+            }
+            self.eventAlerts = false
+        }
     }
     
     func fetchListings() {
@@ -80,7 +131,12 @@ class EventViewModel: ObservableObject {
     func setEvent(event: Event?) {
         if let event = event {
             self.event = event
-            eventName = event.name
+            self.eventName = event.name
+            
+            guard let userAlerts = FirebaseManager.shared.currentUser?.alerts else {return}
+            guard let eventId = self.event?.id else {return}
+    
+            self.eventAlerts = userAlerts.contains(eventId)
         }
     }
     

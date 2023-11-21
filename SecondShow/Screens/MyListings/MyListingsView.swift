@@ -37,11 +37,12 @@ struct MyListingsView: View {
                 
                 if showSoldPopupView {
                     SoldPopupView(showPopupView: $showSoldPopupView, listing: selectedListing, notifyUser: notifyUser)
+                        .transition(.asymmetric(insertion: .scale(scale: 1.05), removal: .opacity))
                 }
                 
                 if showDeletePopupView {
-
                     DeletePopupView(showPopupView: $showDeletePopupView, listing: selectedListing, notifyUser: notifyUser)
+                        .transition(.asymmetric(insertion: .scale(scale: 1.05), removal: .opacity))
                 }
             }
         }.padding()
@@ -85,7 +86,9 @@ struct MyListingsView: View {
                     Spacer()
                     Button {
                         selectedListing = listing
-                        showSoldPopupView.toggle()
+                        withAnimation(.easeInOut(duration: 0.3)) {
+                            showSoldPopupView.toggle()
+                        }
                     } label: {
                         Text("Sold")
                             .font(.system(size: 15))
@@ -97,7 +100,9 @@ struct MyListingsView: View {
                     }
                     Button {
                         selectedListing = listing
-                        showDeletePopupView.toggle()
+                        withAnimation(.easeInOut(duration: 0.3)) {
+                            showDeletePopupView.toggle()
+                        }
                     } label: {
                         VStack {
                             Circle()

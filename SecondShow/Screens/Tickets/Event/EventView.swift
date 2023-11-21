@@ -25,10 +25,15 @@ struct EventView: View {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button {
                     // TODO
+                    if self.vm.eventAlerts {
+                        self.vm.deregisterEventAlerts()
+                    } else {
+                        self.vm.registerEventAlerts()
+                    }
                 } label: {
-                    Image(systemName: "bell")
+                    Image(systemName: self.vm.eventAlerts ? "bell.fill" : "bell")
                         .font(.system(size: 14))
-                        .foregroundColor(Color(.secondaryLabel))
+                        .foregroundColor(self.vm.eventAlerts ? Color(.systemBlue) : Color(.secondaryLabel))
                 }
             }
         }
