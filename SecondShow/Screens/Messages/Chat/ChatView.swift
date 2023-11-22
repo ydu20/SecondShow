@@ -91,6 +91,6 @@ struct ChatView: View {
 struct ChatView_Previews: PreviewProvider {
     static var previews: some View {
 //        ChatView()
-        MainMessagesView(notifyUser: {_, _ in})
+        MainMessagesView(notifyUser: {_, _ in}, showChatView: .constant(false))
     }
 }

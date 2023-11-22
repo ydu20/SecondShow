@@ -17,14 +17,20 @@ struct MainMessagesView: View {
     var chatVm = ChatViewModel()
     
     var body: some View {
-            VStack {
-                NavBar<EmptyView>(title: "Messages", subtitle: nil)
-                messageList
+        VStack {
+            NavBar<EmptyView>(title: "Messages", subtitle: nil)
+            messageList
+            NavigationLink(destination: ChatView(vm: chatVm), isActive: $showChatView) {
+                EmptyView()
             }
-            .padding()
-            .navigationDestination(isPresented: $showChatView) {
-                ChatView(vm: chatVm)
-            }
+            .hidden()
+        }
+        .padding()
+//            .navigationDestination(isPresented: $showChatView) {
+//                ChatView(vm: chatVm)
+//            }
+        
+
     }
     
     private var messageList: some View {

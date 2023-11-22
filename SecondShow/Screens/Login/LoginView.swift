@@ -18,7 +18,8 @@ struct LoginView: View {
     @State private var loginStatusMessage = ""
     
     var body: some View {
-        NavigationStack {
+//        NavigationStack {
+        NavigationView {
             VStack(spacing: 20) {
                 HStack {
                     Spacer()
@@ -75,14 +76,20 @@ struct LoginView: View {
                 Text(self.loginStatusMessage)
                     .foregroundColor(Color(red: 0.8, green: 0, blue: 0))
                 
+                NavigationLink(destination: RegisterView(), isActive: $showRegisterView) {
+                    EmptyView()
+                }
+                .hidden()
+                
                 Spacer()
             }
             .padding()
             .navigationBarHidden(true)
-            .navigationDestination(isPresented: $showRegisterView) {
-                RegisterView()
-            }
+//            .navigationDestination(isPresented: $showRegisterView) {
+//                RegisterView()
+//            }
         }
+//        }
     }
     
     private func loginUser() {

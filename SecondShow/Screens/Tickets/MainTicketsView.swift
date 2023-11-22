@@ -26,6 +26,7 @@ struct MainTicketsView: View {
     }
     
     var body: some View {
+        NavigationView {
             VStack {
                 NavBar(
                     title: "Second Show",
@@ -46,15 +47,24 @@ struct MainTicketsView: View {
                 } else {
                     showsList
                 }
+                
+                NavigationLink(destination: EventView(vm: eventVm), isActive: $showEventView) {
+                    EmptyView()
+                }.hidden()
+                
             }
             .padding()
             .sheet(isPresented: $showNewListingView) {
                 NewListingView(notifyUser: notifyUser)
                     .environmentObject(vm)
             }
-            .navigationDestination(isPresented: $showEventView, destination: {
-                EventView(vm: eventVm)
-            })
+            
+
+        }
+
+//            .navigationDestination(isPresented: $showEventView, destination: {
+//                EventView(vm: eventVm)
+//            })
     }
     
     private var showsList: some View {

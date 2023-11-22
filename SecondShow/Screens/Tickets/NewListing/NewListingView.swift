@@ -23,7 +23,8 @@ struct NewListingView: View {
     @State private var newListingWarning = ""
     
     var body: some View {
-        NavigationStack {
+//        NavigationStack {
+        NavigationView {
             ZStack {
                 Form {
                     TextField("Event Name", text: $eventName)
@@ -74,6 +75,7 @@ struct NewListingView: View {
                 }
             }
         }
+//        }
     }
     
     private func createListing() {
@@ -214,6 +216,6 @@ struct NewListingView: View {
 struct NewListingView_Previews: PreviewProvider {
     static var previews: some View {
 //        NewListingView()
-        MainTicketsView(notifyUser: {_, _ in})
+        MainTicketsView(notifyUser: {_, _ in}, showChatView: .constant(false))
     }
 }

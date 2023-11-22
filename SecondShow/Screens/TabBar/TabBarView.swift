@@ -21,12 +21,13 @@ struct TabBarView: View {
     
     var body: some View {
         ZStack {
-            NavigationStack {
+//            NavigationStack {
+            NavigationView {
                 TabView(selection: $selectedTab) {
                     MainTicketsView(notifyUser: notifyUser, showChatView: $showChatView)
                         .tabItem {Image(systemName: "ticket")}
                         .tag(0)
-
+                    
                     MainMessagesView(notifyUser: notifyUser, showChatView: $showChatView)
                         .tabItem {Image(systemName: "message")}
                         .tag(1)
@@ -40,6 +41,7 @@ struct TabBarView: View {
                         .tag(3)
                 }
             }
+//            }
             
             NotificationBanner(bannerText: bannerText, bannerColor: bannerColor)
                 .offset(y: showBanner ?
