@@ -214,7 +214,7 @@ struct SoldPopupView: View {
 
 struct SoldPopupView_Previews: PreviewProvider {
     static var previews: some View {
-        SoldPopupView(showPopupView: .constant(true), listing: Listing(eventId: "testtesttest", eventName: "Test Event", eventDate: "11-26-2023", listingNumber: 1, price: 15, totalQuantity: 4, availableQuantity: 1, popularity: 14, createTime: Date(), creator: "123123asdf"), notifyUser: {msg, _ in print(msg)})
+        SoldPopupView(showPopupView: .constant(true), listing: Listing(id: "123123asdf", eventId: "testtesttest", eventName: "Test Event", eventDate: "11-26-2023", listingNumber: 1, price: 15, totalQuantity: 4, availableQuantity: 1, popularity: 14, createTime: Date(), creator: "Hi"), notifyUser: {msg, _ in print(msg)})
         
 //        SoldPopupView(showPopupView: .constant(true), listing: nil, notifyUser: {msg, _ in print(msg)})
     }

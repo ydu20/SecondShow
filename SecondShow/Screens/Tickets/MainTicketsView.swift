@@ -26,37 +26,37 @@ struct MainTicketsView: View {
     }
     
     var body: some View {
-            VStack {
-                NavBar(
-                    title: "Second Show",
-                    subtitle: nil,
-                    buttonLabel: {
-                        Image(systemName: "plus.circle")
-                            .font(.system(size: 20))
-                            .foregroundColor(Color(.label))
-                    },
-                    buttonAction: {
-                        showNewListingView.toggle()
-                    }
-                )
-                if self.vm.eventDates.count == 0 {
-                    Text("No events currently. Post a listing to create an event!")
-                        .padding(.top, 200)
-                    Spacer()
-                } else {
-                    showsList
+        VStack {
+            NavBar(
+                title: "Second Show",
+                subtitle: nil,
+                buttonLabel: {
+                    Image(systemName: "plus.circle")
+                        .font(.system(size: 20))
+                        .foregroundColor(Color(.label))
+                },
+                buttonAction: {
+                    showNewListingView.toggle()
                 }
-                
-                NavigationLink(destination: EventView(vm: eventVm, chatVm: chatVm), isActive: $showEventView) {
-                    EmptyView()
-                }
-                .hidden()
+            )
+            if self.vm.eventDates.count == 0 {
+                Text("No events currently. Post a listing to create an event!")
+                    .padding(.top, 200)
+                Spacer()
+            } else {
+                showsList
             }
-            .padding()
-            .sheet(isPresented: $showNewListingView) {
-                NewListingView(notifyUser: notifyUser)
-                    .environmentObject(vm)
+            
+            NavigationLink(destination: EventView(vm: eventVm, chatVm: chatVm), isActive: $showEventView) {
+                EmptyView()
             }
+            .hidden()
+        }
+        .padding()
+        .sheet(isPresented: $showNewListingView) {
+            NewListingView(notifyUser: notifyUser)
+                .environmentObject(vm)
+        }
     }
     
     private var showsList: some View {

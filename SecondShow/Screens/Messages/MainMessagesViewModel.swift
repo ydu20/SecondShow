@@ -12,7 +12,12 @@ class MainMessagesViewModel: ObservableObject {
     
     @Published var recentMessages = [RecentMessage]()
     
-    private var recentMessagesListener: ListenerRegistration?
+    var recentMessagesListener: ListenerRegistration?
+    
+    init() {
+        fetchRecentMessages()
+    }
+    
     
     func fetchRecentMessages() {
         guard let uid = FirebaseManager.shared.auth.currentUser?.uid else {return}

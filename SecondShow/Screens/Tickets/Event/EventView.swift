@@ -45,6 +45,9 @@ struct EventView: View {
             }
         }
         .padding()
+        .onDisappear {
+            vm.listingListener?.remove()
+        }
     }
     
     private var listingsView: some View {

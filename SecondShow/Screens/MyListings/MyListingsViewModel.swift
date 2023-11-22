@@ -16,10 +16,12 @@ class MyListingsViewModel: ObservableObject {
     private var myListingListener: ListenerRegistration?
     
     init() {
+        print("Initilizing MyListingViewModel...")
+
         fetchMyListings()
     }
     
-    func fetchMyListings() {
+    private func fetchMyListings() {
         guard let user = FirebaseManager.shared.currentUser else {return}
         
         myListingListener?.remove()

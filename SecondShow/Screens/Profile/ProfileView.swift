@@ -143,6 +143,9 @@ struct ProfileView: View {
         .onAppear {
             vm.fetchMyAlerts()
         }
+        .onDisappear {
+            vm.eventListener?.remove()
+        }
     }
 }
 

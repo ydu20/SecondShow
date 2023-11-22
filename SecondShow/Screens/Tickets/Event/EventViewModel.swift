@@ -17,10 +17,13 @@ class EventViewModel: ObservableObject {
     @Published var eventAlerts = false
 
     private var event: Event?
-    private var listingListener: ListenerRegistration?
+    var listingListener: ListenerRegistration?
     private var notifyUser: ((String, Color) -> ())?
 
     init(event: Event?, notifyUser: @escaping (String, Color) -> ()) {
+        print("Initilizing eventViewModel...")
+
+        
         self.notifyUser = notifyUser
         
         setEvent(event: event)

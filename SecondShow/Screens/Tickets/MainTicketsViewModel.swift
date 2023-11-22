@@ -15,6 +15,7 @@ class MainTicketsViewModel: ObservableObject {
     private var eventListener: ListenerRegistration?
     
     init() {
+        print("Initilizing mainTicketsViewModel...")
         fetchEvents()
     }
     

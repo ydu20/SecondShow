@@ -13,8 +13,7 @@ class ProfileViewModel: ObservableObject {
     
     @Published var myAlerts = [Event]()
     
-    private var eventListener: ListenerRegistration?
-    
+    var eventListener: ListenerRegistration?
     
     init() {
         fetchMyAlerts()

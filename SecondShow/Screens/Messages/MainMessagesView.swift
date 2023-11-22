@@ -29,6 +29,9 @@ struct MainMessagesView: View {
         .onAppear {
             vm.fetchRecentMessages()
         }
+        .onDisappear {
+            vm.recentMessagesListener?.remove()
+        }
     }
     
     private var messageList: some View {

@@ -45,10 +45,12 @@ struct MyListingsView: View {
                         .transition(.asymmetric(insertion: .scale(scale: 1.05), removal: .opacity))
                 }
             }
-        }.padding()
-        
+        }
+        .padding()
+//        .onDisappear {
+//            vm.myListingListener?.remove()
+//        }
     }
-
     
     private var myAvailableListingsView: some View {
         ForEach(self.vm.myAvailableListings) { listing in
