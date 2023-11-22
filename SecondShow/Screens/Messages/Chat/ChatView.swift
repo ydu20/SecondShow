@@ -10,17 +10,36 @@ import SwiftUI
 struct ChatView: View {
     
     @StateObject var vm: ChatViewModel
-    
-    @State private var tempInput = ""
+    @Environment(\.presentationMode) var presentationMode
+    static let emptyScrollToString = "BottomAnchor"
     
     var body: some View {
         ZStack {
             messageView
         }
-        .navigationTitle("Hello")
+        .navigationTitle(vm.titleText)
         .navigationBarTitleDisplayMode(.inline)
+        .navigationBarBackButtonHidden(true)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button(action: {
+                    self.presentationMode.wrappedValue.dismiss()
+                }) {
+                    HStack {
+                        Image(systemName: "chevron.left")
+                            .font(.system(size: 16, weight: .semibold))
+                            .padding(.trailing, -2)
+                        Text("Back")
+                    }
+                }
+            }
+        }
+        .onAppear {
+            vm.fetchMessages()
+        }
         .onDisappear {
             // TODO
+            vm.messagesListener?.remove()
         }
     }
     
@@ -28,12 +47,12 @@ struct ChatView: View {
         HStack {
             ZStack {
                 DescriptionPlaceholder()
-                TextEditor(text: $tempInput)
-                    .opacity(tempInput.isEmpty ? 0.5 : 1)
+                TextEditor(text: $vm.inputText)
+                    .opacity(self.vm.inputText.isEmpty ? 0.5 : 1)
             }
             .frame(height: 40)
             Button {
-                // TODO
+                vm.handleSend()
             } label: {
                 Text("Send")
                     .foregroundColor(.white)
@@ -61,29 +80,52 @@ struct ChatView: View {
     }
     
     private var messageView: some View {
-        VStack {
-            ScrollView {
+        ScrollView {
+            ScrollViewReader { scrollViewProxy in
                 VStack {
-                    ForEach(0..<20, id: \.self) { num in
-                        HStack {
-                            Spacer()
+                    ForEach(self.vm.chatMessages) { chatMessage in
+                        
+                        if (chatMessage.fromId == FirebaseManager.shared.auth.currentUser?.uid) {
                             HStack {
-                                Text("Message # \(num)").foregroundColor(.white)
+                                Spacer()
+                                HStack {
+                                    Text(chatMessage.message).foregroundColor(.white)
+                                }
+                                .padding(12)
+                                .background(Color.blue)
+                                .cornerRadius(8)
                             }
-                            .padding(12)
-                            .background(Color.blue)
-                            .cornerRadius(8)
+                            .padding(.horizontal)
+                            .padding(.vertical, 4)
+                        } else {
+                            HStack {
+                                HStack {
+                                    Text(chatMessage.message).foregroundColor(.black)
+                                }
+                                .padding(12)
+                                .background(Color.white)
+                                .cornerRadius(8)
+                                Spacer()
+                            }
+                            .padding(.horizontal)
+                            .padding(.vertical, 4)
                         }
-                        .padding(.horizontal)
-                        .padding(.vertical, 4)
+                    }
+                    
+                    HStack{Spacer()}
+                        .id(Self.emptyScrollToString)
+                }
+                .onReceive(vm.$autoScrollCount) { _ in
+                    withAnimation(.easeOut(duration: 0.5)) {
+                        scrollViewProxy.scrollTo(Self.emptyScrollToString, anchor: .bottom)
                     }
                 }
             }
-            .background(Color(.init(white: 0.95, alpha: 1)))
-            .safeAreaInset(edge: .bottom) {
-                inputDockView
-                    .background(Color(.systemBackground).ignoresSafeArea())
-            }
+        }
+        .background(Color(.init(white: 0.95, alpha: 1)))
+        .safeAreaInset(edge: .bottom) {
+            inputDockView
+                .background(Color(.systemBackground).ignoresSafeArea())
         }
     }
 }
@@ -91,6 +133,6 @@ struct ChatView: View {
 struct ChatView_Previews: PreviewProvider {
     static var previews: some View {
 //        ChatView()
-        MainMessagesView(notifyUser: {_, _ in}, showChatView: .constant(false))
+        MainMessagesView(notifyUser: {_, _ in}, chatVm: ChatViewModel())
     }
 }

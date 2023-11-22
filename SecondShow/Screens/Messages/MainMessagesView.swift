@@ -10,11 +10,11 @@ import SwiftUI
 struct MainMessagesView: View {
     
     let notifyUser: (String, Color) -> ()
-    @Binding var showChatView: Bool
     
-//    @State private var showChatView = false
+    @StateObject private var vm = MainMessagesViewModel()
+    var chatVm: ChatViewModel
     
-    var chatVm = ChatViewModel()
+    @State private var showChatView = false
     
     var body: some View {
         VStack {
@@ -26,37 +26,37 @@ struct MainMessagesView: View {
             .hidden()
         }
         .padding()
-//            .navigationDestination(isPresented: $showChatView) {
-//                ChatView(vm: chatVm)
-//            }
-        
-
+        .onAppear {
+            vm.fetchRecentMessages()
+        }
     }
     
     private var messageList: some View {
         ScrollView {
-            ForEach(0..<15, id: \.self) { num in
+            ForEach(vm.recentMessages) { recentMessage in
                 Button {
+                    chatVm.updateWithRecentMessage(rm: recentMessage)
                     showChatView.toggle()
                 } label: {
                     HStack(spacing: 16) {
                         VStack(alignment: .leading, spacing: 8) {
-                            Text("Concert Show #35")
+                            Text("\(recentMessage.eventName) #\(recentMessage.listingNumber)")
                                 .font(.system(size: 16, weight: .bold))
                                 .foregroundColor(Color(.label))
-                            Text("Hey, is this still available?")
+                            Text(recentMessage.message)
                                 .font(.system(size: 13))
                                 .foregroundColor(Color(.darkGray))
                                 .multilineTextAlignment(.leading)
                         }
                         Spacer()
-                        Text("5m")
+                        Text(recentMessage.timeAgo)
                             .font(.system(size: 14, weight: .semibold))
                     }
                 }
                 Divider()
                     .padding(.vertical, 8)
             }
+            
         }
     }
 }

@@ -6,36 +6,27 @@
 //
 
 import Foundation
+import Firebase
 
 class ChatViewModel: ObservableObject {
     
     @Published var inputText = ""
     @Published var chatMessages = [ChatMessage]()
+    @Published var autoScrollCount = 0
     
-    
-//    private var counterParty: User?
-//    private var event: Event?
-//    private var listing: Listing?
     private var listingId, eventName, toId: String?
     private var listingNumber: Int?
+    var messagesListener: ListenerRegistration?
     
-//    // This initializer should only be called from the Tickets page
-//    init(listing: Listing?) {
-//        guard let listing = listing else {return}
-//        guard let listingId = listing.id else {return}
-//
-//        self.listingId = listingId
-//        self.eventName = listing.eventName
-//        self.listingNumber = listing.listingNumber
-//        self.counterPartyUid = listing.creator
-//
-//        fetchMessages()
-//    }
-//
-//    // This initializer should only be called from the Messages page
-//    init(eventId: String, listingNumber: String, counterPartyUid: String) {
-//
-//    }
+    var titleText: String {
+        guard let eventName = eventName else {
+            return ""
+        }
+        guard let listingNumber = listingNumber else {
+            return ""
+        }
+        return "\(eventName) #\(listingNumber)"
+    }
     
     // This should only be called from the Tickets page
     func updateWithListing(listing: Listing) {
@@ -46,7 +37,8 @@ class ChatViewModel: ObservableObject {
         self.listingNumber = listing.listingNumber
         self.toId = listing.creator
         
-        fetchMessages()
+        self.inputText = ""
+//        fetchMessages()
     }
     
     // This should only be called from the Messages page
@@ -56,11 +48,46 @@ class ChatViewModel: ObservableObject {
         self.listingNumber = rm.listingNumber
         self.toId = rm.counterPartyUid
         
-        fetchMessages()
+        self.inputText = ""
+//        fetchMessages()
     }
     
     func fetchMessages() {
+        guard let fromId = FirebaseManager.shared.auth.currentUser?.uid else {return}
+        guard let toId = self.toId else {return}
+        guard let listingId = self.listingId else {return}
         
+        messagesListener?.remove()
+        chatMessages.removeAll()
+                
+        messagesListener = FirebaseManager.shared.firestore
+            .collection(MessageConstants.messages)
+            .document(fromId)
+            .collection(ListingConstants.listings)
+            .document(listingId)
+            .collection(toId)
+            .order(by: MessageConstants.timestamp)
+            .addSnapshotListener { querySnapshot, err in
+                if let err = err {
+                    print("Error listening for messages: \(err.localizedDescription)")
+                    print(err)
+                    return
+                }
+                
+                querySnapshot?.documentChanges.forEach({change in
+                    if change.type == .added {
+                        guard let message = try? change.document.data(as: ChatMessage.self) else {
+                            print("Failure codifying ChatMessage object")
+                            return
+                        }
+                        self.chatMessages.append(message)
+                    }
+                })
+                
+                DispatchQueue.main.async {
+                    self.autoScrollCount += 1
+                }
+            }
     }
     
     func handleSend() {
@@ -69,6 +96,7 @@ class ChatViewModel: ObservableObject {
         guard let listingId = self.listingId else {return}
         let timestamp = Date()
         
+//        print("Handling send...")
         
         let msgData = [
             MessageConstants.listingId: listingId,
@@ -91,9 +119,12 @@ class ChatViewModel: ObservableObject {
                 print("Error saving outgoing message: \(err.localizedDescription)")
                 return
             }
-            // TODO
+            
+            self.persistRecentMessage(timestamp: timestamp)
+            print("Sender message saved")
+            self.inputText = ""
+            self.autoScrollCount += 1
         }
-        
         
         let incomingDoc = FirebaseManager.shared.firestore
             .collection(MessageConstants.messages)
@@ -108,8 +139,7 @@ class ChatViewModel: ObservableObject {
                 print("Error saving incoming message: \(err.localizedDescription)")
                 return
             }
-            // TODO
-            
+            print("Recipient message saved")
         }
     }
     
@@ -119,6 +149,8 @@ class ChatViewModel: ObservableObject {
         guard let listingId = self.listingId else {return}
         guard let eventName = self.eventName else {return}
         guard let listingNumber = self.listingNumber else {return}
+        
+//        print("Persisting recent message...")
         
         let senderRecentMessages = FirebaseManager.shared.firestore
             .collection(MessageConstants.recentMessages)
@@ -131,7 +163,8 @@ class ChatViewModel: ObservableObject {
             ListingConstants.eventName: eventName,
             MessageConstants.counterPartyUid: toId,
             ListingConstants.listingNumber: listingNumber,
-            MessageConstants.timestamp: timestamp
+            MessageConstants.timestamp: timestamp,
+            MessageConstants.message: inputText
         ] as [String: Any]
         
         senderRecentMessages.setData(senderRmData) { err in
@@ -152,7 +185,8 @@ class ChatViewModel: ObservableObject {
             ListingConstants.eventName: eventName,
             MessageConstants.counterPartyUid: fromId,
             ListingConstants.listingNumber: listingNumber,
-            MessageConstants.timestamp: timestamp
+            MessageConstants.timestamp: timestamp,
+            MessageConstants.message: inputText
         ] as [String: Any]
         
         recipientRecentMessages.setData(recipientRmData) { err in
@@ -161,6 +195,5 @@ class ChatViewModel: ObservableObject {
                 return
             }
         }
-        
     }
 }

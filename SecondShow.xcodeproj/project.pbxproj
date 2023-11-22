@@ -50,6 +50,7 @@
 		87DBCAC72B0939B00062720A /* ListingIdentifierConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87DBCAC62B0939B00062720A /* ListingIdentifierConstants.swift */; };
 		87DBCACB2B0942140062720A /* MyListingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87DBCACA2B0942140062720A /* MyListingsViewModel.swift */; };
 		87DBCACF2B0ACB7E0062720A /* SoldPopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87DBCACE2B0ACB7E0062720A /* SoldPopupView.swift */; };
+		87F5DC9D2B0E5293008A5C0A /* MainMessagesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87F5DC9C2B0E5293008A5C0A /* MainMessagesViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -113,6 +114,7 @@
 		87DBCAC62B0939B00062720A /* ListingIdentifierConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListingIdentifierConstants.swift; sourceTree = "<group>"; };
 		87DBCACA2B0942140062720A /* MyListingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyListingsViewModel.swift; sourceTree = "<group>"; };
 		87DBCACE2B0ACB7E0062720A /* SoldPopupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoldPopupView.swift; sourceTree = "<group>"; };
+		87F5DC9C2B0E5293008A5C0A /* MainMessagesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMessagesViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -309,6 +311,7 @@
 			isa = PBXGroup;
 			children = (
 				87B2D39C2B026CCD003FB28B /* MainMessagesView.swift */,
+				87F5DC9C2B0E5293008A5C0A /* MainMessagesViewModel.swift */,
 				87B2D39E2B026D1C003FB28B /* Chat */,
 			);
 			path = Messages;
@@ -549,6 +552,7 @@
 				87B2D3982B026C81003FB28B /* EventView.swift in Sources */,
 				87454DF02B06777C0006600C /* EventConstants.swift in Sources */,
 				8788CB762B04599B00419385 /* RootView.swift in Sources */,
+				87F5DC9D2B0E5293008A5C0A /* MainMessagesViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

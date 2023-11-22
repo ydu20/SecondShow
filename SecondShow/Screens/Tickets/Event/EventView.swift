@@ -10,6 +10,9 @@ import SwiftUI
 struct EventView: View {
     
     @StateObject var vm: EventViewModel
+    var chatVm: ChatViewModel
+    
+    @State private var showChatView = false
     
     var body: some View {
         VStack {
@@ -18,13 +21,17 @@ struct EventView: View {
             } else {
                 listingsView
             }
+            
+            NavigationLink(destination: ChatView(vm: chatVm), isActive: $showChatView) {
+                EmptyView()
+            }
+            .hidden()
         }
         .navigationTitle(vm.eventName)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button {
-                    // TODO
                     if self.vm.eventAlerts {
                         self.vm.deregisterEventAlerts()
                     } else {
@@ -44,7 +51,12 @@ struct EventView: View {
         ScrollView {
             ForEach(self.vm.listings) { listing in
                 Button {
-                    // TODO
+                    guard let uid = FirebaseManager.shared.auth.currentUser?.uid else {return}
+                    
+                    if (listing.creator != uid) {
+                        chatVm.updateWithListing(listing: listing)
+                        showChatView.toggle()
+                    }
                 } label: {
                     HStack(spacing: 10) {
                         Text("# \(String(listing.listingNumber))")

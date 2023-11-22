@@ -192,12 +192,11 @@ struct NewListingView: View {
             ListingConstants.popularity: 0,
         ] as [String: Any]
         
-        eventDoc.collection("listings").document(String(listingNumber)).setData(listingData) { err in
+        eventDoc.collection("listings").document().setData(listingData) { err in
             if let err = err {
                 notifyUser("Error adding new listing: \(err.localizedDescription)", Color(.systemRed))
             } else {
                 // Adding listing to user also
-
                 
                 FirebaseManager.shared.firestore.collection("users").document(user.uid).collection("listings").addDocument(data: listingData) { error in
                     if let error = error {
@@ -216,6 +215,6 @@ struct NewListingView: View {
 struct NewListingView_Previews: PreviewProvider {
     static var previews: some View {
 //        NewListingView()
-        MainTicketsView(notifyUser: {_, _ in}, showChatView: .constant(false))
+        MainTicketsView(notifyUser: {_, _ in}, chatVm: ChatViewModel())
     }
 }
