@@ -10,29 +10,28 @@ import SwiftUI
 struct MainMessagesView: View {
     
     let notifyUser: (String, Color) -> ()
+    @Binding var showChatView: Bool
     
-    @State private var showAlert = false
+//    @State private var showChatView = false
+    
+    var chatVm = ChatViewModel()
     
     var body: some View {
-        VStack {
-            NavBar<EmptyView>(title: "Messages", subtitle: nil)
-            messageList
-            
-        }.padding()
-            .alert(isPresented: $showAlert) {
-                Alert(
-                    title: Text("Alert Message"),
-                    message: Text("This is alert message"),
-                    dismissButton: .default(Text("Dismiss"))
-                )
+            VStack {
+                NavBar<EmptyView>(title: "Messages", subtitle: nil)
+                messageList
+            }
+            .padding()
+            .navigationDestination(isPresented: $showChatView) {
+                ChatView(vm: chatVm)
             }
     }
     
     private var messageList: some View {
         ScrollView {
-            ForEach(0..<10, id: \.self) { num in
+            ForEach(0..<15, id: \.self) { num in
                 Button {
-                    showAlert.toggle()
+                    showChatView.toggle()
                 } label: {
                     HStack(spacing: 16) {
                         VStack(alignment: .leading, spacing: 8) {

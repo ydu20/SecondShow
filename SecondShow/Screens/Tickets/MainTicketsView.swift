@@ -11,6 +11,7 @@ import Firebase
 struct MainTicketsView: View {
 
     let notifyUser: (String, Color) -> ()
+    @Binding var showChatView: Bool
     
     @State private var showNewListingView = false
     @State private var showEventView = false
@@ -18,13 +19,13 @@ struct MainTicketsView: View {
     @StateObject private var vm = MainTicketsViewModel()
     var eventVm: EventViewModel
     
-    init(notifyUser: @escaping (String, Color) -> Void) {
+    init(notifyUser: @escaping (String, Color) -> Void, showChatView: Binding<Bool>) {
+        self._showChatView = showChatView
         self.notifyUser = notifyUser
         self.eventVm = EventViewModel(event: nil, notifyUser: notifyUser)
     }
     
     var body: some View {
-        NavigationStack {
             VStack {
                 NavBar(
                     title: "Second Show",
@@ -38,17 +39,22 @@ struct MainTicketsView: View {
                         showNewListingView.toggle()
                     }
                 )
-                showsList
+                if self.vm.eventDates.count == 0 {
+                    Text("No events currently. Post a listing to create an event!")
+                        .padding(.top, 200)
+                    Spacer()
+                } else {
+                    showsList
+                }
             }
             .padding()
             .sheet(isPresented: $showNewListingView) {
                 NewListingView(notifyUser: notifyUser)
+                    .environmentObject(vm)
             }
             .navigationDestination(isPresented: $showEventView, destination: {
                 EventView(vm: eventVm)
             })
-            .environmentObject(vm)
-        }
     }
     
     private var showsList: some View {

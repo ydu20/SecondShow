@@ -14,7 +14,7 @@ struct EventView: View {
     var body: some View {
         VStack {
             if self.vm.listings.count == 0 {
-                Text("No events currently. Post a listing to create an event!")
+                Text("No listings for this event currently.")
             } else {
                 listingsView
             }

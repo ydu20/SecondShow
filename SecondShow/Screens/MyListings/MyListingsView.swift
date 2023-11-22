@@ -86,7 +86,7 @@ struct MyListingsView: View {
                     Spacer()
                     Button {
                         selectedListing = listing
-                        withAnimation(.easeInOut(duration: 0.3)) {
+                        withAnimation(.linear(duration: 0.2)) {
                             showSoldPopupView.toggle()
                         }
                     } label: {
@@ -100,7 +100,7 @@ struct MyListingsView: View {
                     }
                     Button {
                         selectedListing = listing
-                        withAnimation(.easeInOut(duration: 0.3)) {
+                        withAnimation(.linear(duration: 0.2)) {
                             showDeletePopupView.toggle()
                         }
                     } label: {

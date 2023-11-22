@@ -119,6 +119,6 @@ struct DeletePopupView: View {
 
 struct DeletePopupView_Previews: PreviewProvider {
     static var previews: some View {
-        DeletePopupView(showPopupView: .constant(true), listing: Listing(eventId: "testtesttest", eventName: "Test Event", eventDate: "11-26-2023", listingNumber: 1, price: 15, totalQuantity: 4, availableQuantity: 1, popularity: 14, createTime: Date()), notifyUser: {msg, _ in print(msg)})
+        DeletePopupView(showPopupView: .constant(true), listing: Listing(eventId: "testtesttest", eventName: "Test Event", eventDate: "11-26-2023", listingNumber: 1, price: 15, totalQuantity: 4, availableQuantity: 1, popularity: 14, createTime: Date(), creator:"Hello"), notifyUser: {msg, _ in print(msg)})
     }
 }

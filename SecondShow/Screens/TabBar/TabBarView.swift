@@ -16,24 +16,29 @@ struct TabBarView: View {
     @State private var bannerColor = Color.orange
     @State private var showBanner = false
     
+    @State private var showChatView = false
+    
+    
     var body: some View {
         ZStack {
-            TabView(selection: $selectedTab) {
-                MainTicketsView(notifyUser: self.notifyUser)
-                    .tabItem {Image(systemName: "ticket")}
-                    .tag(0)
-                
-                MainMessagesView(notifyUser: self.notifyUser)
-                    .tabItem {Image(systemName: "message")}
-                    .tag(1)
-                
-                MyListingsView(notifyUser: self.notifyUser)
-                    .tabItem {Image(systemName: "list.bullet")}
-                    .tag(2)
-                
-                ProfileView(notifyUser: self.notifyUser, showLoginView: $showLoginView)
-                    .tabItem {Image(systemName: "person")}
-                    .tag(3)
+            NavigationStack {
+                TabView(selection: $selectedTab) {
+                    MainTicketsView(notifyUser: notifyUser, showChatView: $showChatView)
+                        .tabItem {Image(systemName: "ticket")}
+                        .tag(0)
+
+                    MainMessagesView(notifyUser: notifyUser, showChatView: $showChatView)
+                        .tabItem {Image(systemName: "message")}
+                        .tag(1)
+                    
+                    MyListingsView(notifyUser: notifyUser)
+                        .tabItem {Image(systemName: "list.bullet")}
+                        .tag(2)
+                    
+                    ProfileView(notifyUser: notifyUser, showLoginView: $showLoginView)
+                        .tabItem {Image(systemName: "person")}
+                        .tag(3)
+                }
             }
             
             NotificationBanner(bannerText: bannerText, bannerColor: bannerColor)

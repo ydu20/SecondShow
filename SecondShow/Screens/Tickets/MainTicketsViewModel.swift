@@ -25,7 +25,6 @@ class MainTicketsViewModel: ObservableObject {
         eventListener = FirebaseManager.shared.firestore
             .collection("events")
             .whereField(EventConstants.listingCount, isNotEqualTo: 0)
-//            .order(by: EventConstants.date)
             .addSnapshotListener { querySnapshot, error in
                 if let error = error {
                     print(error.localizedDescription)

@@ -49,7 +49,7 @@ struct ProfileView: View {
             }
             .pickerStyle(SegmentedPickerStyle())
             .padding(.bottom, 10)
-                        
+
             if isAlerts {
                 alertsList
             } else {
@@ -136,7 +136,7 @@ struct ProfileView: View {
                 }
             }
             else {
-                Text("Go to an event's page to add an alert")
+                Text("Go to an event page to add an alert")
                     .padding(.top, 40)
             }
         }

@@ -11,7 +11,7 @@ import FirebaseFirestore
 import SwiftUI
 
 class EventViewModel: ObservableObject {
-    
+
     @Published var eventName = ""
     @Published var listings = [Listing]()
     @Published var eventAlerts = false

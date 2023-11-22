@@ -17,4 +17,6 @@ struct ListingConstants {
     static let totalQuantity = "totalQuantity"
     static let availableQuantity = "availableQuantity"
     static let popularity = "popularity"
+    static let creator = "creator"
+    static let listings = "listings"
 }

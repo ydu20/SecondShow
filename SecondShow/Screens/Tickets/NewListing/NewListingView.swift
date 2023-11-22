@@ -172,16 +172,22 @@ struct NewListingView: View {
             notifyUser("Error converting price to integer", Color(.systemRed))
             return
         }
+        guard let user = FirebaseManager.shared.currentUser else {
+            notifyUser("Error retrievinig local user information", Color(.systemRed))
+            return
+        }
+        
         let listingData = [
             ListingConstants.eventId: eventDoc.documentID,
             ListingConstants.eventName: eventData[EventConstants.name]!,
             ListingConstants.eventDate: eventData[EventConstants.date]!,
             ListingConstants.listingNumber: listingNumber,
             ListingConstants.createTime: Timestamp(),
+            ListingConstants.creator: user.uid,
             ListingConstants.price: priceInt,
             ListingConstants.totalQuantity: quantity,
             ListingConstants.availableQuantity: quantity,
-            ListingConstants.popularity: 0
+            ListingConstants.popularity: 0,
         ] as [String: Any]
         
         eventDoc.collection("listings").document(String(listingNumber)).setData(listingData) { err in
@@ -189,10 +195,7 @@ struct NewListingView: View {
                 notifyUser("Error adding new listing: \(err.localizedDescription)", Color(.systemRed))
             } else {
                 // Adding listing to user also
-                guard let user = FirebaseManager.shared.currentUser else {
-                    notifyUser("Error retrievinig local user information", Color(.systemRed))
-                    return
-                }
+
                 
                 FirebaseManager.shared.firestore.collection("users").document(user.uid).collection("listings").addDocument(data: listingData) { error in
                     if let error = error {
