@@ -15,8 +15,10 @@ struct ChatView: View {
     
     var body: some View {
         ZStack (alignment: .top) {
-
+            
             messageView
+            
+            descriptionBarView
             
         }
         .navigationTitle(vm.titleText)
@@ -45,76 +47,69 @@ struct ChatView: View {
         }
     }
     
-    private var inputDockView: some View {
-        HStack {
-            ZStack {
-                DescriptionPlaceholder()
-                TextEditor(text: $vm.inputText)
-                    .opacity(self.vm.inputText.isEmpty ? 0.5 : 1)
-                    .disabled(vm.sold || vm.deleted)
+    private var descriptionBarView: some View {
+        HStack (spacing: 10) {
+            if vm.eventName != nil, vm.listingNumber != nil {
+                HStack {
+                    Text("\(vm.eventName!) #\(String(vm.listingNumber!))")
+                        .font(.system(size: 12, weight: .semibold))
+                        .foregroundColor(Color(.white))
+                }
+                .padding(.horizontal, 8)
+                .padding(.vertical, 2)
+                .background(Color(.systemIndigo))
+                .cornerRadius(10)
             }
-            .frame(height: 40)
-            Button {
-                vm.handleSend()
-            } label: {
-                Text("Send")
-                    .foregroundColor(.white)
+
+            if vm.price != nil {
+                HStack {
+                    Text("$\(String(vm.price!))")
+                        .font(.system(size: 12, weight: .semibold))
+                        .foregroundColor(Color(.white))
+                }
+                .padding(.horizontal, 8)
+                .padding(.vertical, 2)
+                .background(Color(.systemOrange))
+                .cornerRadius(10)
             }
-            .padding(.horizontal)
-            .padding(.vertical, 8)
-            .background(!(vm.sold || vm.deleted) ? Color.blue : Color.black.opacity(0.3))
-            .cornerRadius(4)
-            .disabled(vm.sold || vm.deleted)
         }
+        .frame(height: 36)
         .padding(.horizontal)
-        .padding(.vertical, 16)
-    }
-    
-    private struct DescriptionPlaceholder: View {
-        var body: some View {
-            HStack {
-                Text("Message")
-                    .foregroundColor(Color(.gray))
-                    .font(.system(size: 17))
-                    .padding(.leading, 5)
-                    .padding(.top, -4)
-                Spacer()
-            }
-        }
+        .padding(.bottom, 6)
     }
     
     private var messageView: some View {
-        VStack (spacing: 0) {
-            HStack (alignment: .top, spacing: 10) {
-                if vm.eventName != nil, vm.listingNumber != nil {
-                    HStack {
-                        Text("\(vm.eventName!) #\(String(vm.listingNumber!))")
-                            .font(.system(size: 12, weight: .semibold))
-                            .foregroundColor(Color(.white))
-                    }
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 2)
-                    .background(Color(.systemIndigo))
-                    .cornerRadius(10)
-                }
-
-                if vm.price != nil {
-                    HStack {
-                        Text("$\(String(vm.price!))")
-                            .font(.system(size: 12, weight: .semibold))
-                            .foregroundColor(Color(.white))
-                    }
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 2)
-                    .background(Color(.systemOrange))
-                    .cornerRadius(10)
-                }
-                
-                Spacer()
-            }
-            .frame(height: 20)
-            .padding(.horizontal)
-            .padding(.bottom, 6)
+//        VStack (spacing: 0) {
+//            HStack (alignment: .top, spacing: 10) {
+//                if vm.eventName != nil, vm.listingNumber != nil {
+//                    HStack {
+//                        Text("\(vm.eventName!) #\(String(vm.listingNumber!))")
+//                            .font(.system(size: 12, weight: .semibold))
+//                            .foregroundColor(Color(.white))
+//                    }
+//                    .padding(.horizontal, 8)
+//                    .padding(.vertical, 2)
+//                    .background(Color(.systemIndigo))
+//                    .cornerRadius(10)
+//                }
+//
+//                if vm.price != nil {
+//                    HStack {
+//                        Text("$\(String(vm.price!))")
+//                            .font(.system(size: 12, weight: .semibold))
+//                            .foregroundColor(Color(.white))
+//                    }
+//                    .padding(.horizontal, 8)
+//                    .padding(.vertical, 2)
+//                    .background(Color(.systemOrange))
+//                    .cornerRadius(10)
+//                }
+//
+//                Spacer()
+//            }
+//            .frame(height: 20)
+//            .padding(.horizontal)
+//            .padding(.bottom, 6)
 
             ScrollView {
                 ScrollViewReader { scrollViewProxy in
@@ -160,7 +155,7 @@ struct ChatView: View {
                         HStack{Spacer()}
                             .id(Self.emptyScrollToString)
                     }
-                    .padding(.top, 12)
+                    .padding(.top, 34)
                     .onReceive(vm.$autoScrollCount) { _ in
                         withAnimation(.easeOut(duration: 0.5)) {
                             scrollViewProxy.scrollTo(Self.emptyScrollToString, anchor: .bottom)
@@ -169,10 +164,48 @@ struct ChatView: View {
                 }
             }
             .background(Color(.init(white: 0.95, alpha: 1)))
-        }
+//        }
         .safeAreaInset(edge: .bottom) {
             inputDockView
                 .background(Color(.systemBackground).ignoresSafeArea())
+        }
+    }
+    
+    private var inputDockView: some View {
+        HStack {
+            ZStack {
+                DescriptionPlaceholder()
+                TextEditor(text: $vm.inputText)
+                    .opacity(self.vm.inputText.isEmpty ? 0.5 : 1)
+                    .disabled(vm.sold || vm.deleted)
+            }
+            .frame(height: 40)
+            Button {
+                vm.handleSend()
+            } label: {
+                Text("Send")
+                    .foregroundColor(.white)
+            }
+            .padding(.horizontal)
+            .padding(.vertical, 8)
+            .background(!(vm.sold || vm.deleted) ? Color.blue : Color.black.opacity(0.3))
+            .cornerRadius(4)
+            .disabled(vm.sold || vm.deleted)
+        }
+        .padding(.horizontal)
+        .padding(.vertical, 16)
+    }
+    
+    private struct DescriptionPlaceholder: View {
+        var body: some View {
+            HStack {
+                Text("Message")
+                    .foregroundColor(Color(.gray))
+                    .font(.system(size: 17))
+                    .padding(.leading, 5)
+                    .padding(.top, -4)
+                Spacer()
+            }
         }
     }
 }

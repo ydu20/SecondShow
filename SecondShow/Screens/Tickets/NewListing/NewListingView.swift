@@ -20,7 +20,7 @@ struct NewListingView: View {
     @State private var quantity = 1
     @State private var price = ""
     
-    @State private var newListingWarning = "warning"
+    @State private var newListingWarning = ""
     
     @State private var showSuggestions: Bool = false
     

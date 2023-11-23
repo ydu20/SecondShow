@@ -12,23 +12,21 @@ struct MyListingsView: View {
     let notifyUser: (String, Color) -> ()
     
     @StateObject var vm = MyListingsViewModel()
-    
-//    init(notifyUser: @escaping (String, Color) -> ()) {
-//        self.notifyUser = notifyUser
-//        vm.setNotifyUser(notifyUser: notifyUser)
-//    }
-    
+        
     @State private var showSoldPopupView = false
     @State private var showDeletePopupView = false
-//    @State private var selectedListing: Listing? = nil
 
     var body: some View {
         VStack {
             NavBar<EmptyView>(title: "My Listings", subtitle: nil)
+                .padding(.horizontal)
+            
             ZStack {
                 ScrollView {
                     myAvailableListingsView
+                        .padding(.horizontal)
                     mySoldOutListingsView
+                        .padding(.horizontal)
                 }
                 .blur(radius: showSoldPopupView || showDeletePopupView ? 3 : 0)
                 .disabled(showSoldPopupView || showDeletePopupView)
@@ -50,8 +48,9 @@ struct MyListingsView: View {
                         .transition(.asymmetric(insertion: .scale(scale: 1.05), removal: .opacity))
                 }
             }
+            
         }
-        .padding()
+        .padding(.vertical)
 //        .onDisappear {
 //            vm.myListingListener?.remove()
 //        }

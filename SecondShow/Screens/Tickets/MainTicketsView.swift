@@ -40,6 +40,8 @@ struct MainTicketsView: View {
                     showNewListingView.toggle()
                 }
             )
+            .padding(.horizontal)
+
             if self.vm.eventDates.count == 0 {
                 Text("No events currently. Post a listing to create an event!")
                     .padding(.top, 200)
@@ -53,11 +55,11 @@ struct MainTicketsView: View {
             }
             .hidden()
         }
-        .padding()
         .sheet(isPresented: $showNewListingView) {
             NewListingView(notifyUser: notifyUser)
                 .environmentObject(vm)
         }
+        .padding(.vertical)
     }
     
     private var eventsList: some View {
@@ -97,6 +99,7 @@ struct MainTicketsView: View {
                         .padding(.vertical, 4)
                 }
             }
+            .padding(.horizontal)
         }
     }
     

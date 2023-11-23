@@ -88,6 +88,9 @@ class ChatViewModel: ObservableObject {
     }
     
     func handleSend() {
+        if inputText.count == 0 {
+            return
+        }
         guard let fromEmail = FirebaseManager.shared.currentUser?.email else {return}
         guard let toEmail = self.counterpartyEmail else {return}
         guard let listingId = self.listingId else {return}
