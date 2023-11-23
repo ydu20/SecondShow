@@ -23,7 +23,7 @@ class ProfileViewModel: ObservableObject {
         guard let user = FirebaseManager.shared.currentUser else {return}
         guard let eventId = event.id else {return}
         
-        let userRef = FirebaseManager.shared.firestore.collection("users").document(user.uid)
+        let userRef = FirebaseManager.shared.firestore.collection("users").document(user.email)
         userRef.updateData([
             FirebaseConstants.alerts: FieldValue.arrayRemove([eventId])
         ]) {err in

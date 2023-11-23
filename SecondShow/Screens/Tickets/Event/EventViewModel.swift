@@ -20,9 +20,10 @@ class EventViewModel: ObservableObject {
     var listingListener: ListenerRegistration?
     private var notifyUser: ((String, Color) -> ())?
 
+    var chatVm: ChatViewModel?
+    
     init(event: Event?, notifyUser: @escaping (String, Color) -> ()) {
         print("Initilizing eventViewModel...")
-
         
         self.notifyUser = notifyUser
         
@@ -30,18 +31,11 @@ class EventViewModel: ObservableObject {
         fetchListings()
     }
     
-//    private func setEventAlerts() {
-//        guard let userAlerts = FirebaseManager.shared.currentUser?.alerts else {return}
-//        guard let eventId = self.event?.id else {return}
-//
-//        eventAlerts = userAlerts.contains(eventId)
-//    }
-    
     func registerEventAlerts() {
         guard let user = FirebaseManager.shared.currentUser else {return}
         guard let eventId = self.event?.id else {return}
         
-        let userRef = FirebaseManager.shared.firestore.collection("users").document(user.uid)
+        let userRef = FirebaseManager.shared.firestore.collection("users").document(user.email)
         userRef.updateData([
             FirebaseConstants.alerts: FieldValue.arrayUnion([eventId])
         ]) {err in
@@ -61,7 +55,7 @@ class EventViewModel: ObservableObject {
         guard let user = FirebaseManager.shared.currentUser else {return}
         guard let eventId = self.event?.id else {return}
         
-        let userRef = FirebaseManager.shared.firestore.collection("users").document(user.uid)
+        let userRef = FirebaseManager.shared.firestore.collection("users").document(user.email)
         userRef.updateData([
             FirebaseConstants.alerts: FieldValue.arrayRemove([eventId])
         ]) {err in
@@ -104,10 +98,10 @@ class EventViewModel: ObservableObject {
                         if change.type == .added || (change.type == .modified && listing.availableQuantity != listing.totalQuantity) {
                             if let ind = self.listings.firstIndex(where: {$0.listingNumber <= listing.listingNumber}) {
                                 if (self.listings[ind].listingNumber == listing.listingNumber) {
-                                    // Modify event
+                                    // Modify listing
                                     self.listings[ind] = listing
                                 } else {
-                                    // Add event
+                                    // Add listing
                                     self.listings.insert(listing, at: ind)
                                 }
                             } else {
@@ -119,6 +113,15 @@ class EventViewModel: ObservableObject {
                             if let rmInd = self.listings.firstIndex(where: {$0.listingNumber == listing.listingNumber}) {
                                 self.listings.remove(at: rmInd)
                             }
+                            
+                            if listing.id == self.chatVm?.listingId, listing.creator == self.chatVm?.counterpartyEmail {
+                                if change.type == .removed {
+                                    self.chatVm?.deleted = true
+                                } else {
+                                    self.chatVm?.sold = true
+                                }
+                            }
+
                         }
                     } else {
                         print("Failure codifying listing object")

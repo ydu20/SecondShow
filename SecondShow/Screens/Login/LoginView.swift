@@ -116,20 +116,20 @@ struct LoginView: View {
                 return
             }
             
-            guard let resultUser = result?.user else {
-                loginStatusMessage = "Login error: Auth user not found"
-                return
-            }
-            
             
             // Temporarily disabled for development
+//            guard let resultUser = result?.user else {
+//                loginStatusMessage = "Login error: Auth user not found"
+//                return
+//            }
+
 //            if (!resultUser.isEmailVerified) {
 //                loginStatusMessage = "Please verify your email account"
 //                return
 //            }
             
             // Update currentUser in FirebaseManager
-            FirebaseManager.shared.firestore.collection("users").document(resultUser.uid).getDocument { document, err in
+            FirebaseManager.shared.firestore.collection("users").document(email).getDocument { document, err in
                 if let err = err {
                     print(err)
                     loginStatusMessage = err.localizedDescription
@@ -141,7 +141,7 @@ struct LoginView: View {
                     if let currentUser = try? document.data(as: User.self) {
                         // Great success
                         FirebaseManager.shared.currentUser = currentUser
-                        loginStatusMessage = "Successfully logged in as \(result?.user.email ?? "")"
+                        loginStatusMessage = "Successfully logged in as \(email)"
                         showLoginView.toggle()
                     } else {
                         loginStatusMessage = "Error converting user info to local object"

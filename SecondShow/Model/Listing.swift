@@ -19,7 +19,7 @@ struct Listing: Codable, Identifiable {
     
     var eventDateMMMdd: String {
         let formatter = DateFormatter()
-        formatter.dateFormat = "MM-dd-yyyy"
+        formatter.dateFormat = "yyyy-MM-dd"
         
         let dateObj = formatter.date(from: eventDate)
         if let dateObj = dateObj {

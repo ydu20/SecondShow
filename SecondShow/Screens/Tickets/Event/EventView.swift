@@ -46,7 +46,9 @@ struct EventView: View {
         }
         .padding()
         .onDisappear {
-            vm.listingListener?.remove()
+            if (!showChatView) {
+                vm.listingListener?.remove()
+            }
         }
     }
     
@@ -54,9 +56,9 @@ struct EventView: View {
         ScrollView {
             ForEach(self.vm.listings) { listing in
                 Button {
-                    guard let uid = FirebaseManager.shared.auth.currentUser?.uid else {return}
+                    guard let userEmail = FirebaseManager.shared.currentUser?.email else {return}
                     
-                    if (listing.creator != uid) {
+                    if (listing.creator != userEmail) {
                         chatVm.updateWithListing(listing: listing)
                         showChatView.toggle()
                     }

@@ -14,12 +14,14 @@ class MainMessagesViewModel: ObservableObject {
     
     var recentMessagesListener: ListenerRegistration?
     
+    var chatVm: ChatViewModel?
+    
     init() {
         fetchRecentMessages()
     }
     
     func fetchRecentMessages() {
-        guard let uid = FirebaseManager.shared.auth.currentUser?.uid else {return}
+        guard let userEmail = FirebaseManager.shared.currentUser?.email else {return}
         
         self.recentMessagesListener?.remove()
         self.recentMessages.removeAll()
@@ -28,10 +30,10 @@ class MainMessagesViewModel: ObservableObject {
         
         recentMessagesListener = FirebaseManager.shared.firestore
             .collection(MessageConstants.recentMessages)
-            .document(uid)
+            .document(userEmail)
             .collection(MessageConstants.messages)
             .order(by: MessageConstants.timestamp)
-            .addSnapshotListener { querySnapshot, err in
+            .addSnapshotListener { [self] querySnapshot, err in
                 if let err = err {
                     print("Error fetching recent messages: \(err.localizedDescription)")
                     return
@@ -48,6 +50,10 @@ class MainMessagesViewModel: ObservableObject {
                     }
                     
                     self.recentMessages.insert(recentMessage, at: 0)
+                    
+                    if recentMessage.listingId == self.chatVm?.listingId, recentMessage.counterpartyEmail == self.chatVm?.counterpartyEmail {
+                        self.chatVm?.updateWithRecentMessage(rm: recentMessage)
+                    }
                 })
             }
     }

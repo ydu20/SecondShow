@@ -8,8 +8,6 @@
 import Foundation
 
 struct FirebaseConstants {
-    static let fromId = "fromId"
-    static let toId = "toId"
     static let text = "text"
     static let createTime = "createTime"
     static let timestamp = "timestamp"

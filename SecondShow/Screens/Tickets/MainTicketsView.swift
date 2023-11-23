@@ -22,6 +22,7 @@ struct MainTicketsView: View {
     init(notifyUser: @escaping (String, Color) -> Void, chatVm: ChatViewModel) {
         self.notifyUser = notifyUser
         self.eventVm = EventViewModel(event: nil, notifyUser: notifyUser)
+        self.eventVm.chatVm = chatVm
         self.chatVm = chatVm
     }
     

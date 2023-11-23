@@ -114,7 +114,7 @@ struct RegisterView: View {
                 return
             }
             
-            print("Successfully created user: \(result?.user.uid ?? "")")
+            print("Successfully created user: \(registerEmail)")
             
             guard let currentUser = FirebaseManager.shared.auth.currentUser else {return}
             
@@ -122,7 +122,7 @@ struct RegisterView: View {
             let userData = [FirebaseConstants.uid: currentUser.uid, FirebaseConstants.email: registerEmail, FirebaseConstants.createTime: Timestamp()] as [String: Any]
             
             FirebaseManager.shared.firestore.collection("users")
-                .document(currentUser.uid).setData(userData) { err in
+                .document(registerEmail).setData(userData) { err in
                     if let err = err {
                         print(err)
                         self.signupStatusMessage = "\(err)"

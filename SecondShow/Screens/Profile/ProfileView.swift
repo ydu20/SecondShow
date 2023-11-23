@@ -21,7 +21,7 @@ struct ProfileView: View {
     var body: some View {
         VStack {
             NavBar(
-                title: "Me",
+                title: "\(FirebaseManager.shared.currentUser?.email.split(separator: "@").first ?? "")",
                 subtitle: "User since \(FirebaseManager.shared.currentUser?.createDateString ?? "")",
                 buttonLabel: {
                     Image(systemName: "gearshape")

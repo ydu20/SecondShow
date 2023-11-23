@@ -19,13 +19,14 @@ struct RootView: View {
             }
         }
         .onAppear {
-            guard let authCurrentUser = FirebaseManager.shared.auth.currentUser else {
+            guard let authCurrentUserEmail = FirebaseManager.shared.auth.currentUser?.email else {
                 showLoginView = true
                 return
             }
+            
             if (FirebaseManager.shared.currentUser == nil) {
                 // Load FirebaseManager CurrentUser
-                FirebaseManager.shared.firestore.collection("users").document(authCurrentUser.uid).getDocument { document, err in
+                FirebaseManager.shared.firestore.collection("users").document(authCurrentUserEmail).getDocument { document, err in
                     if let err = err {
                         print("Error retrieving user info: \(err)")
                         try? FirebaseManager.shared.auth.signOut()
@@ -53,7 +54,7 @@ struct RootView: View {
     private func attachFirebaseUserSnapshot () {
         guard let currentUser = FirebaseManager.shared.currentUser else {return}
 
-        FirebaseManager.shared.firestore.collection("users").document(currentUser.uid).addSnapshotListener { snapshot, err in
+        FirebaseManager.shared.firestore.collection("users").document(currentUser.email).addSnapshotListener { snapshot, err in
             if let err = err {
                 print("Error retrieving user info: \(err)")
                 return

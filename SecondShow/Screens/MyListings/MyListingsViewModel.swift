@@ -80,7 +80,7 @@ class MyListingsViewModel: ObservableObject {
             return
         }
         
-        let userListingRef = FirebaseManager.shared.firestore.collection("users").document(user.uid).collection("listings").document(listing.id ?? "")
+        let userListingRef = FirebaseManager.shared.firestore.collection("users").document(user.email).collection("listings").document(listing.id ?? "")
         
         userListingRef.getDocument { (doc, err) in
             if let err = err {
@@ -117,7 +117,7 @@ class MyListingsViewModel: ObservableObject {
         
         let listingRef = eventRef.collection("listings").document(listing.id ?? "")
         
-        let userListingRef = FirebaseManager.shared.firestore.collection("users").document(user.uid).collection("listings").document(listing.id ?? "")
+        let userListingRef = FirebaseManager.shared.firestore.collection("users").document(user.email).collection("listings").document(listing.id ?? "")
         
         listingRef.delete { err in
             if let err = err {
@@ -137,12 +137,12 @@ class MyListingsViewModel: ObservableObject {
     private func handleSoldOutAndDelete(eventRef: DocumentReference, deleted: Bool) {
         decreaseEventListingCount(eventRef: eventRef)
         
-        guard let uid = FirebaseManager.shared.auth.currentUser?.uid else {return}
+        guard let userEmail = FirebaseManager.shared.currentUser?.email else {return}
         guard let listingId = selectedListing?.id else {return}
         
         let msgCollectionRef = FirebaseManager.shared.firestore
             .collection("recent_messages")
-            .document(uid)
+            .document(userEmail)
             .collection("messages")
         
         msgCollectionRef
@@ -154,8 +154,8 @@ class MyListingsViewModel: ObservableObject {
                 }
                 
                 for document in querySnapshot!.documents {
-                    guard let counterpartyUid = document.get(MessageConstants.counterpartyUid) as? String else {
-                        self.notifyUser("Failure retrieving counterpartyUid", Color(.systemRed))
+                    guard let counterpartyEmail = document.get(MessageConstants.counterpartyEmail) as? String else {
+                        self.notifyUser("Failure retrieving counterpartyEmail", Color(.systemRed))
                         return
                     }
                     let recentMsgId = document.documentID
@@ -170,9 +170,9 @@ class MyListingsViewModel: ObservableObject {
                     
                     FirebaseManager.shared.firestore
                         .collection("recent_messages")
-                        .document(counterpartyUid)
+                        .document(counterpartyEmail)
                         .collection("messages")
-                        .document(listingId + "<->" + uid)
+                        .document(listingId + "<->" + userEmail)
                         .updateData(updateData) { err in
                             if let err = err {
                                 self.notifyUser("Failure updating buyer's recentMessage: \(err.localizedDescription)", Color(.systemRed))
@@ -205,7 +205,7 @@ class MyListingsViewModel: ObservableObject {
         
         myListingListener = FirebaseManager.shared.firestore
             .collection("users")
-            .document(user.uid)
+            .document(user.email)
             .collection("listings")
 //            .order(by: ListingConstants.createTime)
             .addSnapshotListener{ querySnapshot, error in

@@ -20,7 +20,7 @@ struct Event: Codable, Identifiable {
     
     var dateMMMdd: String {
         let formatter = DateFormatter()
-        formatter.dateFormat = "MM-dd-yyyy"
+        formatter.dateFormat = "yyyy-MM-dd"
         
         let dateObj = formatter.date(from: date)
         if let dateObj = dateObj {

@@ -8,10 +8,10 @@
 import Foundation
 
 struct MessageConstants {
-    static let counterpartyUid = "counterpartyUid"
+    static let counterpartyEmail = "counterpartyEmail"
     static let counterparties = "counterparties"
-    static let fromId = "fromId"
-    static let toId = "toId"
+    static let fromEmail = "fromEmail"
+    static let toEmail = "toEmail"
     static let message = "message"
     static let timestamp = "timestamp"
     static let messages = "messages"

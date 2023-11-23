@@ -12,6 +12,6 @@ struct ChatMessage: Codable, Identifiable {
     
     @DocumentID var id: String?
     
-    let listingId, fromId, toId, message: String
+    let listingId, fromEmail, toEmail, message: String
     let timestamp: Date
 }

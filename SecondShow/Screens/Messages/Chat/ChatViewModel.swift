@@ -16,19 +16,13 @@ class ChatViewModel: ObservableObject {
     @Published var sold = false
     @Published var deleted = false
     
-    private var listingId, eventName, toId: String?
-    private var listingNumber: Int?
+    var listingId, eventName, counterpartyEmail: String?
+    var listingNumber, price: Int?
     
     var messagesListener: ListenerRegistration?
     
     var titleText: String {
-        guard let eventName = eventName else {
-            return ""
-        }
-        guard let listingNumber = listingNumber else {
-            return ""
-        }
-        return "\(eventName) #\(listingNumber)"
+        return String(counterpartyEmail?.split(separator: "@").first ?? "")
     }
     
     // This should only be called from the Tickets page
@@ -38,11 +32,10 @@ class ChatViewModel: ObservableObject {
         self.listingId = listingId
         self.eventName = listing.eventName
         self.listingNumber = listing.listingNumber
-        self.toId = listing.creator
+        self.counterpartyEmail = listing.creator
         self.sold = false
         self.deleted = false
-        
-        self.inputText = ""
+        self.price = listing.price
     }
     
     // This should only be called from the Messages page
@@ -50,16 +43,15 @@ class ChatViewModel: ObservableObject {
         self.listingId = rm.listingId
         self.eventName = rm.eventName
         self.listingNumber = rm.listingNumber
-        self.toId = rm.counterpartyUid
+        self.counterpartyEmail = rm.counterpartyEmail
         self.sold = rm.sold
         self.deleted = rm.deleted
-        
-        self.inputText = ""
+        self.price = rm.price
     }
     
     func fetchMessages() {
-        guard let fromId = FirebaseManager.shared.auth.currentUser?.uid else {return}
-        guard let toId = self.toId else {return}
+        guard let fromEmail = FirebaseManager.shared.currentUser?.email else {return}
+        guard let toEmail = self.counterpartyEmail else {return}
         guard let listingId = self.listingId else {return}
         
         messagesListener?.remove()
@@ -67,10 +59,10 @@ class ChatViewModel: ObservableObject {
                 
         messagesListener = FirebaseManager.shared.firestore
             .collection(MessageConstants.messages)
-            .document(fromId)
+            .document(fromEmail)
             .collection(ListingConstants.listings)
             .document(listingId)
-            .collection(toId)
+            .collection(toEmail)
             .order(by: MessageConstants.timestamp)
             .addSnapshotListener { querySnapshot, err in
                 if let err = err {
@@ -96,8 +88,8 @@ class ChatViewModel: ObservableObject {
     }
     
     func handleSend() {
-        guard let fromId = FirebaseManager.shared.auth.currentUser?.uid else {return}
-        guard let toId = self.toId else {return}
+        guard let fromEmail = FirebaseManager.shared.currentUser?.email else {return}
+        guard let toEmail = self.counterpartyEmail else {return}
         guard let listingId = self.listingId else {return}
         let timestamp = Date()
         
@@ -105,18 +97,18 @@ class ChatViewModel: ObservableObject {
         
         let msgData = [
             ListingConstants.listingId: listingId,
-            MessageConstants.fromId: fromId,
-            MessageConstants.toId: toId,
+            MessageConstants.fromEmail: fromEmail,
+            MessageConstants.toEmail: toEmail,
             MessageConstants.message: inputText,
             MessageConstants.timestamp: timestamp
         ] as [String: Any]
         
         let outgoingDoc = FirebaseManager.shared.firestore
             .collection(MessageConstants.messages)
-            .document(fromId)
+            .document(fromEmail)
             .collection(ListingConstants.listings)
             .document(listingId)
-            .collection(toId)
+            .collection(toEmail)
             .document()
         
         outgoingDoc.setData(msgData) { err in
@@ -133,10 +125,10 @@ class ChatViewModel: ObservableObject {
         
         let incomingDoc = FirebaseManager.shared.firestore
             .collection(MessageConstants.messages)
-            .document(toId)
+            .document(toEmail)
             .collection(ListingConstants.listings)
             .document(listingId)
-            .collection(fromId)
+            .collection(fromEmail)
             .document()
         
         incomingDoc.setData(msgData) { err in
@@ -149,29 +141,32 @@ class ChatViewModel: ObservableObject {
     }
     
     private func persistRecentMessage(timestamp: Date) {
-        guard let fromId = FirebaseManager.shared.auth.currentUser?.uid else {return}
-        guard let toId = self.toId else {return}
+        guard let fromEmail = FirebaseManager.shared.currentUser?.email else {return}
+        guard let toEmail = self.counterpartyEmail else {return}
         guard let listingId = self.listingId else {return}
         guard let eventName = self.eventName else {return}
         guard let listingNumber = self.listingNumber else {return}
+        guard let price = self.price else {return}
+
         
 //        print("Persisting recent message...")
         
         let senderRecentMessages = FirebaseManager.shared.firestore
             .collection(MessageConstants.recentMessages)
-            .document(fromId)
+            .document(fromEmail)
             .collection(MessageConstants.messages)
-            .document(listingId + "<->" + toId)
+            .document(listingId + "<->" + toEmail)
         
         let senderRmData = [
             ListingConstants.listingId: listingId,
             ListingConstants.eventName: eventName,
-            MessageConstants.counterpartyUid: toId,
+            MessageConstants.counterpartyEmail: toEmail,
             ListingConstants.listingNumber: listingNumber,
             MessageConstants.timestamp: timestamp,
-            MessageConstants.message: inputText,
+            MessageConstants.message: inputText.replacingOccurrences(of: "\n", with: "").prefix(30),
             MessageConstants.sold: sold,
-            MessageConstants.deleted: deleted
+            MessageConstants.deleted: deleted,
+            ListingConstants.price: price,
         ] as [String: Any]
         
         senderRecentMessages.setData(senderRmData) { err in
@@ -183,19 +178,20 @@ class ChatViewModel: ObservableObject {
         
         let recipientRecentMessages = FirebaseManager.shared.firestore
             .collection(MessageConstants.recentMessages)
-            .document(toId)
+            .document(toEmail)
             .collection(MessageConstants.messages)
-            .document(listingId + "<->" + fromId)
+            .document(listingId + "<->" + fromEmail)
         
         let recipientRmData = [
             ListingConstants.listingId: listingId,
             ListingConstants.eventName: eventName,
-            MessageConstants.counterpartyUid: fromId,
+            MessageConstants.counterpartyEmail: fromEmail,
             ListingConstants.listingNumber: listingNumber,
             MessageConstants.timestamp: timestamp,
             MessageConstants.message: inputText,
             MessageConstants.sold: sold,
-            MessageConstants.deleted: deleted
+            MessageConstants.deleted: deleted,
+            ListingConstants.price: price,
         ] as [String: Any]
         
         recipientRecentMessages.setData(recipientRmData) { err in

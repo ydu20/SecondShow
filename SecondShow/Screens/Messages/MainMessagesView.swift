@@ -16,6 +16,8 @@ struct MainMessagesView: View {
     
     @State private var showChatView = false
     
+    @State private var intraTabNavigation = false
+    
     var body: some View {
         VStack {
             NavBar<EmptyView>(title: "Messages", subtitle: nil)
@@ -27,10 +29,18 @@ struct MainMessagesView: View {
         }
         .padding()
         .onAppear {
-            vm.fetchRecentMessages()
+            if (!intraTabNavigation) {
+                print("MAIN MESSAGES: FETCHING RECENT")
+                vm.chatVm = chatVm
+                vm.fetchRecentMessages()
+            }
         }
         .onDisappear {
-            vm.recentMessagesListener?.remove()
+            if !(showChatView) {
+                print("MAIN MESSAGES: REMOVING LISTENER")
+                vm.recentMessagesListener?.remove()
+                intraTabNavigation = false
+            }
         }
     }
     
@@ -40,12 +50,28 @@ struct MainMessagesView: View {
                 Button {
                     chatVm.updateWithRecentMessage(rm: recentMessage)
                     showChatView.toggle()
+                    intraTabNavigation = true
                 } label: {
                     HStack(spacing: 16) {
                         VStack(alignment: .leading, spacing: 8) {
-                            Text("\(recentMessage.eventName) #\(recentMessage.listingNumber)")
-                                .font(.system(size: 16, weight: .bold))
-                                .foregroundColor(Color(.label))
+                            
+                            HStack (spacing: 10) {
+                                Text(recentMessage.counterpartyEmail.split(separator: "@").first ?? "")
+                                    .font(.system(size: 18, weight: .bold))
+                                    .foregroundColor(Color(.label))
+                                
+                                HStack {
+                                    Text("\(recentMessage.eventName) #\(recentMessage.listingNumber)")
+                                        .font(.system(size: 12, weight: .semibold))
+                                        .foregroundColor(Color(.white))
+                                }
+                                .padding(.horizontal, 8)
+                                .padding(.vertical, 2)
+                                .background(Color(.systemIndigo))
+                                .cornerRadius(10)
+                                    
+                            }
+                            
                             Text(
                                 recentMessage.sold ? "This listing has been sold" :
                                     recentMessage.deleted ? "The seller has deleted this listing" :
@@ -58,10 +84,10 @@ struct MainMessagesView: View {
                         Spacer()
                         Text(recentMessage.timeAgo)
                             .font(.system(size: 14, weight: .semibold))
-                    }
+                    }.padding(.top, 7)
                 }
                 Divider()
-                    .padding(.vertical, 8)
+                    .padding(.vertical, 5)
             }
             
         }

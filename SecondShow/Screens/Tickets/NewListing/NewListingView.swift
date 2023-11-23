@@ -23,7 +23,6 @@ struct NewListingView: View {
     @State private var newListingWarning = ""
     
     var body: some View {
-//        NavigationStack {
         NavigationView {
             ZStack {
                 Form {
@@ -31,6 +30,7 @@ struct NewListingView: View {
                         .onReceive(eventName.publisher.collect()) {
                             eventName = String($0.prefix(30))
                         }
+                        .textInputAutocapitalization(.words)
                     DatePicker("Event Date", selection: $eventDate, in: Date()..., displayedComponents: .date)
                     
                     Stepper("Number of tickets:  \(quantity)", value: $quantity, in: 1...10)
@@ -75,8 +75,9 @@ struct NewListingView: View {
                 }
             }
         }
-//        }
     }
+    
+    
     
     private func createListing() {
         // Check price field
@@ -94,7 +95,7 @@ struct NewListingView: View {
         }
         
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MM-dd-yyyy"
+        dateFormatter.dateFormat = "yyyy-MM-dd"
         
         var newMaxListingNum = 1
         var newListingCount = 1
@@ -185,7 +186,7 @@ struct NewListingView: View {
             ListingConstants.eventDate: eventData[EventConstants.date]!,
             ListingConstants.listingNumber: listingNumber,
             ListingConstants.createTime: Timestamp(),
-            ListingConstants.creator: user.uid,
+            ListingConstants.creator: user.email,
             ListingConstants.price: priceInt,
             ListingConstants.totalQuantity: quantity,
             ListingConstants.availableQuantity: quantity,
@@ -202,7 +203,7 @@ struct NewListingView: View {
             }
             
             // Add listing to user also
-            FirebaseManager.shared.firestore.collection("users").document(user.uid).collection("listings").document(listingRef!.documentID).setData(listingData) { error in
+            FirebaseManager.shared.firestore.collection("users").document(user.email).collection("listings").document(listingRef!.documentID).setData(listingData) { error in
                 if let error = error {
                     notifyUser("Error associating listing with user: \(error.localizedDescription)", Color(.systemRed))
                 } else {
