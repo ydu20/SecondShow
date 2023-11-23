@@ -12,6 +12,14 @@ import FirebaseFirestore
 class MainTicketsViewModel: ObservableObject {
     
     @Published var eventDates = [EventDate]()
+    var events: [Event] {
+        var ret: [Event] = []
+        eventDates.forEach { eventDate in
+            ret += eventDate.events
+        }
+        return ret
+    }
+    
     private var eventListener: ListenerRegistration?
     
     init() {

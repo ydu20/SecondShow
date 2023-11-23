@@ -16,15 +16,18 @@ struct Event: Codable, Identifiable {
     var date: String
     var maxListingNum: Int
     var listingCount: Int
-//    var listings: [Listing]?
+    
+    var dateObj: Date? {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        return formatter.date(from: date)
+    }
     
     var dateMMMdd: String {
         let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd"
-        
-        let dateObj = formatter.date(from: date)
+        formatter.dateFormat = "MMM. dd"
+
         if let dateObj = dateObj {
-            formatter.dateFormat = "MMM. dd"
             return formatter.string(from: dateObj)
         } else {
             return "ERROR DATE"

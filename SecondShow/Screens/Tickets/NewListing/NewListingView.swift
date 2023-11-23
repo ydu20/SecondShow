@@ -14,23 +14,56 @@ struct NewListingView: View {
     
     @EnvironmentObject var vm: MainTicketsViewModel
     @Environment(\.presentationMode) var presentationMode
-    
+        
     @State private var eventName = ""
     @State private var eventDate = Date()
     @State private var quantity = 1
     @State private var price = ""
     
-    @State private var newListingWarning = ""
+    @State private var newListingWarning = "warning"
+    
+    @State private var showSuggestions: Bool = false
+    
+    @State private var oneOffSuggestionDisable = false
+    @State private var suggestions: [Event] = []
+    
+    private func updateSuggestions() {
+        if eventName.count < 3 {
+            suggestions = []
+            return
+        }
+        
+        let filteredAndSorted = vm.events.map { event -> (Event, Int) in
+                (event, LevenshteinDistance.levDisAugmented(eventName.lowercased(), event.name.lowercased()))
+            }
+            .filter {$0.1 <= 5}
+            .sorted {$0.1 < $1.1}
+
+        suggestions = filteredAndSorted.prefix(5).map{$0.0}
+    }
     
     var body: some View {
         NavigationView {
-            ZStack {
+            ZStack (alignment: .top) {
+                
                 Form {
                     TextField("Event Name", text: $eventName)
-                        .onReceive(eventName.publisher.collect()) {
+                        .onChange(of: eventName) {
                             eventName = String($0.prefix(30))
+                            if (!oneOffSuggestionDisable) {
+                                if (!showSuggestions && eventName.count >= 3) || (showSuggestions && eventName.count < 3) {
+                                    withAnimation(.easeInOut(duration: 0.15)) {
+                                        showSuggestions.toggle()
+                                    }
+                                }
+                            } else {
+                                oneOffSuggestionDisable = false
+                            }
+                            
+                            updateSuggestions()
                         }
                         .textInputAutocapitalization(.words)
+                    
                     DatePicker("Event Date", selection: $eventDate, in: Date()..., displayedComponents: .date)
                     
                     Stepper("Number of tickets:  \(quantity)", value: $quantity, in: 1...10)
@@ -46,14 +79,69 @@ struct NewListingView: View {
                                     .stroke(Color(.quaternaryLabel), lineWidth: 2)
                             )
                             .keyboardType(.numberPad)
-                            .onReceive(price.publisher.collect()) {
+                            .onChange(of: price) {
                                 price = String($0.prefix(3)).filter{"0123456789".contains($0)}
                             }
                     }
                 }
-                Text(self.newListingWarning)
-                    .foregroundColor(Color(red: 0.8, green: 0, blue: 0))
-                    .offset(y: -UIScreen.main.bounds.height / 2.8 + 200)
+                
+                VStack {
+                    Text(self.newListingWarning)
+                        .foregroundColor(Color(red: 0.8, green: 0, blue: 0))
+                }
+                .offset(y: 220)
+                
+                if showSuggestions {
+                    Color.clear
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .contentShape(Rectangle())
+                        .edgesIgnoringSafeArea(.all)
+                        .onTapGesture {
+                            showSuggestions = false
+                        }
+                }
+                
+                if showSuggestions {
+                    VStack {
+                        HStack {
+                            VStack {
+                                
+                                ForEach(Array(suggestions.enumerated()), id: \.offset) { index, suggestedEvent in
+                                    HStack {
+                                        Button {
+                                            showSuggestions = false
+                                            oneOffSuggestionDisable = true
+                                            eventName = suggestedEvent.name
+                                            guard let nonOpDate = suggestedEvent.dateObj else {return}
+                                            eventDate = nonOpDate
+                                        } label: {
+                                            Text(suggestedEvent.name)
+                                                .foregroundColor(Color.black)
+                                        }
+                                        Spacer()
+                                    }
+
+                                    if index != suggestions.count - 1 {
+                                        Divider()
+                                            .padding(.vertical, 2)
+                                    }
+                                }
+                                
+                                
+                            }
+                            .padding(.vertical, 12)
+                            .padding(.horizontal, 12)
+                        }
+                        .background(Color.white)
+                        .cornerRadius(10)
+                        .shadow(radius: 5)
+                    }
+                    .padding(24)
+                    .frame(maxWidth: .infinity)
+                    .offset(y: 64)
+                    .transition(.opacity)
+                }
+                
             }
             .navigationTitle("New Listing")
             .navigationBarTitleDisplayMode(.inline)
@@ -77,11 +165,13 @@ struct NewListingView: View {
         }
     }
     
-    
-    
     private func createListing() {
-        // Check price field
-        if price == "" {
+        // Validating fields
+        if eventName.count == 0 {
+            newListingWarning = "Please enter an event name"
+            return
+        }
+        if price.count == 0 {
             newListingWarning = "Please enter a price"
             return
         }

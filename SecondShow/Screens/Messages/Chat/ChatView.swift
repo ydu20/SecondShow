@@ -86,7 +86,6 @@ struct ChatView: View {
     private var messageView: some View {
         VStack (spacing: 0) {
             HStack (alignment: .top, spacing: 10) {
-                
                 if vm.eventName != nil, vm.listingNumber != nil {
                     HStack {
                         Text("\(vm.eventName!) #\(String(vm.listingNumber!))")
@@ -113,8 +112,9 @@ struct ChatView: View {
                 
                 Spacer()
             }
-            .frame(height: 30)
+            .frame(height: 20)
             .padding(.horizontal)
+            .padding(.bottom, 6)
 
             ScrollView {
                 ScrollViewReader { scrollViewProxy in
