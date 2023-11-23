@@ -18,7 +18,6 @@ class MainMessagesViewModel: ObservableObject {
         fetchRecentMessages()
     }
     
-    
     func fetchRecentMessages() {
         guard let uid = FirebaseManager.shared.auth.currentUser?.uid else {return}
         

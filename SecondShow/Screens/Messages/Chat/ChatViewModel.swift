@@ -13,9 +13,12 @@ class ChatViewModel: ObservableObject {
     @Published var inputText = ""
     @Published var chatMessages = [ChatMessage]()
     @Published var autoScrollCount = 0
+    @Published var sold = false
+    @Published var deleted = false
     
     private var listingId, eventName, toId: String?
     private var listingNumber: Int?
+    
     var messagesListener: ListenerRegistration?
     
     var titleText: String {
@@ -36,9 +39,10 @@ class ChatViewModel: ObservableObject {
         self.eventName = listing.eventName
         self.listingNumber = listing.listingNumber
         self.toId = listing.creator
+        self.sold = false
+        self.deleted = false
         
         self.inputText = ""
-//        fetchMessages()
     }
     
     // This should only be called from the Messages page
@@ -46,10 +50,11 @@ class ChatViewModel: ObservableObject {
         self.listingId = rm.listingId
         self.eventName = rm.eventName
         self.listingNumber = rm.listingNumber
-        self.toId = rm.counterPartyUid
+        self.toId = rm.counterpartyUid
+        self.sold = rm.sold
+        self.deleted = rm.deleted
         
         self.inputText = ""
-//        fetchMessages()
     }
     
     func fetchMessages() {
@@ -99,7 +104,7 @@ class ChatViewModel: ObservableObject {
 //        print("Handling send...")
         
         let msgData = [
-            MessageConstants.listingId: listingId,
+            ListingConstants.listingId: listingId,
             MessageConstants.fromId: fromId,
             MessageConstants.toId: toId,
             MessageConstants.message: inputText,
@@ -159,12 +164,14 @@ class ChatViewModel: ObservableObject {
             .document(listingId + "<->" + toId)
         
         let senderRmData = [
-            MessageConstants.listingId: listingId,
+            ListingConstants.listingId: listingId,
             ListingConstants.eventName: eventName,
-            MessageConstants.counterPartyUid: toId,
+            MessageConstants.counterpartyUid: toId,
             ListingConstants.listingNumber: listingNumber,
             MessageConstants.timestamp: timestamp,
-            MessageConstants.message: inputText
+            MessageConstants.message: inputText,
+            MessageConstants.sold: sold,
+            MessageConstants.deleted: deleted
         ] as [String: Any]
         
         senderRecentMessages.setData(senderRmData) { err in
@@ -181,12 +188,14 @@ class ChatViewModel: ObservableObject {
             .document(listingId + "<->" + fromId)
         
         let recipientRmData = [
-            MessageConstants.listingId: listingId,
+            ListingConstants.listingId: listingId,
             ListingConstants.eventName: eventName,
-            MessageConstants.counterPartyUid: fromId,
+            MessageConstants.counterpartyUid: fromId,
             ListingConstants.listingNumber: listingNumber,
             MessageConstants.timestamp: timestamp,
-            MessageConstants.message: inputText
+            MessageConstants.message: inputText,
+            MessageConstants.sold: sold,
+            MessageConstants.deleted: deleted
         ] as [String: Any]
         
         recipientRecentMessages.setData(recipientRmData) { err in

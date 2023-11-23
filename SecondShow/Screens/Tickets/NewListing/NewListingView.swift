@@ -136,7 +136,7 @@ struct NewListingView: View {
                 .document(eventId)
             
             guard let eventDoc = eventDoc else {
-                notifyUser("Error addinge event", Color(.systemRed))
+                notifyUser("Error adding event", Color(.systemRed))
                 return
             }
             eventDoc.setData(eventData) { err in
@@ -148,23 +148,23 @@ struct NewListingView: View {
             }
         } else {
             // Update existing event
-            if let foundEventId = foundEventId {
-                eventDoc = FirebaseManager.shared.firestore.collection("events").document(foundEventId)
-                
-                if let eventDoc = eventDoc {
-                    eventDoc.setData(eventData) { err in
-                        if let err = err {
-                            notifyUser("Error updating event: \(err.localizedDescription)", Color(.systemRed))
-                            return
-                        }
-                        uploadListing(eventDoc: eventDoc, eventData: eventData, listingNumber: newMaxListingNum)
-                    }
-                } else {
-                    notifyUser("Error updating event: event not found in database", Color(.systemRed))
+            guard let foundEventId = foundEventId else {
+                notifyUser("Error updating event: local id is nil", Color(.systemRed))
+                return
+            }
+            
+            eventDoc = FirebaseManager.shared.firestore.collection("events").document(foundEventId)
+            guard let eventDoc = eventDoc else {
+                notifyUser("Error updating event: event not found in database", Color(.systemRed))
+                return
+            }
+            
+            eventDoc.setData(eventData) { err in
+                if let err = err {
+                    notifyUser("Error updating event: \(err.localizedDescription)", Color(.systemRed))
                     return
                 }
-            } else {
-                notifyUser("Error updating event: local id is nil", Color(.systemRed))
+                uploadListing(eventDoc: eventDoc, eventData: eventData, listingNumber: newMaxListingNum)
             }
         }
     }
@@ -192,22 +192,24 @@ struct NewListingView: View {
             ListingConstants.popularity: 0,
         ] as [String: Any]
         
-        eventDoc.collection("listings").document().setData(listingData) { err in
+        
+        // Add listing to event
+        var listingRef: DocumentReference? = nil
+        listingRef = eventDoc.collection("listings").addDocument(data: listingData) { err in
             if let err = err {
                 notifyUser("Error adding new listing: \(err.localizedDescription)", Color(.systemRed))
-            } else {
-                // Adding listing to user also
-                
-                FirebaseManager.shared.firestore.collection("users").document(user.uid).collection("listings").addDocument(data: listingData) { error in
-                    if let error = error {
-                        notifyUser("Error associating listing with user: \(error.localizedDescription)", Color(.systemRed))
-                    } else {
-                        notifyUser("Listing posted! Your listing number is: \(listingNumber)", Color(.systemGreen))
-                    }
+                return
+            }
+            
+            // Add listing to user also
+            FirebaseManager.shared.firestore.collection("users").document(user.uid).collection("listings").document(listingRef!.documentID).setData(listingData) { error in
+                if let error = error {
+                    notifyUser("Error associating listing with user: \(error.localizedDescription)", Color(.systemRed))
+                } else {
+                    notifyUser("Listing posted! Your listing number is: \(listingNumber)", Color(.systemGreen))
                 }
             }
         }
-        
     }
     
 }

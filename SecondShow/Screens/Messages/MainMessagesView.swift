@@ -46,7 +46,11 @@ struct MainMessagesView: View {
                             Text("\(recentMessage.eventName) #\(recentMessage.listingNumber)")
                                 .font(.system(size: 16, weight: .bold))
                                 .foregroundColor(Color(.label))
-                            Text(recentMessage.message)
+                            Text(
+                                recentMessage.sold ? "This listing has been sold" :
+                                    recentMessage.deleted ? "The seller has deleted this listing" :
+                                    recentMessage.message
+                            )
                                 .font(.system(size: 13))
                                 .foregroundColor(Color(.darkGray))
                                 .multilineTextAlignment(.leading)

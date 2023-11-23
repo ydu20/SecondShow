@@ -11,12 +11,12 @@ import FirebaseFirestore
 struct DeletePopupView: View {
     
     @Binding var showPopupView: Bool
-    let listing: Listing?
+    @ObservedObject var vm: MyListingsViewModel
     let notifyUser: (String, Color) -> ()
     
     var body: some View {
         VStack {
-            if listing != nil {
+            if vm.selectedListing != nil {
                 Text("Are you sure you want to delete this listing?")
                     .padding(.bottom, 20)
             } else {
@@ -40,15 +40,15 @@ struct DeletePopupView: View {
                                 .stroke(Color(.secondaryLabel))
                         )
                 }
-                if listing != nil {
+                if vm.selectedListing != nil {
                     Spacer()
                     Button {
-                        if listing != nil {
+                        if vm.selectedListing != nil {
                             // TODO
                             withAnimation(.easeInOut(duration: 0.15)) {
                                 showPopupView.toggle()
                             }
-                            deleteListing()
+                            vm.deleteListing()
                         }
                     } label: {
                         Text("Delete")
@@ -71,54 +71,54 @@ struct DeletePopupView: View {
         .cornerRadius(12)
     }
     
-    private func deleteListing() {
-        guard let listing = listing else {
-            notifyUser("Cannot load local listing", Color(.systemRed))
-            return
-        }
-        
-        guard let user = FirebaseManager.shared.currentUser else {
-            notifyUser("Error retrieving local user information", Color(.systemRed))
-            return
-        }
-        
-        let eventRef = FirebaseManager.shared.firestore.collection("events").document(listing.eventId)
-        
-        let listingRef = eventRef.collection("listings").document(String(listing.listingNumber))
-        
-        let userListingRef = FirebaseManager.shared.firestore.collection("users").document(user.uid).collection("listings").document(listing.id ?? "")
-        
-        listingRef.delete { err in
-            if let err = err {
-                notifyUser("Error deleting listing: \(err.localizedDescription)", Color(.systemRed))
-                return
-            }
-        }
-        userListingRef.delete { err in
-            if let err = err {
-                notifyUser("Error deleting user listing: \(err.localizedDescription)", Color(.systemRed))
-            }
-            return
-        }
-        decreaseEventListingCount(eventRef: eventRef)
-    }
-    
-    private func decreaseEventListingCount(eventRef: DocumentReference) {
-        let eventUpdate = [
-            EventConstants.listingCount: FieldValue.increment(Int64(-1))
-        ]
-        eventRef.updateData(eventUpdate) { err in
-            if let err = err {
-                notifyUser("Error updating event: \(err.localizedDescription)", Color(.systemRed))
-                return
-            }
-        }
-    }
+//    private func deleteListing() {
+//        guard let listing = listing else {
+//            notifyUser("Cannot load local listing", Color(.systemRed))
+//            return
+//        }
+//
+//        guard let user = FirebaseManager.shared.currentUser else {
+//            notifyUser("Error retrieving local user information", Color(.systemRed))
+//            return
+//        }
+//
+//        let eventRef = FirebaseManager.shared.firestore.collection("events").document(listing.eventId)
+//
+//        let listingRef = eventRef.collection("listings").document(String(listing.listingNumber))
+//
+//        let userListingRef = FirebaseManager.shared.firestore.collection("users").document(user.uid).collection("listings").document(listing.id ?? "")
+//
+//        listingRef.delete { err in
+//            if let err = err {
+//                notifyUser("Error deleting listing: \(err.localizedDescription)", Color(.systemRed))
+//                return
+//            }
+//        }
+//        userListingRef.delete { err in
+//            if let err = err {
+//                notifyUser("Error deleting user listing: \(err.localizedDescription)", Color(.systemRed))
+//            }
+//            return
+//        }
+//        decreaseEventListingCount(eventRef: eventRef)
+//    }
+//
+//    private func decreaseEventListingCount(eventRef: DocumentReference) {
+//        let eventUpdate = [
+//            EventConstants.listingCount: FieldValue.increment(Int64(-1))
+//        ]
+//        eventRef.updateData(eventUpdate) { err in
+//            if let err = err {
+//                notifyUser("Error updating event: \(err.localizedDescription)", Color(.systemRed))
+//                return
+//            }
+//        }
+//    }
 
 }
 
 struct DeletePopupView_Previews: PreviewProvider {
     static var previews: some View {
-        DeletePopupView(showPopupView: .constant(true), listing: Listing(eventId: "testtesttest", eventName: "Test Event", eventDate: "11-26-2023", listingNumber: 1, price: 15, totalQuantity: 4, availableQuantity: 1, popularity: 14, createTime: Date(), creator:"Hello"), notifyUser: {msg, _ in print(msg)})
+        DeletePopupView(showPopupView: .constant(true), vm: MyListingsViewModel(), notifyUser: {msg, _ in print(msg)})
     }
 }

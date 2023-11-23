@@ -12,9 +12,11 @@ struct RecentMessage: Codable, Identifiable {
     
     @DocumentID var id: String?
     
-    let listingId, eventName, counterPartyUid, message: String
+    let listingId, eventName, counterpartyUid, message: String
     let listingNumber: Int
     let timestamp: Date
+    
+    let sold, deleted: Bool
     
     var timeAgo: String {
         let formatter = RelativeDateTimeFormatter()

@@ -44,7 +44,7 @@ struct MainTicketsView: View {
                     .padding(.top, 200)
                 Spacer()
             } else {
-                showsList
+                eventsList
             }
             
             NavigationLink(destination: EventView(vm: eventVm, chatVm: chatVm), isActive: $showEventView) {
@@ -59,7 +59,7 @@ struct MainTicketsView: View {
         }
     }
     
-    private var showsList: some View {
+    private var eventsList: some View {
         ScrollView {
             ForEach(vm.eventDates) { eventDate in
                 HStack(spacing: 16) {

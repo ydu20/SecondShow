@@ -8,6 +8,7 @@
 import Foundation
 
 struct ListingConstants {
+    static let listingId = "listingId"
     static let eventId = "eventId"
     static let eventName = "eventName"
     static let eventDate = "eventDate"

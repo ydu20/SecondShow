@@ -11,11 +11,16 @@ struct MyListingsView: View {
     
     let notifyUser: (String, Color) -> ()
     
-    @StateObject private var vm = MyListingsViewModel()
+    @StateObject var vm = MyListingsViewModel()
+    
+//    init(notifyUser: @escaping (String, Color) -> ()) {
+//        self.notifyUser = notifyUser
+//        vm.setNotifyUser(notifyUser: notifyUser)
+//    }
     
     @State private var showSoldPopupView = false
     @State private var showDeletePopupView = false
-    @State private var selectedListing: Listing? = nil
+//    @State private var selectedListing: Listing? = nil
 
     var body: some View {
         VStack {
@@ -36,12 +41,12 @@ struct MyListingsView: View {
                 }
                 
                 if showSoldPopupView {
-                    SoldPopupView(showPopupView: $showSoldPopupView, listing: selectedListing, notifyUser: notifyUser)
+                    SoldPopupView(showPopupView: $showSoldPopupView, vm: vm, notifyUser: notifyUser)
                         .transition(.asymmetric(insertion: .scale(scale: 1.05), removal: .opacity))
                 }
                 
                 if showDeletePopupView {
-                    DeletePopupView(showPopupView: $showDeletePopupView, listing: selectedListing, notifyUser: notifyUser)
+                    DeletePopupView(showPopupView: $showDeletePopupView, vm: vm, notifyUser: notifyUser)
                         .transition(.asymmetric(insertion: .scale(scale: 1.05), removal: .opacity))
                 }
             }
@@ -50,6 +55,9 @@ struct MyListingsView: View {
 //        .onDisappear {
 //            vm.myListingListener?.remove()
 //        }
+        .onAppear {
+            vm.notifyUser = self.notifyUser
+        }
     }
     
     private var myAvailableListingsView: some View {
@@ -87,7 +95,7 @@ struct MyListingsView: View {
                     }
                     Spacer()
                     Button {
-                        selectedListing = listing
+                        vm.selectedListing = listing
                         withAnimation(.linear(duration: 0.2)) {
                             showSoldPopupView.toggle()
                         }
@@ -101,7 +109,7 @@ struct MyListingsView: View {
                             .cornerRadius(6)
                     }
                     Button {
-                        selectedListing = listing
+                        vm.selectedListing = listing
                         withAnimation(.linear(duration: 0.2)) {
                             showDeletePopupView.toggle()
                         }

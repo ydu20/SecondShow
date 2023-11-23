@@ -84,6 +84,8 @@ class EventViewModel: ObservableObject {
             return
         }
         
+        print("Fetching listings...")
+        
         listingListener?.remove()
         listings.removeAll()
         

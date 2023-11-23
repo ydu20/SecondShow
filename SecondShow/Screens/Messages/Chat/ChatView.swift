@@ -38,7 +38,6 @@ struct ChatView: View {
             vm.fetchMessages()
         }
         .onDisappear {
-            // TODO
             vm.messagesListener?.remove()
         }
     }
@@ -49,6 +48,7 @@ struct ChatView: View {
                 DescriptionPlaceholder()
                 TextEditor(text: $vm.inputText)
                     .opacity(self.vm.inputText.isEmpty ? 0.5 : 1)
+                    .disabled(vm.sold || vm.deleted)
             }
             .frame(height: 40)
             Button {
@@ -59,8 +59,9 @@ struct ChatView: View {
             }
             .padding(.horizontal)
             .padding(.vertical, 8)
-            .background(Color.blue)
+            .background(!(vm.sold || vm.deleted) ? Color.blue : Color.black.opacity(0.3))
             .cornerRadius(4)
+            .disabled(vm.sold || vm.deleted)
         }
         .padding(.horizontal)
         .padding(.vertical, 16)
@@ -110,6 +111,15 @@ struct ChatView: View {
                             .padding(.horizontal)
                             .padding(.vertical, 4)
                         }
+                    }
+                    
+                    if (vm.deleted) {
+                        Text("The seller has deleted this listing")
+                            .foregroundColor(Color.gray)
+                    }
+                    if (vm.sold) {
+                        Text("This listing has been sold")
+                            .foregroundColor(Color.gray)
                     }
                     
                     HStack{Spacer()}
