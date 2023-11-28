@@ -12,6 +12,8 @@ struct RootView: View {
     @State private var showLoginView: Bool = false
     @State private var selectedTab: Int = 0
     
+    private let userService = UserService()
+    
     var body: some View {
         ZStack {
             if !showLoginView {

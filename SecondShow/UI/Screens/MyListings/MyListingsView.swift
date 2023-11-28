@@ -48,7 +48,6 @@ struct MyListingsView: View {
                         .transition(.asymmetric(insertion: .scale(scale: 1.05), removal: .opacity))
                 }
             }
-            
         }
         .padding(.vertical)
 //        .onDisappear {

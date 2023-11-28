@@ -79,37 +79,6 @@ struct ChatView: View {
     }
     
     private var messageView: some View {
-//        VStack (spacing: 0) {
-//            HStack (alignment: .top, spacing: 10) {
-//                if vm.eventName != nil, vm.listingNumber != nil {
-//                    HStack {
-//                        Text("\(vm.eventName!) #\(String(vm.listingNumber!))")
-//                            .font(.system(size: 12, weight: .semibold))
-//                            .foregroundColor(Color(.white))
-//                    }
-//                    .padding(.horizontal, 8)
-//                    .padding(.vertical, 2)
-//                    .background(Color(.systemIndigo))
-//                    .cornerRadius(10)
-//                }
-//
-//                if vm.price != nil {
-//                    HStack {
-//                        Text("$\(String(vm.price!))")
-//                            .font(.system(size: 12, weight: .semibold))
-//                            .foregroundColor(Color(.white))
-//                    }
-//                    .padding(.horizontal, 8)
-//                    .padding(.vertical, 2)
-//                    .background(Color(.systemOrange))
-//                    .cornerRadius(10)
-//                }
-//
-//                Spacer()
-//            }
-//            .frame(height: 20)
-//            .padding(.horizontal)
-//            .padding(.bottom, 6)
 
             ScrollView {
                 ScrollViewReader { scrollViewProxy in
@@ -164,7 +133,6 @@ struct ChatView: View {
                 }
             }
             .background(Color(.init(white: 0.95, alpha: 1)))
-//        }
         .safeAreaInset(edge: .bottom) {
             inputDockView
                 .background(Color(.systemBackground).ignoresSafeArea())

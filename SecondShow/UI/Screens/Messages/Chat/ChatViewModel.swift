@@ -95,9 +95,7 @@ class ChatViewModel: ObservableObject {
         guard let toEmail = self.counterpartyEmail else {return}
         guard let listingId = self.listingId else {return}
         let timestamp = Date()
-        
-//        print("Handling send...")
-        
+
         let msgData = [
             ListingConstants.listingId: listingId,
             MessageConstants.fromEmail: fromEmail,
@@ -150,10 +148,7 @@ class ChatViewModel: ObservableObject {
         guard let eventName = self.eventName else {return}
         guard let listingNumber = self.listingNumber else {return}
         guard let price = self.price else {return}
-
-        
-//        print("Persisting recent message...")
-        
+                
         let senderRecentMessages = FirebaseManager.shared.firestore
             .collection(MessageConstants.recentMessages)
             .document(fromEmail)
