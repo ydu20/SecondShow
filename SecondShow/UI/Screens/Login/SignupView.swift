@@ -99,6 +99,6 @@ struct SignupView: View {
 
 struct SignupView_Previews: PreviewProvider {
     static var previews: some View {
-        LoginView(showLoginView: .constant(true))
+        LoginView(showLoginView: .constant(true), userService: UserService())
     }
 }

@@ -11,6 +11,12 @@ import FirebaseAuth
 
 class LoginViewModel: ObservableObject {
 
+    private let userService: UserService
+    
+    init(userService: UserService) {
+        self.userService = userService
+    }
+    
     @Published var showSignupView = false
     @Published var showSignupCompleteAlert = false
     
@@ -41,44 +47,15 @@ class LoginViewModel: ObservableObject {
         self.statusMessage = ""
         
         // Create user
-        
-        FirebaseManager.shared.auth.createUser(withEmail: signupEmail, password: signupPassword) { result, err in
+        userService.createUser(email: signupEmail, password: signupPassword, createTime: Date(), sendEmailVerification: requireVerification) { _, err in
             if let err = err {
-                print("Failed to create user: ", err)
-                self.statusMessage = "Failed to create user: \(err)"
+                self.statusMessage = err
+                // Only want to create user, not sign in
+                self.userService.logoutUser()
                 return
             }
-            
-            print("Successfully created user: \(self.signupEmail)")
-            
-            guard let currentUser = FirebaseManager.shared.auth.currentUser else {return}
-            
-            // Upload user to FireStore
-            let userData = [FirebaseConstants.uid: currentUser.uid, FirebaseConstants.email: self.signupEmail, FirebaseConstants.createTime: Date()] as [String: Any]
-            
-            FirebaseManager.shared.firestore.collection("users")
-                .document(self.signupEmail).setData(userData) { err in
-                    if let err = err {
-                        print(err)
-                        self.statusMessage = "\(err)"
-                        return
-                    }
-
-                    print("Uploaded to Firebase")
-
-                    // Disabled for development
-//                    currentUser.sendEmailVerification() { err in
-//                        if let err = err {
-//                            print(err)
-//                            self.signupStatusMessage = "\(err)"
-//                            return
-//                        }
-//                        print ("Email verification sent")
-//                        didCompleteSignUp()
-//                    }
-                    
-                    self.didCompleteSignUp()
-                }
+            self.didCompleteSignUp()
+            self.userService.logoutUser()
         }
     }
     
@@ -86,7 +63,6 @@ class LoginViewModel: ObservableObject {
         signupEmail = ""
         signupPassword = ""
         signupConfirmPassword = ""
-        
         showSignupCompleteAlert.toggle()
     }
     
@@ -102,55 +78,13 @@ class LoginViewModel: ObservableObject {
                 return
             }
             statusMessage = ""
-            
-            // Login user
-            FirebaseManager.shared.auth.signIn(withEmail: loginEmail, password: loginPassword) {
-                result, err in
-                if let err = err as NSError? {
-                    if err.domain == "FIRAuthErrorDomain", err.code == 17999 {
-                        self.statusMessage = "Incorrect email or password"
-                    } else {
-                        self.statusMessage = err.localizedDescription
-                    }
-                    return
-                }
-                
-                
-                // Temporarily disabled for development
-    //            guard let resultUser = result?.user else {
-    //                loginStatusMessage = "Login error: Auth user not found"
-    //                return
-    //            }
-
-    //            if (!resultUser.isEmailVerified) {
-    //                loginStatusMessage = "Please verify your email account"
-    //                return
-    //            }
-                
-                // Update currentUser in FirebaseManager
-                FirebaseManager.shared.firestore.collection("users").document(self.loginEmail).getDocument { document, err in
-                    if let err = err {
-                        print(err)
-                        self.statusMessage = err.localizedDescription
-                        try? FirebaseManager.shared.auth.signOut()
-                        return
-                    }
-                    
-                    if let document = document {
-                        if let currentUser = try? document.data(as: User.self) {
-                            // Great success
-                            FirebaseManager.shared.currentUser = currentUser
-                            self.statusMessage = "Successfully logged in as \(self.loginEmail)"
-                            onSuccess()
-                        } else {
-                            self.statusMessage = "Error converting user info to local object"
-                            try? FirebaseManager.shared.auth.signOut()
-                        }
-                    } else {
-                        self.statusMessage = "User not found in database"
-                        try? FirebaseManager.shared.auth.signOut()
-                    }
-                }
+        
+        userService.loginUser(email: loginEmail, password: loginPassword, emailVerificationRequired: requireVerification) { err in
+            if let err = err {
+                self.statusMessage = err
+                return
             }
+            onSuccess()
+        }
     }
 }

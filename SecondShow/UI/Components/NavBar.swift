@@ -66,6 +66,6 @@ struct NavBar_Previews: PreviewProvider {
 //            },
 //            buttonAction: {}
 //        )
-        TabBarView(showLoginView: .constant(false), selectedTab: .constant(3))
+        TabBarView(showLoginView: .constant(false), selectedTab: .constant(3), userService: UserService())
     }
 }

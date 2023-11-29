@@ -10,11 +10,10 @@ import Firebase
 
 
 protocol UserServiceProtocol {
-//    func createUserAuth(email: String, password: String, completion: @escaping((FirebaseAuth.User?, String?) -> Void))
     
     func uploadUser(uid: String, email: String, createTime: Date , completion: @escaping((String?) -> Void))
     
-    func createUser(email: String, password: String, createTime: Date, completion: @escaping((FirebaseAuth.User?, String?) -> Void))
+    func createUser(email: String, password: String, createTime: Date, sendEmailVerification: Bool, completion: @escaping((FirebaseAuth.User?, String?) -> Void))
 
     func getUser(email: String, completion: @escaping((User?, String?) -> Void))
     
@@ -22,31 +21,18 @@ protocol UserServiceProtocol {
     
     func logoutUser()
     
-    func isLoggedIn(completion: @escaping((Bool) -> Void))
+    func verifyLoginStatus(completion: @escaping((Bool) -> Void))
+    
+    func attachUserListener(completion: @escaping((User?, String?) -> Void))
+    
+    func removeUserListener()
 }
 
-class UserService: UserServiceProtocol {
+class UserService: ObservableObject, UserServiceProtocol {
     
-//    func createUserAuth(email: String, password: String, completion: @escaping((FirebaseAuth.User?, String?) -> Void)) {
-//        FirebaseManager.shared.auth.createUser(withEmail: email, password: password) { result, err in
-//            if let err = err  {
-//                completion(nil, "Error creating user: \(err.localizedDescription)")
-//                return
-//            }
-//
-//            guard let currentUser = FirebaseManager.shared.auth.currentUser else {
-//                completion(nil, "Error creating user: User not saved locally")
-//                return
-//            }
-//
-//            // Only want to create user, not sign in
-//            self.logoutUser()
-//
-//            completion(currentUser, nil)
-//        }
-//    }
-    
-    func createUser(email: String, password: String, createTime: Date, completion: @escaping((FirebaseAuth.User?, String?) -> Void)) {
+    private var userListener: ListenerRegistration?
+        
+    func createUser(email: String, password: String, createTime: Date, sendEmailVerification: Bool, completion: @escaping((FirebaseAuth.User?, String?) -> Void)) {
         FirebaseManager.shared.auth.createUser(withEmail: email, password: password) { result, err in
             if let err = err  {
                 completion(nil, "Error creating user: \(err.localizedDescription)")
@@ -58,15 +44,21 @@ class UserService: UserServiceProtocol {
                 return
             }
             
-            // Only want to create user, not sign in
-            self.logoutUser()
             
             self.uploadUser(uid: currentUser.uid, email: email, createTime: createTime) { err in
                 if let err = err {
                     completion(nil, err)
                     return
                 }
-                completion(currentUser, nil)
+                
+                // send verification email
+                currentUser.sendEmailVerification() { err in
+                    if let err = err {
+                        completion(nil, "Error sending email verification: \(err.localizedDescription)")
+                        return
+                    }
+                    completion(currentUser, nil)
+                }
             }
         }
     }
@@ -141,7 +133,7 @@ class UserService: UserServiceProtocol {
         try? FirebaseManager.shared.auth.signOut()
     }
     
-    func isLoggedIn(completion: @escaping((Bool) -> Void)) {
+    func verifyLoginStatus(completion: @escaping((Bool) -> Void)) {
         guard let authCurrUserEmail = FirebaseManager.shared.auth.currentUser?.email else {
             completion(false)
             return
@@ -161,5 +153,27 @@ class UserService: UserServiceProtocol {
         } else {
             completion(true)
         }
+    }
+    
+    func attachUserListener(completion: @escaping((User?, String?) -> Void)) {
+        guard let currentUser = FirebaseManager.shared.currentUser else {return}
+        
+        removeUserListener()
+        FirebaseManager.shared.firestore.collection("users").document(currentUser.email).addSnapshotListener{ snapshot, err in
+            if let err = err {
+                completion(nil, "Snapshot error: \(err.localizedDescription)")
+                return
+            }
+            
+            if let updatedUser = try? snapshot?.data(as: User.self) {
+                completion(updatedUser, nil)
+            } else {
+                completion(nil, "Error codifying user snapshot")
+            }
+        }
+    }
+    
+    func removeUserListener() {
+        userListener?.remove()
     }
 }

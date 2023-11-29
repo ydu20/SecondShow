@@ -152,6 +152,6 @@ struct ProfileView: View {
 struct ProfileView_Previews: PreviewProvider {
     static var previews: some View {
 //        ProfileView()
-        TabBarView(showLoginView: .constant(false), selectedTab: .constant(3))
+        TabBarView(showLoginView: .constant(false), selectedTab: .constant(3), userService: UserService())
     }
 }

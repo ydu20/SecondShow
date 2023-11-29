@@ -94,6 +94,6 @@ struct EventView: View {
 struct EventView_Previews: PreviewProvider {
     static var previews: some View {
 //        EventView(vm: EventViewModel(event: nil))
-        TabBarView(showLoginView: .constant(false), selectedTab: .constant(0))
+        TabBarView(showLoginView: .constant(false), selectedTab: .constant(0), userService: UserService())
     }
 }

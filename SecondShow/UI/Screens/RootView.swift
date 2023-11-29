@@ -17,58 +17,33 @@ struct RootView: View {
     var body: some View {
         ZStack {
             if !showLoginView {
-                TabBarView(showLoginView: $showLoginView, selectedTab: $selectedTab)
+                TabBarView(
+                    showLoginView: $showLoginView,
+                    selectedTab: $selectedTab,
+                    userService: userService
+                )
             }
         }
         .onAppear {
-            guard let authCurrentUserEmail = FirebaseManager.shared.auth.currentUser?.email else {
-                showLoginView = true
-                return
-            }
-            
-            if (FirebaseManager.shared.currentUser == nil) {
-                // Load FirebaseManager CurrentUser
-                FirebaseManager.shared.firestore.collection("users").document(authCurrentUserEmail).getDocument { document, err in
-                    if let err = err {
-                        print("Error retrieving user info: \(err)")
-                        try? FirebaseManager.shared.auth.signOut()
-                        showLoginView = true
-                        return
-                    }
-                    
-                    if let currentUser = try? document?.data(as: User.self) {
-                        // Great success
-                        FirebaseManager.shared.currentUser = currentUser
-                        attachFirebaseUserSnapshot()
-                        print("Successfully logged in")
-                    } else {
-                        try? FirebaseManager.shared.auth.signOut()
-                        showLoginView = false
+            // Verify login status & attach listener
+            userService.verifyLoginStatus { loggedIn in
+                if !loggedIn {
+                    showLoginView = true
+                } else {
+                    userService.attachUserListener { updatedUser, err in
+                        if let err = err {
+                            print(err)
+                            return
+                        }
+                        FirebaseManager.shared.currentUser = updatedUser
                     }
                 }
             }
         }
         .fullScreenCover(isPresented: $showLoginView) {
-            LoginView(showLoginView: $showLoginView)
+            LoginView(showLoginView: $showLoginView, userService: userService)
         }
-    }
-    
-    private func attachFirebaseUserSnapshot () {
-        guard let currentUser = FirebaseManager.shared.currentUser else {return}
-
-        FirebaseManager.shared.firestore.collection("users").document(currentUser.email).addSnapshotListener { snapshot, err in
-            if let err = err {
-                print("Error retrieving user info: \(err)")
-                return
-            }
-            
-            if let currentUser = try? snapshot?.data(as: User.self) {
-                // Great success
-                FirebaseManager.shared.currentUser = currentUser
-            } else {
-                print("Error fetching user snapshot")
-            }
-        }
+        .environmentObject(userService)
     }
 }
 

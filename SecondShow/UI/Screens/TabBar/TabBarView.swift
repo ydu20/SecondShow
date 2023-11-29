@@ -11,6 +11,7 @@ struct TabBarView: View {
     
     @Binding var showLoginView: Bool
     @Binding var selectedTab: Int
+    let userService: UserService
     
     @State private var bannerText = ""
     @State private var bannerColor = Color.orange
@@ -66,6 +67,6 @@ struct TabBarView: View {
 
 struct TicketsTabView_Previews: PreviewProvider {
     static var previews: some View {
-        TabBarView(showLoginView: .constant(false), selectedTab: .constant(0))
+        TabBarView(showLoginView: .constant(false), selectedTab: .constant(0), userService: UserService())
     }
 }

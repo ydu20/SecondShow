@@ -11,7 +11,12 @@ import FirebaseAuth
 struct LoginView: View {
     
     @Binding var showLoginView: Bool
-    @StateObject private var vm = LoginViewModel()
+    @StateObject private var vm: LoginViewModel
+    
+    init(showLoginView: Binding<Bool>, userService: UserService) {
+        self._showLoginView = showLoginView
+        _vm = StateObject(wrappedValue: LoginViewModel(userService: userService))
+    }
     
     var body: some View {
         NavigationView {
@@ -102,12 +107,11 @@ struct LoginView: View {
                 .padding(.bottom, 26)
         }
     }
-
 }
 
 struct LoginView_Previews: PreviewProvider {
     static var previews: some View {
-        LoginView(showLoginView: .constant(true))
+        LoginView(showLoginView: .constant(true), userService: UserService())
 //        RootView()
     }
 }

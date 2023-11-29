@@ -97,6 +97,6 @@ struct MainMessagesView: View {
 struct MainMessagesView_Previews: PreviewProvider {
     static var previews: some View {
 //        MainMessagesView()
-        TabBarView(showLoginView: .constant(false), selectedTab: .constant(1))
+        TabBarView(showLoginView: .constant(false), selectedTab: .constant(1), userService: UserService())
     }
 }
