@@ -28,10 +28,10 @@ protocol UserServiceProtocol {
     func removeUserListener()
 }
 
-class UserService: ObservableObject, UserServiceProtocol {
+class UserService: UserServiceProtocol {
     
     private var userListener: ListenerRegistration?
-        
+    
     func createUser(email: String, password: String, createTime: Date, sendEmailVerification: Bool, completion: @escaping((FirebaseAuth.User?, String?) -> Void)) {
         FirebaseManager.shared.auth.createUser(withEmail: email, password: password) { result, err in
             if let err = err  {

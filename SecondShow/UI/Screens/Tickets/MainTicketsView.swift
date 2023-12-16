@@ -15,14 +15,28 @@ struct MainTicketsView: View {
     @State private var showNewListingView = false
     @State private var showEventView = false
     
-    @StateObject private var vm = MainTicketsViewModel()
+    @StateObject private var vm: MainTicketsViewModel
     var eventVm: EventViewModel
     var chatVm: ChatViewModel
     
-    init(notifyUser: @escaping (String, Color) -> Void, chatVm: ChatViewModel) {
+    init(notifyUser: @escaping (String, Color) -> Void, chatVm: ChatViewModel, eventService: EventService) {
         self.notifyUser = notifyUser
-        self.eventVm = EventViewModel(event: nil, notifyUser: notifyUser)
-        self.eventVm.chatVm = chatVm
+        _vm = StateObject(wrappedValue: MainTicketsViewModel(eventService: eventService))
+
+        self.eventVm = EventViewModel(
+            eventService: eventService,
+            notifyUser: notifyUser,
+            updateChatOnRemoval: {listingId, creator, deleted in
+                if listingId == chatVm.listingId, creator == chatVm.counterpartyEmail {
+                    if deleted {
+                        chatVm.deleted = true
+                    } else {
+                        chatVm.sold = true
+                    }
+                }
+            }
+        )
+        
         self.chatVm = chatVm
     }
     
@@ -107,8 +121,18 @@ struct MainTicketsView: View {
 
 struct MainTicketsView_Previews: PreviewProvider {
     static var previews: some View {
-        TabBarView(showLoginView: .constant(false), selectedTab: .constant(0), userService: UserService())
-        TabBarView(showLoginView: .constant(false), selectedTab: .constant(0), userService: UserService())
+        TabBarView(
+            showLoginView: .constant(false),
+            selectedTab: .constant(0),
+            userService: UserService(),
+            eventService: EventService()
+        )
+        TabBarView(
+            showLoginView: .constant(false),
+            selectedTab: .constant(0),
+            userService: UserService(),
+            eventService: EventService()
+        )
             .preferredColorScheme(.dark)
         
     }

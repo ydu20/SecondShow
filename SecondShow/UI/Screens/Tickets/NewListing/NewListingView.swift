@@ -307,7 +307,11 @@ struct NewListingView: View {
 
 struct NewListingView_Previews: PreviewProvider {
     static var previews: some View {
-//        NewListingView()
-        MainTicketsView(notifyUser: {_, _ in}, chatVm: ChatViewModel())
+        TabBarView(
+            showLoginView: .constant(false),
+            selectedTab: .constant(0),
+            userService: UserService(),
+            eventService: EventService()
+        )
     }
 }

@@ -189,6 +189,6 @@ struct MyListingsView: View {
 
 struct MyListingsView_Previews: PreviewProvider {
     static var previews: some View {
-        TabBarView(showLoginView: .constant(false), selectedTab: .constant(2), userService: UserService())
+        EmptyView()
     }
 }

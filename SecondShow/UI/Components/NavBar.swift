@@ -57,15 +57,11 @@ struct NavBar<Label: View>: View {
 
 struct NavBar_Previews: PreviewProvider {
     static var previews: some View {
-//        NavBar(
-//            title: "Second Show",
-//            buttonLabel: {
-//                Image(systemName: "plus.circle")
-//                    .font(.system(size: 20))
-//                    .foregroundColor(Color(.label))
-//            },
-//            buttonAction: {}
-//        )
-        TabBarView(showLoginView: .constant(false), selectedTab: .constant(3), userService: UserService())
+        TabBarView(
+            showLoginView: .constant(false),
+            selectedTab: .constant(0),
+            userService: UserService(),
+            eventService: EventService()
+        )
     }
 }

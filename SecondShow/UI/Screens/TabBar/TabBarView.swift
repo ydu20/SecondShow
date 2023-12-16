@@ -12,6 +12,7 @@ struct TabBarView: View {
     @Binding var showLoginView: Bool
     @Binding var selectedTab: Int
     let userService: UserService
+    let eventService: EventService
     
     @State private var bannerText = ""
     @State private var bannerColor = Color.orange
@@ -24,19 +25,31 @@ struct TabBarView: View {
         ZStack {
             NavigationView {
                 TabView(selection: $selectedTab) {
-                    MainTicketsView(notifyUser: notifyUser, chatVm: chatViewModel)
+                    MainTicketsView(
+                        notifyUser: notifyUser,
+                        chatVm: chatViewModel,
+                        eventService: eventService
+                    )
                         .tabItem {Image(systemName: "ticket")}
                         .tag(0)
                     
-                    MainMessagesView(notifyUser: notifyUser, chatVm: chatViewModel)
+                    MainMessagesView(
+                        notifyUser: notifyUser,
+                        chatVm: chatViewModel
+                    )
                         .tabItem {Image(systemName: "message")}
                         .tag(1)
                     
-                    MyListingsView(notifyUser: notifyUser)
+                    MyListingsView(
+                        notifyUser: notifyUser
+                    )
                         .tabItem {Image(systemName: "list.bullet")}
                         .tag(2)
                     
-                    ProfileView(notifyUser: notifyUser, showLoginView: $showLoginView)
+                    ProfileView(
+                        notifyUser: notifyUser,
+                        showLoginView: $showLoginView
+                    )
                         .tabItem {Image(systemName: "person")}
                         .tag(3)
                 }
@@ -67,6 +80,11 @@ struct TabBarView: View {
 
 struct TicketsTabView_Previews: PreviewProvider {
     static var previews: some View {
-        TabBarView(showLoginView: .constant(false), selectedTab: .constant(0), userService: UserService())
+        TabBarView(
+            showLoginView: .constant(false),
+            selectedTab: .constant(0),
+            userService: UserService(),
+            eventService: EventService()
+        )
     }
 }

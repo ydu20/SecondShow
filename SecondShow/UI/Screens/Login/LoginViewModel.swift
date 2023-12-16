@@ -68,16 +68,16 @@ class LoginViewModel: ObservableObject {
     
     
     func loginUser(onSuccess: @escaping () -> ()) {
-            // Validation
-            if (loginEmail.count < 5) {
-                statusMessage = "Please enter a valid email"
-                return
-            }
-            if (loginPassword.count == 0) {
-                statusMessage = "Please enter a password"
-                return
-            }
-            statusMessage = ""
+        // Validation
+        if (loginEmail.count < 5) {
+            statusMessage = "Please enter a valid email"
+            return
+        }
+        if (loginPassword.count == 0) {
+            statusMessage = "Please enter a password"
+            return
+        }
+        statusMessage = ""
         
         userService.loginUser(email: loginEmail, password: loginPassword, emailVerificationRequired: requireVerification) { err in
             if let err = err {

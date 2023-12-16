@@ -16,35 +16,48 @@ class EventViewModel: ObservableObject {
     @Published var listings = [Listing]()
     @Published var eventAlerts = false
 
-    private var event: Event?
-    var listingListener: ListenerRegistration?
-    private var notifyUser: ((String, Color) -> ())?
-
-    var chatVm: ChatViewModel?
+    private var event: Event? = nil
+    private let eventService: EventService
     
-    init(event: Event?, notifyUser: @escaping (String, Color) -> ()) {
+    private var notifyUser: (String, Color) -> ()
+    private var updateChatOnRemoval: ((String, String, Bool) -> ())
+    
+    
+    var listingListener: ListenerRegistration?
+    
+    
+    init(eventService: EventService, notifyUser: @escaping (String, Color) -> (), updateChatOnRemoval: @escaping (String, String, Bool) -> ()) {
         print("Initilizing eventViewModel...")
         
+        self.eventService = eventService
         self.notifyUser = notifyUser
-        
-        setEvent(event: event)
-        fetchListings()
+        self.updateChatOnRemoval = updateChatOnRemoval
     }
     
     func registerEventAlerts() {
-        guard let user = FirebaseManager.shared.currentUser else {return}
+//        guard let user = FirebaseManager.shared.currentUser else {return}
+//        guard let eventId = self.event?.id else {return}
+//
+//        let userRef = FirebaseManager.shared.firestore.collection("users").document(user.email)
+//        userRef.updateData([
+//            FirebaseConstants.alerts: FieldValue.arrayUnion([eventId])
+//        ]) {err in
+//            if let err = err {
+////                if let notifyUser = self.notifyUser {
+//                self.notifyUser(err.localizedDescription, Color(.systemRed))
+////                } else {
+////                    print(err.localizedDescription)
+////                }
+//                return
+//            }
+//            self.eventAlerts = true
+//        }
+        
         guard let eventId = self.event?.id else {return}
         
-        let userRef = FirebaseManager.shared.firestore.collection("users").document(user.email)
-        userRef.updateData([
-            FirebaseConstants.alerts: FieldValue.arrayUnion([eventId])
-        ]) {err in
+        eventService.addEventAlert(eventId: eventId) { err in
             if let err = err {
-                if let notifyUser = self.notifyUser {
-                    notifyUser(err.localizedDescription, Color(.systemRed))
-                } else {
-                    print(err.localizedDescription)
-                }
+                self.notifyUser(err, Color(.systemRed))
                 return
             }
             self.eventAlerts = true
@@ -52,19 +65,29 @@ class EventViewModel: ObservableObject {
     }
     
     func deregisterEventAlerts() {
-        guard let user = FirebaseManager.shared.currentUser else {return}
+//        guard let user = FirebaseManager.shared.currentUser else {return}
+//        guard let eventId = self.event?.id else {return}
+//
+//        let userRef = FirebaseManager.shared.firestore.collection("users").document(user.email)
+//        userRef.updateData([
+//            FirebaseConstants.alerts: FieldValue.arrayRemove([eventId])
+//        ]) {err in
+//            if let err = err {
+////                if let notifyUser = self.notifyUser {
+//                self.notifyUser(err.localizedDescription, Color(.systemRed))
+////                } else {
+////                    print(err.localizedDescription)
+////                }
+//                return
+//            }
+//            self.eventAlerts = false
+//        }
+        
         guard let eventId = self.event?.id else {return}
         
-        let userRef = FirebaseManager.shared.firestore.collection("users").document(user.email)
-        userRef.updateData([
-            FirebaseConstants.alerts: FieldValue.arrayRemove([eventId])
-        ]) {err in
+        eventService.removeEventAlert(eventId: eventId) { err in
             if let err = err {
-                if let notifyUser = self.notifyUser {
-                    notifyUser(err.localizedDescription, Color(.systemRed))
-                } else {
-                    print(err.localizedDescription)
-                }
+                self.notifyUser(err, Color(.systemRed))
                 return
             }
             self.eventAlerts = false
@@ -114,14 +137,7 @@ class EventViewModel: ObservableObject {
                                 self.listings.remove(at: rmInd)
                             }
                             
-                            if listing.id == self.chatVm?.listingId, listing.creator == self.chatVm?.counterpartyEmail {
-                                if change.type == .removed {
-                                    self.chatVm?.deleted = true
-                                } else {
-                                    self.chatVm?.sold = true
-                                }
-                            }
-
+                            self.updateChatOnRemoval(listing.id ?? "", listing.creator, change.type == .removed)
                         }
                     } else {
                         print("Failure codifying listing object")
