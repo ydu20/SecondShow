@@ -16,12 +16,89 @@ protocol ListingServiceProtocol {
     
     func fetchUserListings(completion: @escaping([DocumentChange]?, String?) -> ())
     
+    func updateListingAvailability(listing: Listing, numSold: Int, completion: @escaping((String?) -> ()))
+    
+    func deleteListing(listing: Listing, completion: @escaping((String?) -> ()))
+    
     func removeListingListener()
 }
 
 class ListingService: ListingServiceProtocol {
     
     private var listingListener: ListenerRegistration?
+    
+    func deleteListing(listing: Listing, completion: @escaping((String?) -> ())) {
+        guard let user = FirebaseManager.shared.currentUser else {
+            completion("Error retrieving local user information")
+            return
+        }
+        
+        let listingRef = FirebaseManager.shared.firestore
+            .collection("events")
+            .document(listing.eventId)
+            .collection("listings")
+            .document(listing.id ?? "")
+        let userListingRef = FirebaseManager.shared.firestore
+            .collection("users")
+            .document(user.email)
+            .collection("listings")
+            .document(listing.id ?? "")
+        
+        listingRef.delete {err in
+            if let err = err {
+                completion("Error deleting listing: \(err.localizedDescription)")
+                return
+            }
+            userListingRef.delete {err in
+                if let err = err {
+                    completion("Error deleting user listing: \(err.localizedDescription)")
+                    return
+                }
+                completion(nil)
+            }
+        }
+    }
+
+    
+    func updateListingAvailability(listing: Listing, numSold: Int, completion: @escaping((String?) -> ())) {
+        
+        guard let user = FirebaseManager.shared.currentUser else {
+            completion("Error retrieving local user information")
+            return
+        }
+        let listingUpdate = [
+            ListingConstants.availableQuantity: listing.availableQuantity - numSold
+        ]
+        
+        let listingRef = FirebaseManager.shared.firestore
+            .collection("events")
+            .document(listing.eventId)
+            .collection("listings")
+            .document(listing.id ?? "")
+        let userListingRef = FirebaseManager.shared.firestore
+            .collection("users")
+            .document(user.email)
+            .collection("listings")
+            .document(listing.id ?? "")
+        
+        listingRef.updateData(listingUpdate) {err in
+            if let err = err {
+                completion("Error updating listing: \(err.localizedDescription)")
+                return
+            }
+                
+            // Update user listing
+            userListingRef.updateData(listingUpdate) {err in
+                if let err = err {
+                    completion("Error updating user's listing: \(err.localizedDescription)")
+                    return
+                }
+                completion(nil)
+            }
+            
+        }
+    }
+
     
     func fetchUserListings(completion: @escaping([DocumentChange]?, String?) -> ()) {
         guard let user = FirebaseManager.shared.currentUser else {return}

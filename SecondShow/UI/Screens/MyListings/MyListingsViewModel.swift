@@ -33,72 +33,17 @@ class MyListingsViewModel: ObservableObject {
             notifyUser("Cannot load local listing", Color(.systemRed))
             return
         }
-        
         if listing.availableQuantity - numSold < 0 {
             notifyUser("Error: negative availability after selling", Color(.systemRed))
             return
         }
-        
-        let eventRef = FirebaseManager.shared.firestore.collection("events").document(listing.eventId)
-        let listingRef = eventRef.collection("listings").document(listing.id ?? "")
-        
-        // Update listing
-        listingRef.getDocument { (doc, err) in
+        listingService.updateListingAvailability(listing: listing, numSold: numSold) { err in
             if let err = err {
-                self.notifyUser("Error retrieving listing: \(err.localizedDescription)", Color(.systemRed))
+                self.notifyUser(err, Color(.systemRed))
                 return
             }
-            
-            if let doc = doc, doc.exists {
-                let listingUpdate = [
-                    ListingConstants.availableQuantity: listing.availableQuantity - numSold
-                ]
-                listingRef.updateData(listingUpdate) { err in
-                    if let err = err {
-                        self.notifyUser("Error updating listing: \(err.localizedDescription)", Color(.systemRed))
-                        return
-                    }
-                    
-                    // Update user listing
-                    self.updateUserListing(listing: listing, listingUpdate: listingUpdate)
-                    
-                    // Update event if listing sells out
-                    if listing.availableQuantity - Int(numSold) == 0 {
-                        self.handleSoldOutAndDelete(eventRef: eventRef, deleted: false)
-                    }
-                }
-                
-            } else {
-                self.notifyUser("Error: listing not found in database", Color(.systemRed))
-                return
-            }
-        }
-    }
-    
-    private func updateUserListing(listing: Listing, listingUpdate: [String: Int]) {
-        guard let user = FirebaseManager.shared.currentUser else {
-            notifyUser("Error retrieving local user information", Color(.systemRed))
-            return
-        }
-        
-        let userListingRef = FirebaseManager.shared.firestore.collection("users").document(user.email).collection("listings").document(listing.id ?? "")
-        
-        userListingRef.getDocument { (doc, err) in
-            if let err = err {
-                self.notifyUser("Error retrieving user listing: \(err.localizedDescription)", Color(.systemRed))
-                return
-            }
-            
-            if let doc = doc, doc.exists {
-                userListingRef.updateData(listingUpdate) { err in
-                    if let err = err {
-                        self.notifyUser("Error updating listing: \(err.localizedDescription)", Color(.systemRed))
-                        return
-                    }
-                }
-            } else {
-                self.notifyUser("Error: user listing not found in database", Color(.systemRed))
-                return
+            if (listing.availableQuantity - numSold) == 0 {
+                self.handleSoldOutAndDelete(eventId: listing.eventId, deleted: false)
             }
         }
     }
@@ -108,34 +53,21 @@ class MyListingsViewModel: ObservableObject {
             notifyUser("Cannot load local listing", Color(.systemRed))
             return
         }
-        
-        guard let user = FirebaseManager.shared.currentUser else {
-            notifyUser("Error retrieving local user information", Color(.systemRed))
-            return
-        }
-        
-        let eventRef = FirebaseManager.shared.firestore.collection("events").document(listing.eventId)
-        
-        let listingRef = eventRef.collection("listings").document(listing.id ?? "")
-        
-        let userListingRef = FirebaseManager.shared.firestore.collection("users").document(user.email).collection("listings").document(listing.id ?? "")
-        
-        listingRef.delete { err in
+        listingService.deleteListing(listing: listing) { err in
             if let err = err {
-                self.notifyUser("Error deleting listing: \(err.localizedDescription)", Color(.systemRed))
+                self.notifyUser(err, Color(.systemRed))
                 return
             }
+            self.handleSoldOutAndDelete(eventId: listing.eventId, deleted: true)
         }
-        userListingRef.delete { err in
-            if let err = err {
-                self.notifyUser("Error deleting user listing: \(err.localizedDescription)", Color(.systemRed))
-            }
-            return
-        }
-        handleSoldOutAndDelete(eventRef: eventRef, deleted: true)
     }
     
-    private func handleSoldOutAndDelete(eventRef: DocumentReference, deleted: Bool) {
+    private func handleSoldOutAndDelete(eventId: String, deleted: Bool) {
+        
+        let eventRef = FirebaseManager.shared.firestore
+            .collection("events")
+            .document(eventId)
+        
         decreaseEventListingCount(eventRef: eventRef)
         
         guard let userEmail = FirebaseManager.shared.currentUser?.email else {return}
