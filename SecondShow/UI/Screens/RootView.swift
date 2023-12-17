@@ -14,6 +14,7 @@ struct RootView: View {
     
     private let userService = UserService()
     private let eventService = EventService()
+    private let listingService = ListingService()
     
     var body: some View {
         ZStack {
@@ -22,7 +23,8 @@ struct RootView: View {
                     showLoginView: $showLoginView,
                     selectedTab: $selectedTab,
                     userService: userService,
-                    eventService: eventService
+                    eventService: eventService,
+                    listingService: listingService
                 )
             }
         }
@@ -45,8 +47,6 @@ struct RootView: View {
         .fullScreenCover(isPresented: $showLoginView) {
             LoginView(showLoginView: $showLoginView, userService: userService)
         }
-//        .environmentObject(userService)
-//        .environmentObject(eventService)
     }
 }
 

@@ -35,24 +35,6 @@ class EventViewModel: ObservableObject {
     }
     
     func registerEventAlerts() {
-//        guard let user = FirebaseManager.shared.currentUser else {return}
-//        guard let eventId = self.event?.id else {return}
-//
-//        let userRef = FirebaseManager.shared.firestore.collection("users").document(user.email)
-//        userRef.updateData([
-//            FirebaseConstants.alerts: FieldValue.arrayUnion([eventId])
-//        ]) {err in
-//            if let err = err {
-////                if let notifyUser = self.notifyUser {
-//                self.notifyUser(err.localizedDescription, Color(.systemRed))
-////                } else {
-////                    print(err.localizedDescription)
-////                }
-//                return
-//            }
-//            self.eventAlerts = true
-//        }
-        
         guard let eventId = self.event?.id else {return}
         
         eventService.addEventAlert(eventId: eventId) { err in
@@ -65,24 +47,6 @@ class EventViewModel: ObservableObject {
     }
     
     func deregisterEventAlerts() {
-//        guard let user = FirebaseManager.shared.currentUser else {return}
-//        guard let eventId = self.event?.id else {return}
-//
-//        let userRef = FirebaseManager.shared.firestore.collection("users").document(user.email)
-//        userRef.updateData([
-//            FirebaseConstants.alerts: FieldValue.arrayRemove([eventId])
-//        ]) {err in
-//            if let err = err {
-////                if let notifyUser = self.notifyUser {
-//                self.notifyUser(err.localizedDescription, Color(.systemRed))
-////                } else {
-////                    print(err.localizedDescription)
-////                }
-//                return
-//            }
-//            self.eventAlerts = false
-//        }
-        
         guard let eventId = self.event?.id else {return}
         
         eventService.removeEventAlert(eventId: eventId) { err in

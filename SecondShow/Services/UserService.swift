@@ -14,7 +14,7 @@ protocol UserServiceProtocol {
     func uploadUser(uid: String, email: String, createTime: Date , completion: @escaping((String?) -> Void))
     
     func createUser(email: String, password: String, createTime: Date, sendEmailVerification: Bool, completion: @escaping((FirebaseAuth.User?, String?) -> Void))
-
+    
     func getUser(email: String, completion: @escaping((User?, String?) -> Void))
     
     func loginUser(email: String, password: String, emailVerificationRequired: Bool, completion: @escaping((String?) -> Void))

@@ -151,11 +151,12 @@ struct ProfileView: View {
 
 struct ProfileView_Previews: PreviewProvider {
     static var previews: some View {
-        TabBarView(
-            showLoginView: .constant(false),
-            selectedTab: .constant(0),
-            userService: UserService(),
-            eventService: EventService()
-        )
+//        TabBarView(
+//            showLoginView: .constant(false),
+//            selectedTab: .constant(0),
+//            userService: UserService(),
+//            eventService: EventService()
+//        )
+        EmptyView()
     }
 }

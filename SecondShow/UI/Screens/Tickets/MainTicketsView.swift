@@ -19,10 +19,12 @@ struct MainTicketsView: View {
     var eventVm: EventViewModel
     var chatVm: ChatViewModel
     
-    init(notifyUser: @escaping (String, Color) -> Void, chatVm: ChatViewModel, eventService: EventService) {
+    private let eventService: EventService
+    private let listingService: ListingService
+    
+    init(notifyUser: @escaping (String, Color) -> Void, chatVm: ChatViewModel, eventService: EventService, listingService: ListingService) {
         self.notifyUser = notifyUser
         _vm = StateObject(wrappedValue: MainTicketsViewModel(eventService: eventService))
-
         self.eventVm = EventViewModel(
             eventService: eventService,
             notifyUser: notifyUser,
@@ -36,8 +38,9 @@ struct MainTicketsView: View {
                 }
             }
         )
-        
         self.chatVm = chatVm
+        self.eventService = eventService
+        self.listingService = listingService
     }
     
     var body: some View {
@@ -70,7 +73,15 @@ struct MainTicketsView: View {
             .hidden()
         }
         .sheet(isPresented: $showNewListingView) {
-            NewListingView(notifyUser: notifyUser)
+            NewListingView(
+                mainTicketsVm: vm,
+                eventService: eventService,
+                listingService: listingService,
+                notifyUser: notifyUser,
+                dismissView: {
+                    showNewListingView = false;
+                }
+            )
                 .environmentObject(vm)
         }
         .padding(.vertical)
@@ -121,19 +132,19 @@ struct MainTicketsView: View {
 
 struct MainTicketsView_Previews: PreviewProvider {
     static var previews: some View {
-        TabBarView(
-            showLoginView: .constant(false),
-            selectedTab: .constant(0),
-            userService: UserService(),
-            eventService: EventService()
-        )
-        TabBarView(
-            showLoginView: .constant(false),
-            selectedTab: .constant(0),
-            userService: UserService(),
-            eventService: EventService()
-        )
-            .preferredColorScheme(.dark)
-        
+//        TabBarView(
+//            showLoginView: .constant(false),
+//            selectedTab: .constant(0),
+//            userService: UserService(),
+//            eventService: EventService()
+//        )
+//        TabBarView(
+//            showLoginView: .constant(false),
+//            selectedTab: .constant(0),
+//            userService: UserService(),
+//            eventService: EventService()
+//        )
+//            .preferredColorScheme(.dark)
+        EmptyView()
     }
 }

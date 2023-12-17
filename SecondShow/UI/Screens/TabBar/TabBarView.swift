@@ -13,6 +13,7 @@ struct TabBarView: View {
     @Binding var selectedTab: Int
     let userService: UserService
     let eventService: EventService
+    let listingService: ListingService
     
     @State private var bannerText = ""
     @State private var bannerColor = Color.orange
@@ -28,7 +29,8 @@ struct TabBarView: View {
                     MainTicketsView(
                         notifyUser: notifyUser,
                         chatVm: chatViewModel,
-                        eventService: eventService
+                        eventService: eventService,
+                        listingService: listingService
                     )
                         .tabItem {Image(systemName: "ticket")}
                         .tag(0)
@@ -80,11 +82,12 @@ struct TabBarView: View {
 
 struct TicketsTabView_Previews: PreviewProvider {
     static var previews: some View {
-        TabBarView(
-            showLoginView: .constant(false),
-            selectedTab: .constant(0),
-            userService: UserService(),
-            eventService: EventService()
-        )
+//        TabBarView(
+//            showLoginView: .constant(false),
+//            selectedTab: .constant(0),
+//            userService: UserService(),
+//            eventService: EventService()
+//        )
+        EmptyView()
     }
 }

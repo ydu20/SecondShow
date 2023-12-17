@@ -13,6 +13,7 @@ class LoginViewModel: ObservableObject {
 
     private let userService: UserService
     
+    
     init(userService: UserService) {
         self.userService = userService
     }

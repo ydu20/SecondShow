@@ -14,16 +14,6 @@ struct NavBar<Label: View>: View {
     let buttonLabel: (() -> Label)?
     let buttonAction: (() -> Void)?
     
-//    init(
-//        title: String,
-//        buttonLabel: (() -> Label)? = nil,
-//        buttonAction: (() -> Void)? = nil
-//    ) {
-//        self.title = title
-//        self.buttonLabel = buttonLabel?()
-//        self.buttonAction = buttonAction
-//    }
-    
     init(title: String, subtitle: String?) {
         self.title = title
         self.subtitle = subtitle
@@ -57,11 +47,12 @@ struct NavBar<Label: View>: View {
 
 struct NavBar_Previews: PreviewProvider {
     static var previews: some View {
-        TabBarView(
-            showLoginView: .constant(false),
-            selectedTab: .constant(0),
-            userService: UserService(),
-            eventService: EventService()
-        )
+//        TabBarView(
+//            showLoginView: .constant(false),
+//            selectedTab: .constant(0),
+//            userService: UserService(),
+//            eventService: EventService()
+//        )
+        EmptyView()
     }
 }
