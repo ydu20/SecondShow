@@ -74,6 +74,7 @@ struct DeletePopupView: View {
 
 struct DeletePopupView_Previews: PreviewProvider {
     static var previews: some View {
-        DeletePopupView(showPopupView: .constant(true), vm: MyListingsViewModel(), notifyUser: {msg, _ in print(msg)})
+//        DeletePopupView(showPopupView: .constant(true), vm: MyListingsViewModel(), notifyUser: {msg, _ in print(msg)})
+        EmptyView()
     }
 }

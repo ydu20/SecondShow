@@ -43,6 +43,7 @@ struct TabBarView: View {
                         .tag(1)
                     
                     MyListingsView(
+                        listingService: listingService,
                         notifyUser: notifyUser
                     )
                         .tabItem {Image(systemName: "list.bullet")}

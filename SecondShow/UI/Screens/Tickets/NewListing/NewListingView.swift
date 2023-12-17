@@ -84,7 +84,6 @@ struct NewListingView: View {
         VStack {
             HStack {
                 VStack {
-                    
                     ForEach(Array(vm.suggestions.enumerated()), id: \.offset) { index, suggestedEvent in
                         HStack {
                             Button {

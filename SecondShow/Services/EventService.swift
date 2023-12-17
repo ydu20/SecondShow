@@ -47,9 +47,7 @@ class EventService: EventServiceProtocol {
                 completion(nil)
             }
     }
-    
-    
-    
+        
     func fetchEvents(completion: @escaping(([DocumentChange]?, String?) -> ())) {
         removeEventListener()
         

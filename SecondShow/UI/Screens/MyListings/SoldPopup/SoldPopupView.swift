@@ -95,6 +95,7 @@ struct SoldPopupView: View {
 
 struct SoldPopupView_Previews: PreviewProvider {
     static var previews: some View {
-        SoldPopupView(showPopupView: .constant(true), vm: MyListingsViewModel(), notifyUser: {msg, _ in print(msg)})
+//        SoldPopupView(showPopupView: .constant(true), vm: MyListingsViewModel(), notifyUser: {msg, _ in print(msg)})
+        EmptyView()
     }
 }

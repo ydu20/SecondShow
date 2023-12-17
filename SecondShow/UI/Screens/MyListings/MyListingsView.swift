@@ -11,10 +11,16 @@ struct MyListingsView: View {
     
     let notifyUser: (String, Color) -> ()
     
-    @StateObject var vm = MyListingsViewModel()
+    @StateObject var vm: MyListingsViewModel
         
     @State private var showSoldPopupView = false
     @State private var showDeletePopupView = false
+    
+    
+    init(listingService: ListingService, notifyUser: @escaping (String, Color) -> ()) {
+        self.notifyUser = notifyUser
+        _vm = StateObject(wrappedValue: MyListingsViewModel(listingService: listingService, notifyUser: notifyUser))
+    }
 
     var body: some View {
         VStack {

@@ -68,7 +68,7 @@ class EventViewModel: ObservableObject {
         print("Fetching listings...")
         
         listings.removeAll()
-        listingService.fetchListings(eventId: eventId) { documentChanges, err in
+        listingService.fetchEventListings(eventId: eventId) { documentChanges, err in
             if let err = err {
                 self.notifyUser(err, Color(.systemRed))
                 return

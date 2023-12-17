@@ -16,16 +16,17 @@ class MyListingsViewModel: ObservableObject {
     
     var selectedListing: Listing? = nil
     private var myListingListener: ListenerRegistration?
-    var notifyUser: (String, Color) -> () = {_, _ in}
+    var notifyUser: (String, Color) -> ()
     
-    init() {
+    private let listingService: ListingService
+    
+    init(listingService: ListingService, notifyUser: @escaping (String, Color) -> ()) {
         print("Initilizing MyListingViewModel...")
+        self.listingService = listingService
+        self.notifyUser = notifyUser
+        
         fetchMyListings()
     }
-    
-//    func setNotifyUser(notifyUser: @escaping (String, Color) -> ()) {
-//        self.notifyUser = notifyUser
-//    }
     
     func updateListing(numSold: Int) {
         guard let listing = selectedListing else {
@@ -194,74 +195,58 @@ class MyListingsViewModel: ObservableObject {
         }
     }
     
-    
-    
     private func fetchMyListings() {
-        guard let user = FirebaseManager.shared.currentUser else {return}
-        
-        myListingListener?.remove()
         myAvailableListings.removeAll()
         mySoldOutListings.removeAll()
         
-        myListingListener = FirebaseManager.shared.firestore
-            .collection("users")
-            .document(user.email)
-            .collection("listings")
-//            .order(by: ListingConstants.createTime)
-            .addSnapshotListener{ querySnapshot, error in
-                if let error = error {
-                    print("Failed to listen for user listings: \(error.localizedDescription)")
-                }
-                
-                querySnapshot?.documentChanges.forEach({ change in
-                    if let myListing = try? change.document.data(as: Listing.self) {
-                        if change.type == .added {
-                            if (myListing.availableQuantity != 0) {
-                                self.insertInPlace(listing: myListing, listings: &self.myAvailableListings)
-                            } else {
-                                self.insertInPlace(listing: myListing, listings: &self.mySoldOutListings)
-                            }
-                        }
-                        else if change.type == .modified {
-                            let availableInd = self.myAvailableListings.firstIndex(where: {$0.id == myListing.id})
-                            let soldOutInd = self.mySoldOutListings.firstIndex(where: {$0.id == myListing.id})
-                            
-                            if (myListing.availableQuantity != 0) {
-                                // Listing still available
-                                if let availableInd = availableInd {
-                                    self.myAvailableListings[availableInd] = myListing
-                                } else {
-                                    self.insertInPlace(listing: myListing, listings: &self.myAvailableListings)
-                                }
-                            } else {
-                                // Listing sold out
-                                if availableInd != nil {
-                                    self.myAvailableListings.removeAll(where: {$0.id == myListing.id})
-                                    self.insertInPlace(listing: myListing, listings: &self.mySoldOutListings)
-                                } else {
-                                    if let soldOutInd = soldOutInd {
-                                        self.mySoldOutListings[soldOutInd] = myListing
-                                    } else {
-                                        self.insertInPlace(listing: myListing, listings: &self.mySoldOutListings)
-                                    }
-                                }
-                            }
-                        }
-                        else {
-                            self.myAvailableListings.removeAll(where: {$0.id == myListing.id})
-                            self.mySoldOutListings.removeAll(where: {$0.id == myListing.id})
-                        }
-                    } else {
-                        print("Failure codifying listing object")
-                    }
-                })
-                
-                // For debugging
-//                print("Snapshot change processed")
-//                self.myAvailableListings.forEach { myListing in
-//                    print("\(String(myListing.eventName)): \(String(myListing.price))")
-//                }
+        listingService.fetchUserListings { documentChanges, err in
+            if let err = err {
+                self.notifyUser(err, Color(.systemRed))
+                return
             }
+            documentChanges?.forEach({change in
+                if let myListing = try? change.document.data(as: Listing.self) {
+                    if change.type == .added {
+                        if (myListing.availableQuantity != 0) {
+                            self.insertInPlace(listing: myListing, listings: &self.myAvailableListings)
+                        } else {
+                            self.insertInPlace(listing: myListing, listings: &self.mySoldOutListings)
+                        }
+                    }
+                    else if change.type == .modified {
+                        let availableInd = self.myAvailableListings.firstIndex(where: {$0.id == myListing.id})
+                        let soldOutInd = self.mySoldOutListings.firstIndex(where: {$0.id == myListing.id})
+                        
+                        if (myListing.availableQuantity != 0) {
+                            // Listing still available
+                            if let availableInd = availableInd {
+                                self.myAvailableListings[availableInd] = myListing
+                            } else {
+                                self.insertInPlace(listing: myListing, listings: &self.myAvailableListings)
+                            }
+                        } else {
+                            // Listing sold out
+                            if availableInd != nil {
+                                self.myAvailableListings.removeAll(where: {$0.id == myListing.id})
+                                self.insertInPlace(listing: myListing, listings: &self.mySoldOutListings)
+                            } else {
+                                if let soldOutInd = soldOutInd {
+                                    self.mySoldOutListings[soldOutInd] = myListing
+                                } else {
+                                    self.insertInPlace(listing: myListing, listings: &self.mySoldOutListings)
+                                }
+                            }
+                        }
+                    }
+                    else {
+                        self.myAvailableListings.removeAll(where: {$0.id == myListing.id})
+                        self.mySoldOutListings.removeAll(where: {$0.id == myListing.id})
+                    }
+                } else {
+                    print("Failure codifying listing object")
+                }
+            })
+        }
     }
     
     private func insertInPlace(listing: Listing, listings: inout [Listing]) {
