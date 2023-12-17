@@ -27,6 +27,7 @@ struct MainTicketsView: View {
         _vm = StateObject(wrappedValue: MainTicketsViewModel(eventService: eventService))
         self.eventVm = EventViewModel(
             eventService: eventService,
+            listingService: listingService,
             notifyUser: notifyUser,
             updateChatOnRemoval: {listingId, creator, deleted in
                 if listingId == chatVm.listingId, creator == chatVm.counterpartyEmail {

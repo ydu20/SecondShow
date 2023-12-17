@@ -18,6 +18,7 @@ class EventViewModel: ObservableObject {
 
     private var event: Event? = nil
     private let eventService: EventService
+    private let listingService: ListingService
     
     private var notifyUser: (String, Color) -> ()
     private var updateChatOnRemoval: ((String, String, Bool) -> ())
@@ -25,11 +26,11 @@ class EventViewModel: ObservableObject {
     
     var listingListener: ListenerRegistration?
     
-    
-    init(eventService: EventService, notifyUser: @escaping (String, Color) -> (), updateChatOnRemoval: @escaping (String, String, Bool) -> ()) {
-        print("Initilizing eventViewModel...")
+    init(eventService: EventService, listingService: ListingService, notifyUser: @escaping (String, Color) -> (), updateChatOnRemoval: @escaping (String, String, Bool) -> ()) {
         
+        print("Initilizing eventViewModel...")
         self.eventService = eventService
+        self.listingService = listingService
         self.notifyUser = notifyUser
         self.updateChatOnRemoval = updateChatOnRemoval
     }
@@ -59,60 +60,52 @@ class EventViewModel: ObservableObject {
     }
     
     func fetchListings() {
-        guard let event = self.event else {return}
-        guard let eventId = event.id else {
-            print("Error: local event does not have id")
+        guard let eventId = self.event?.id else {
+            print("Error: event id is nil")
             return
         }
         
         print("Fetching listings...")
         
-        listingListener?.remove()
         listings.removeAll()
-        
-        listingListener = FirebaseManager.shared.firestore
-            .collection("events")
-            .document(eventId)
-            .collection("listings")
-            .whereField(ListingConstants.availableQuantity, isNotEqualTo: 0)
-            .addSnapshotListener { querySnapshot, error in
-                if let error = error {
-                    print("Failed to listen for events: \(error.localizedDescription)")
-                    return
-                }
-                querySnapshot?.documentChanges.forEach({ change in
-                    if let listing = try? change.document.data(as: Listing.self) {
-                        if change.type == .added || (change.type == .modified && listing.availableQuantity != listing.totalQuantity) {
-                            if let ind = self.listings.firstIndex(where: {$0.listingNumber <= listing.listingNumber}) {
-                                if (self.listings[ind].listingNumber == listing.listingNumber) {
-                                    // Modify listing
-                                    self.listings[ind] = listing
-                                } else {
-                                    // Add listing
-                                    self.listings.insert(listing, at: ind)
-                                }
+        listingService.fetchListings(eventId: eventId) { documentChanges, err in
+            if let err = err {
+                self.notifyUser(err, Color(.systemRed))
+                return
+            }
+            guard let documentChanges = documentChanges else {
+                self.notifyUser("Error fetching listings", Color(.systemRed))
+                return
+            }
+            
+            documentChanges.forEach { change in
+                if let listing = try? change.document.data(as: Listing.self) {
+                    if change.type == .added || (change.type == .modified && listing.availableQuantity != listing.totalQuantity) {
+                        if let ind = self.listings.firstIndex(where: {$0.listingNumber <= listing.listingNumber}) {
+                            if (self.listings[ind].listingNumber == listing.listingNumber) {
+                                // Modify listing
+                                self.listings[ind] = listing
                             } else {
-                                // Append to end
-                                self.listings.append(listing)
+                                // Add listing
+                                self.listings.insert(listing, at: ind)
                             }
                         } else {
-                            // If listing is removed / becomes unavailable
-                            if let rmInd = self.listings.firstIndex(where: {$0.listingNumber == listing.listingNumber}) {
-                                self.listings.remove(at: rmInd)
-                            }
-                            
-                            self.updateChatOnRemoval(listing.id ?? "", listing.creator, change.type == .removed)
+                            // Append to end
+                            self.listings.append(listing)
                         }
                     } else {
-                        print("Failure codifying listing object")
+                        // If listing is removed / becomes unavailable
+                        if let rmInd = self.listings.firstIndex(where: {$0.listingNumber == listing.listingNumber}) {
+                            self.listings.remove(at: rmInd)
+                        }
+                        
+                        self.updateChatOnRemoval(listing.id ?? "", listing.creator, change.type == .removed)
                     }
-                })
-                
-                // For debugging
-//                self.listings.forEach { listing in
-//                    print("\(String(listing.listingNumber)): \(String(listing.price))")
-//                }
+                } else {
+                    print("Failure codifying listing object")
+                }
             }
+        }
     }
     
     func setEvent(event: Event?) {
@@ -120,8 +113,8 @@ class EventViewModel: ObservableObject {
             self.event = event
             self.eventName = event.name
             
-            guard let userAlerts = FirebaseManager.shared.currentUser?.alerts else {return}
             guard let eventId = self.event?.id else {return}
+            guard let userAlerts = FirebaseManager.shared.currentUser?.alerts else {return}
     
             self.eventAlerts = userAlerts.contains(eventId)
         }

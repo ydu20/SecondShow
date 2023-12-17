@@ -43,7 +43,7 @@ struct NewListingView: View {
                 
                 inputForm
                 formWarning
-                if vm.showSuggestions {
+                if vm.showSuggestions, vm.suggestions.count > 0 {
                     suggestionsCover
                     suggestionsPanel
                 }

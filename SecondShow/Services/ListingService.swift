@@ -12,9 +12,38 @@ protocol ListingServiceProtocol {
     
     func createListing(eventId: String, eventName: String, eventDate: String, listingNumber: Int, price: Int, quantity: Int, completion: @escaping((String?) -> ()))
     
+    func fetchListings(eventId: String, completion: @escaping([DocumentChange]?, String?) -> ())
+    
+    func removeListingListener()
 }
 
 class ListingService: ListingServiceProtocol {
+    
+    private var listingListener: ListenerRegistration?
+    
+    func fetchListings(eventId: String, completion: @escaping([DocumentChange]?, String?) -> ()) {
+        removeListingListener()
+        listingListener = FirebaseManager.shared.firestore
+            .collection("events")
+            .document(eventId)
+            .collection("listings")
+            .order(by: "listingNumber", descending: false)
+            .addSnapshotListener { querySnapshot, error in
+                if let error = error {
+                    completion(nil, error.localizedDescription)
+                    return
+                }
+                guard let snapshot = querySnapshot else {
+                    completion(nil, "Error fetching listings")
+                    return
+                }
+                completion(snapshot.documentChanges, nil)
+            }
+    }
+    
+    func removeListingListener() {
+        listingListener?.remove()
+    }
     
     func createListing(eventId: String, eventName: String, eventDate: String, listingNumber: Int, price: Int, quantity: Int, completion: @escaping((String?) -> ())) {
         guard let user = FirebaseManager.shared.currentUser else {
