@@ -17,9 +17,9 @@ struct MyListingsView: View {
     @State private var showDeletePopupView = false
     
     
-    init(listingService: ListingService, notifyUser: @escaping (String, Color) -> ()) {
+    init(eventService: EventService, listingService: ListingService, rmService: RecentMessageService, notifyUser: @escaping (String, Color) -> ()) {
         self.notifyUser = notifyUser
-        _vm = StateObject(wrappedValue: MyListingsViewModel(listingService: listingService, notifyUser: notifyUser))
+        _vm = StateObject(wrappedValue: MyListingsViewModel(eventService: eventService, listingService: listingService, rmService: rmService, notifyUser: notifyUser))
     }
 
     var body: some View {
@@ -28,14 +28,24 @@ struct MyListingsView: View {
                 .padding(.horizontal)
             
             ZStack {
+                
                 ScrollView {
-                    myAvailableListingsView
-                        .padding(.horizontal)
-                    mySoldOutListingsView
-                        .padding(.horizontal)
+                    if vm.myAvailableListings.count == 0, vm.mySoldOutListings.count == 0 {
+                        Text("Create a new listing to sell your tickets.")
+                            .padding(.top, 200)
+                        Spacer()
+                    } else {
+                        myAvailableListingsView
+                            .padding(.horizontal)
+                        mySoldOutListingsView
+                            .padding(.horizontal)
+                    }
                 }
                 .blur(radius: showSoldPopupView || showDeletePopupView ? 3 : 0)
                 .disabled(showSoldPopupView || showDeletePopupView)
+
+                
+
 
                 if showSoldPopupView || showDeletePopupView {
                     Color.clear
@@ -60,7 +70,7 @@ struct MyListingsView: View {
 //            vm.myListingListener?.remove()
 //        }
         .onAppear {
-            vm.notifyUser = self.notifyUser
+            vm.fetchMyListings()
         }
     }
     

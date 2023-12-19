@@ -21,7 +21,16 @@ struct MainMessagesView: View {
     var body: some View {
         VStack {
             NavBar<EmptyView>(title: "Messages", subtitle: nil)
-            messageList
+            
+            
+            if vm.recentMessages.count == 0 {
+                Text("Message a listing to start a chat!")
+                    .padding(.top, 200)
+                Spacer()
+            } else {
+                messageList
+            }
+            
             NavigationLink(destination: ChatView(vm: chatVm), isActive: $showChatView) {
                 EmptyView()
             }

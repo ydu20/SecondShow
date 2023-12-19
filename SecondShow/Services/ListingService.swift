@@ -143,6 +143,7 @@ class ListingService: ListingServiceProtocol {
     }
     
     func removeListingListener() {
+        print("REMOVING LISTENER")
         listingListener?.remove()
     }
     

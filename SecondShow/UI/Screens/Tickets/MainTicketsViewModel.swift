@@ -27,8 +27,11 @@ class MainTicketsViewModel: ObservableObject {
         }
         return ret
     }
-
     
+    func removeListener() {
+        eventService.removeEventListener()
+    }
+
     func fetchEvents() {
         eventDates.removeAll()
         
@@ -44,6 +47,12 @@ class MainTicketsViewModel: ObservableObject {
             
             documentChanges.forEach({change in
                 if let event = try? change.document.data(as: Event.self) {
+                    guard let eventDateObj = event.dateObj else {return}
+                    let currentDate = Calendar.current.startOfDay(for: Date())
+                    if (eventDateObj < currentDate) {
+                        return
+                    }
+                    
                     if change.type != .removed {
                         // Add/modify event
                         if let ind = self.eventDates.firstIndex(where: {$0.date == event.date}) {

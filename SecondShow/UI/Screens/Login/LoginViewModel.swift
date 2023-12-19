@@ -78,13 +78,13 @@ class LoginViewModel: ObservableObject {
             statusMessage = "Please enter a password"
             return
         }
-        statusMessage = ""
         
         userService.loginUser(email: loginEmail, password: loginPassword, emailVerificationRequired: requireVerification) { err in
             if let err = err {
                 self.statusMessage = err
                 return
             }
+            self.statusMessage = ""
             onSuccess()
         }
     }

@@ -15,6 +15,7 @@ struct RootView: View {
     private let userService = UserService()
     private let eventService = EventService()
     private let listingService = ListingService()
+    private let rmService = RecentMessageService()
     
     var body: some View {
         ZStack {
@@ -24,7 +25,8 @@ struct RootView: View {
                     selectedTab: $selectedTab,
                     userService: userService,
                     eventService: eventService,
-                    listingService: listingService
+                    listingService: listingService,
+                    rmService: rmService
                 )
             }
         }

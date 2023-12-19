@@ -18,12 +18,17 @@ class MyListingsViewModel: ObservableObject {
     private var myListingListener: ListenerRegistration?
     var notifyUser: (String, Color) -> ()
     
+    private let eventService: EventService
     private let listingService: ListingService
+    private let rmService: RecentMessageService
     
-    init(listingService: ListingService, notifyUser: @escaping (String, Color) -> ()) {
-        print("Initilizing MyListingViewModel...")
+    init(eventService: EventService, listingService: ListingService, rmService: RecentMessageService, notifyUser: @escaping (String, Color) -> ()) {
+        print("Initializing MyListingViewModel...")
+        
+        self.eventService = eventService
         self.listingService = listingService
         self.notifyUser = notifyUser
+        self.rmService = rmService
         
         fetchMyListings()
     }
@@ -64,70 +69,85 @@ class MyListingsViewModel: ObservableObject {
     
     private func handleSoldOutAndDelete(eventId: String, deleted: Bool) {
         
-        let eventRef = FirebaseManager.shared.firestore
-            .collection("events")
-            .document(eventId)
+//        let eventRef = FirebaseManager.shared.firestore
+//            .collection("events")
+//            .document(eventId)
+//
+//        decreaseEventListingCount(eventRef: eventRef)
         
-        decreaseEventListingCount(eventRef: eventRef)
-        
-        guard let userEmail = FirebaseManager.shared.currentUser?.email else {return}
-        guard let listingId = selectedListing?.id else {return}
-        
-        let msgCollectionRef = FirebaseManager.shared.firestore
-            .collection("recent_messages")
-            .document(userEmail)
-            .collection("messages")
-        
-        msgCollectionRef
-            .whereField(ListingConstants.listingId, isEqualTo: listingId)
-            .getDocuments { querySnapshot, err in
-                if let err = err {
-                    self.notifyUser("Error retrieving recent messages: \(err.localizedDescription)", Color(.systemRed))
-                    return
-                }
-                
-                for document in querySnapshot!.documents {
-                    guard let counterpartyEmail = document.get(MessageConstants.counterpartyEmail) as? String else {
-                        self.notifyUser("Failure retrieving counterpartyEmail", Color(.systemRed))
-                        return
-                    }
-                    let recentMsgId = document.documentID
-                    
-                    let updateData = deleted ? [MessageConstants.deleted: true] : [MessageConstants.sold: true]
-                    
-                    msgCollectionRef.document(recentMsgId).updateData(updateData) { err in
-                        if let err = err {
-                            self.notifyUser("Failure updating seller's recentMessage: \(err.localizedDescription)", Color(.systemRed))
-                        }
-                    }
-                    
-                    FirebaseManager.shared.firestore
-                        .collection("recent_messages")
-                        .document(counterpartyEmail)
-                        .collection("messages")
-                        .document(listingId + "<->" + userEmail)
-                        .updateData(updateData) { err in
-                            if let err = err {
-                                self.notifyUser("Failure updating buyer's recentMessage: \(err.localizedDescription)", Color(.systemRed))
-                            }
-                        }
-                }
-            }
-    }
-    
-    private func decreaseEventListingCount(eventRef: DocumentReference) {
-        let eventUpdate = [
-            EventConstants.listingCount: FieldValue.increment(Int64(-1))
-        ]
-        eventRef.updateData(eventUpdate) { err in
+        eventService.decreaseEventListingCount(eventId: eventId) { err in
             if let err = err {
-                self.notifyUser("Error updating event: \(err.localizedDescription)", Color(.systemRed))
+                self.notifyUser(err, Color(.systemRed))
                 return
             }
         }
+        
+        guard let userEmail = FirebaseManager.shared.currentUser?.email else {return}
+        guard let listingId = selectedListing?.id else {return}
+  
+        rmService.updateRmsOnSoldoutOrDelete(userEmail: userEmail, listingId: listingId, deleted: deleted) { err in
+            if let err = err {
+                self.notifyUser(err, Color(.systemRed))
+                return
+            }
+        }
+        
+//        let msgCollectionRef = FirebaseManager.shared.firestore
+//            .collection("recent_messages")
+//            .document(userEmail)
+//            .collection("messages")
+        
+//        msgCollectionRef
+//            .whereField(ListingConstants.listingId, isEqualTo: listingId)
+//            .getDocuments { querySnapshot, err in
+//                if let err = err {
+//                    self.notifyUser("Error retrieving recent messages: \(err.localizedDescription)", Color(.systemRed))
+//                    return
+//                }
+//
+//                for document in querySnapshot!.documents {
+//                    guard let counterpartyEmail = document.get(MessageConstants.counterpartyEmail) as? String else {
+//                        self.notifyUser("Failure retrieving counterpartyEmail", Color(.systemRed))
+//                        return
+//                    }
+//                    let recentMsgId = document.documentID
+//
+//                    let updateData = deleted ? [MessageConstants.deleted: true] : [MessageConstants.sold: true]
+//
+//                    msgCollectionRef.document(recentMsgId).updateData(updateData) { err in
+//                        if let err = err {
+//                            self.notifyUser("Failure updating seller's recentMessage: \(err.localizedDescription)", Color(.systemRed))
+//                        }
+//                    }
+//
+//                    FirebaseManager.shared.firestore
+//                        .collection("recent_messages")
+//                        .document(counterpartyEmail)
+//                        .collection("messages")
+//                        .document(listingId + "<->" + userEmail)
+//                        .updateData(updateData) { err in
+//                            if let err = err {
+//                                self.notifyUser("Failure updating buyer's recentMessage: \(err.localizedDescription)", Color(.systemRed))
+//                            }
+//                        }
+//                }
+//            }
+        
     }
     
-    private func fetchMyListings() {
+//    private func decreaseEventListingCount(eventRef: DocumentReference) {
+//        let eventUpdate = [
+//            EventConstants.listingCount: FieldValue.increment(Int64(-1))
+//        ]
+//        eventRef.updateData(eventUpdate) { err in
+//            if let err = err {
+//                self.notifyUser("Error updating event: \(err.localizedDescription)", Color(.systemRed))
+//                return
+//            }
+//        }
+//    }
+    
+    func fetchMyListings() {
         myAvailableListings.removeAll()
         mySoldOutListings.removeAll()
         

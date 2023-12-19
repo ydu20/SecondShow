@@ -17,7 +17,7 @@ struct EventView: View {
     var body: some View {
         VStack {
             if self.vm.listings.count == 0 {
-                Text("No listings for this event currently.")
+                Text("No available listings for this event currently.")
             } else {
                 listingsView
             }
@@ -45,10 +45,11 @@ struct EventView: View {
             }
         }
         .padding()
+        .onAppear {
+            vm.fetchListings()
+        }
         .onDisappear {
-            if (!showChatView) {
-                vm.listingListener?.remove()
-            }
+            vm.removeListener()
         }
     }
     

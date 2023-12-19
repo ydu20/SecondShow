@@ -22,7 +22,7 @@ struct MainTicketsView: View {
     private let eventService: EventService
     private let listingService: ListingService
     
-    init(notifyUser: @escaping (String, Color) -> Void, chatVm: ChatViewModel, eventService: EventService, listingService: ListingService) {
+    init(chatVm: ChatViewModel, eventService: EventService, listingService: ListingService, notifyUser: @escaping (String, Color) -> Void) {
         self.notifyUser = notifyUser
         _vm = StateObject(wrappedValue: MainTicketsViewModel(eventService: eventService))
         self.eventVm = EventViewModel(
@@ -60,7 +60,7 @@ struct MainTicketsView: View {
             )
             .padding(.horizontal)
 
-            if self.vm.eventDates.count == 0 {
+            if vm.eventDates.count == 0 {
                 Text("No events currently. Post a listing to create an event!")
                     .padding(.top, 200)
                 Spacer()

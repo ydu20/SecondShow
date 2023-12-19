@@ -23,9 +23,7 @@ class EventViewModel: ObservableObject {
     private var notifyUser: (String, Color) -> ()
     private var updateChatOnRemoval: ((String, String, Bool) -> ())
     
-    
-    var listingListener: ListenerRegistration?
-    
+        
     init(eventService: EventService, listingService: ListingService, notifyUser: @escaping (String, Color) -> (), updateChatOnRemoval: @escaping (String, String, Bool) -> ()) {
         
         print("Initilizing eventViewModel...")
@@ -59,6 +57,10 @@ class EventViewModel: ObservableObject {
         }
     }
     
+    func removeListener() {
+        listingService.removeListingListener()
+    }
+    
     func fetchListings() {
         guard let eventId = self.event?.id else {
             print("Error: event id is nil")
@@ -79,8 +81,9 @@ class EventViewModel: ObservableObject {
             }
             
             documentChanges.forEach { change in
+                print("INCOMING UPDATEEEEEEEE")
                 if let listing = try? change.document.data(as: Listing.self) {
-                    if change.type == .added || (change.type == .modified && listing.availableQuantity != listing.totalQuantity) {
+                    if listing.availableQuantity != 0 && (change.type == .added || change.type == .modified) {
                         if let ind = self.listings.firstIndex(where: {$0.listingNumber <= listing.listingNumber}) {
                             if (self.listings[ind].listingNumber == listing.listingNumber) {
                                 // Modify listing

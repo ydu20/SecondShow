@@ -21,12 +21,29 @@ protocol EventServiceProtocol {
     
     func removeEventListener()
     
-    
+    func decreaseEventListingCount(eventId: String, completion: @escaping((String?) -> ()))
 }
 
 class EventService: EventServiceProtocol {
     
     private var eventListener: ListenerRegistration?
+    
+    func decreaseEventListingCount(eventId: String, completion: @escaping ((String?) -> ())) {
+        let update = [
+            EventConstants.listingCount: FieldValue.increment(Int64(-1))
+        ]
+        
+        FirebaseManager.shared.firestore
+            .collection("events")
+            .document(eventId)
+            .updateData(update) { err in
+                if let err = err {
+                    completion("Error updating event: \(err.localizedDescription)")
+                    return
+                }
+                completion(nil)
+            }
+    }
     
     func createOrUpdateEvent(id: String, name: String, date: String, maxListingNum: Int, listingCount: Int, completion: @escaping((String?) -> ())) {
         let eventData = [
