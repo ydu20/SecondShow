@@ -114,11 +114,7 @@ class ListingService: ListingServiceProtocol {
                     completion(nil, err.localizedDescription)
                     return
                 }
-                guard let snapshot = querySnapshot else {
-                    completion(nil, "Error fetching listings")
-                    return
-                }
-                completion(snapshot.documentChanges, nil)
+                completion(querySnapshot?.documentChanges, nil)
             }
     }
 

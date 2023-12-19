@@ -7,55 +7,86 @@
 
 import Foundation
 import Firebase
+import SwiftUI
 
 class MainMessagesViewModel: ObservableObject {
     
     @Published var recentMessages = [RecentMessage]()
+        
+    let chatVm: ChatViewModel
+    let messageService: MessageService
+    let notifyUser: (String, Color) -> ()
     
-    var recentMessagesListener: ListenerRegistration?
-    
-    var chatVm: ChatViewModel?
-    
-    init() {
+    init(chatVm: ChatViewModel, messageService: MessageService, notifyUser: @escaping (String, Color) -> Void) {
+        
+        self.chatVm = chatVm
+        self.messageService = messageService
+        self.notifyUser = notifyUser
+        
         fetchRecentMessages()
     }
     
+    func removeListener() {
+        messageService.removeRecentMessagesListener()
+    }
+    
     func fetchRecentMessages() {
-        guard let userEmail = FirebaseManager.shared.currentUser?.email else {return}
-        
-        self.recentMessagesListener?.remove()
         self.recentMessages.removeAll()
         
         print("Fetching recent messages...")
         
-        recentMessagesListener = FirebaseManager.shared.firestore
-            .collection(MessageConstants.recentMessages)
-            .document(userEmail)
-            .collection(MessageConstants.messages)
-            .order(by: MessageConstants.timestamp)
-            .addSnapshotListener { [self] querySnapshot, err in
-                if let err = err {
-                    print("Error fetching recent messages: \(err.localizedDescription)")
+        messageService.fetchRecentMessages { documentChanges, err in
+            if let err = err {
+                self.notifyUser(err, Color(.systemRed))
+                return
+            }
+            
+            documentChanges?.forEach({change in
+                guard let recentMessage = try? change.document.data(as: RecentMessage.self) else {
+                    print("Failure codifying RecentMessage object")
                     return
                 }
                 
-                querySnapshot?.documentChanges.forEach({change in
-                    guard let recentMessage = try? change.document.data(as: RecentMessage.self) else {
-                        print("Failure codifying RecentMessage object")
-                        return
-                    }
-                    
-                    if let ind = self.recentMessages.firstIndex(where: {$0.id == recentMessage.id}) {
-                        self.recentMessages.remove(at: ind)
-                    }
-                    
-                    self.recentMessages.insert(recentMessage, at: 0)
-                    
-                    if recentMessage.listingId == self.chatVm?.listingId, recentMessage.counterpartyEmail == self.chatVm?.counterpartyEmail {
-                        self.chatVm?.updateWithRecentMessage(rm: recentMessage)
-                    }
-                })
-            }
+                if let ind = self.recentMessages.firstIndex(where: {$0.id == recentMessage.id}) {
+                    self.recentMessages.remove(at: ind)
+                }
+                
+                self.recentMessages.insert(recentMessage, at: 0)
+                
+                if recentMessage.listingId == self.chatVm.listingId, recentMessage.counterpartyEmail == self.chatVm.counterpartyEmail {
+                    self.chatVm.updateWithRecentMessage(rm: recentMessage)
+                }
+            })
+        }
+        
+//        recentMessagesListener = FirebaseManager.shared.firestore
+//            .collection(MessageConstants.recentMessages)
+//            .document(userEmail)
+//            .collection(MessageConstants.messages)
+//            .order(by: MessageConstants.timestamp)
+//            .addSnapshotListener { [self] querySnapshot, err in
+//                if let err = err {
+//                    print("Error fetching recent messages: \(err.localizedDescription)")
+//                    return
+//                }
+//
+//                querySnapshot?.documentChanges.forEach({change in
+//                    guard let recentMessage = try? change.document.data(as: RecentMessage.self) else {
+//                        print("Failure codifying RecentMessage object")
+//                        return
+//                    }
+//
+//                    if let ind = self.recentMessages.firstIndex(where: {$0.id == recentMessage.id}) {
+//                        self.recentMessages.remove(at: ind)
+//                    }
+//
+//                    self.recentMessages.insert(recentMessage, at: 0)
+//
+//                    if recentMessage.listingId == self.chatVm.listingId, recentMessage.counterpartyEmail == self.chatVm.counterpartyEmail {
+//                        self.chatVm.updateWithRecentMessage(rm: recentMessage)
+//                    }
+//                })
+//            }
     }
     
 }

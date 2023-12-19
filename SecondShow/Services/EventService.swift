@@ -75,6 +75,7 @@ class EventService: EventServiceProtocol {
                     completion(nil, error.localizedDescription)
                     return
                 }
+
                 completion(querySnapshot?.documentChanges, nil)
             }
     }

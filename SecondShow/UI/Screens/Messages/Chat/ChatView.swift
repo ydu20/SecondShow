@@ -180,7 +180,8 @@ struct ChatView: View {
 
 struct ChatView_Previews: PreviewProvider {
     static var previews: some View {
-//        ChatView()
-        MainMessagesView(notifyUser: {_, _ in}, chatVm: ChatViewModel())
+        //        ChatView()
+        //        MainMessagesView(notifyUser: {_, _ in}, chatVm: ChatViewModel())
+        EmptyView()
     }
 }

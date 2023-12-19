@@ -14,7 +14,7 @@ struct TabBarView: View {
     let userService: UserService
     let eventService: EventService
     let listingService: ListingService
-    let rmService: RecentMessageService
+    let messageService: MessageService
     
     @State private var bannerText = ""
     @State private var bannerColor = Color.orange
@@ -37,8 +37,9 @@ struct TabBarView: View {
                         .tag(0)
                     
                     MainMessagesView(
-                        notifyUser: notifyUser,
-                        chatVm: chatViewModel
+                        chatVm: chatViewModel,
+                        messageService: messageService,
+                        notifyUser: notifyUser
                     )
                         .tabItem {Image(systemName: "message")}
                         .tag(1)
@@ -46,7 +47,7 @@ struct TabBarView: View {
                     MyListingsView(
                         eventService: eventService,
                         listingService: listingService,
-                        rmService: rmService,
+                        messageService: messageService,
                         notifyUser: notifyUser
                     )
                         .tabItem {Image(systemName: "list.bullet")}

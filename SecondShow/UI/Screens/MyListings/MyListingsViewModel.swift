@@ -16,19 +16,19 @@ class MyListingsViewModel: ObservableObject {
     
     var selectedListing: Listing? = nil
     private var myListingListener: ListenerRegistration?
-    var notifyUser: (String, Color) -> ()
+    let notifyUser: (String, Color) -> ()
     
     private let eventService: EventService
     private let listingService: ListingService
-    private let rmService: RecentMessageService
+    private let messageService: MessageService
     
-    init(eventService: EventService, listingService: ListingService, rmService: RecentMessageService, notifyUser: @escaping (String, Color) -> ()) {
+    init(eventService: EventService, listingService: ListingService, messageService: MessageService, notifyUser: @escaping (String, Color) -> ()) {
         print("Initializing MyListingViewModel...")
         
         self.eventService = eventService
         self.listingService = listingService
         self.notifyUser = notifyUser
-        self.rmService = rmService
+        self.messageService = messageService
         
         fetchMyListings()
     }
@@ -79,7 +79,7 @@ class MyListingsViewModel: ObservableObject {
         guard let userEmail = FirebaseManager.shared.currentUser?.email else {return}
         guard let listingId = selectedListing?.id else {return}
   
-        rmService.updateRmsOnSoldoutOrDelete(userEmail: userEmail, listingId: listingId, deleted: deleted) { err in
+        messageService.updateRmsOnSoldoutOrDelete(userEmail: userEmail, listingId: listingId, deleted: deleted) { err in
             if let err = err {
                 self.notifyUser(err, Color(.systemRed))
                 return

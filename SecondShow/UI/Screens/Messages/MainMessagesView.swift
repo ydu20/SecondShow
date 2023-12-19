@@ -11,17 +11,23 @@ struct MainMessagesView: View {
     
     let notifyUser: (String, Color) -> ()
     
-    @StateObject private var vm = MainMessagesViewModel()
+    @StateObject private var vm: MainMessagesViewModel
     var chatVm: ChatViewModel
     
     @State private var showChatView = false
     
     @State private var intraTabNavigation = false
     
+    init(chatVm: ChatViewModel, messageService: MessageService, notifyUser: @escaping (String, Color) -> Void) {
+        self.notifyUser = notifyUser
+        self.chatVm = chatVm
+        _vm = StateObject(wrappedValue: MainMessagesViewModel(chatVm: chatVm, messageService: messageService, notifyUser: notifyUser))
+    }
+    
+    
     var body: some View {
         VStack {
             NavBar<EmptyView>(title: "Messages", subtitle: nil)
-            
             
             if vm.recentMessages.count == 0 {
                 Text("Message a listing to start a chat!")
@@ -40,14 +46,13 @@ struct MainMessagesView: View {
         .onAppear {
             if (!intraTabNavigation) {
                 print("MAIN MESSAGES: FETCHING RECENT")
-                vm.chatVm = chatVm
                 vm.fetchRecentMessages()
             }
         }
         .onDisappear {
             if !(showChatView) {
                 print("MAIN MESSAGES: REMOVING LISTENER")
-                vm.recentMessagesListener?.remove()
+                vm.removeListener()
                 intraTabNavigation = false
             }
         }

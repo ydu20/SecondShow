@@ -17,9 +17,9 @@ struct MyListingsView: View {
     @State private var showDeletePopupView = false
     
     
-    init(eventService: EventService, listingService: ListingService, rmService: RecentMessageService, notifyUser: @escaping (String, Color) -> ()) {
+    init(eventService: EventService, listingService: ListingService, messageService: MessageService, notifyUser: @escaping (String, Color) -> ()) {
         self.notifyUser = notifyUser
-        _vm = StateObject(wrappedValue: MyListingsViewModel(eventService: eventService, listingService: listingService, rmService: rmService, notifyUser: notifyUser))
+        _vm = StateObject(wrappedValue: MyListingsViewModel(eventService: eventService, listingService: listingService, messageService: messageService, notifyUser: notifyUser))
     }
 
     var body: some View {

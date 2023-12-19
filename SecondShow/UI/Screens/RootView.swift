@@ -15,7 +15,7 @@ struct RootView: View {
     private let userService = UserService()
     private let eventService = EventService()
     private let listingService = ListingService()
-    private let rmService = RecentMessageService()
+    private let messageService = MessageService()
     
     var body: some View {
         ZStack {
@@ -26,7 +26,7 @@ struct RootView: View {
                     userService: userService,
                     eventService: eventService,
                     listingService: listingService,
-                    rmService: rmService
+                    messageService: messageService
                 )
             }
         }

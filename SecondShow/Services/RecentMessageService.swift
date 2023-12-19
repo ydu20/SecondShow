@@ -6,12 +6,49 @@
 //
 
 import Foundation
+import Firebase
+import FirebaseFirestore
 
 protocol RecentMessageServiceProtocol {
+    
+    func fetchRecentMessages(completion: @escaping(([DocumentChange]?, String?) -> ()))
+    
     func updateRmsOnSoldoutOrDelete(userEmail: String, listingId: String, deleted: Bool, completion: @escaping((String?) -> ()))
+    
+    func removeRecentMessagesListener()
 }
 
 class RecentMessageService: RecentMessageServiceProtocol {
+    
+    private var recentMessagesListener: ListenerRegistration?
+    
+    func fetchRecentMessages(completion: @escaping(([DocumentChange]?, String?) -> ())) {
+        guard let userEmail = FirebaseManager.shared.currentUser?.email else {return}
+        
+        removeRecentMessagesListener()
+        
+        recentMessagesListener = FirebaseManager.shared.firestore
+            .collection(MessageConstants.recentMessages)
+            .document(userEmail)
+            .collection(MessageConstants.messages)
+            .order(by: MessageConstants.timestamp)
+            .addSnapshotListener { querySnapshot, err in
+                if let err = err {
+                    completion(nil, "Error fetching recent messages: \(err.localizedDescription)")
+                    return
+                }
+                
+                completion(querySnapshot?.documentChanges, nil)
+                
+            }
+        
+    }
+    
+    func removeRecentMessagesListener() {
+        self.recentMessagesListener?.remove()
+    }
+
+    
     func updateRmsOnSoldoutOrDelete(userEmail: String, listingId: String, deleted: Bool, completion: @escaping((String?) -> ())) {
         
         let msgCollectionRef = FirebaseManager.shared.firestore
@@ -65,6 +102,5 @@ class RecentMessageService: RecentMessageServiceProtocol {
                     completion(nil)
                 }
             }
-        
     }
 }
