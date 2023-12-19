@@ -7,8 +7,11 @@
 
 import Foundation
 import Firebase
+import SwiftUI
 
 class ChatViewModel: ObservableObject {
+    
+    let messageService: MessageService
     
     @Published var inputText = ""
     @Published var chatMessages = [ChatMessage]()
@@ -24,6 +27,11 @@ class ChatViewModel: ObservableObject {
     var titleText: String {
         return String(counterpartyEmail?.split(separator: "@").first ?? "")
     }
+    
+    init(messageService: MessageService) {
+        self.messageService = messageService
+    }
+    
     
     // This should only be called from the Tickets page
     func updateWithListing(listing: Listing) {
@@ -50,41 +58,68 @@ class ChatViewModel: ObservableObject {
     }
     
     func fetchMessages() {
-        guard let fromEmail = FirebaseManager.shared.currentUser?.email else {return}
-        guard let toEmail = self.counterpartyEmail else {return}
+        guard let counterPartyEmail = self.counterpartyEmail else {return}
         guard let listingId = self.listingId else {return}
         
-        messagesListener?.remove()
         chatMessages.removeAll()
-                
-        messagesListener = FirebaseManager.shared.firestore
-            .collection(MessageConstants.messages)
-            .document(fromEmail)
-            .collection(ListingConstants.listings)
-            .document(listingId)
-            .collection(toEmail)
-            .order(by: MessageConstants.timestamp)
-            .addSnapshotListener { querySnapshot, err in
-                if let err = err {
-                    print("Error listening for messages: \(err.localizedDescription)")
-                    print(err)
-                    return
-                }
-                
-                querySnapshot?.documentChanges.forEach({change in
-                    if change.type == .added {
-                        guard let message = try? change.document.data(as: ChatMessage.self) else {
-                            print("Failure codifying ChatMessage object")
-                            return
-                        }
-                        self.chatMessages.append(message)
-                    }
-                })
-                
-                DispatchQueue.main.async {
-                    self.autoScrollCount += 1
-                }
+        
+        messageService.fetchChatMessages(counterPartyEmail: counterPartyEmail, listingId: listingId) { documentChanges, err in
+            if let err = err {
+                print(err)
+                return
             }
+            
+            documentChanges?.forEach({change in
+                if change.type == .added {
+                    guard let message = try? change.document.data(as: ChatMessage.self) else {
+                        print("Failure codifying ChatMessage object")
+                        return
+                    }
+                    self.chatMessages.append(message)
+                }
+            })
+            
+            DispatchQueue.main.async {
+                self.autoScrollCount += 1
+            }
+        }
+        
+//
+//        guard let fromEmail = FirebaseManager.shared.currentUser?.email else {return}
+//        guard let toEmail = self.counterpartyEmail else {return}
+//        guard let listingId = self.listingId else {return}
+//
+//        messagesListener?.remove()
+//        chatMessages.removeAll()
+//
+//        messagesListener = FirebaseManager.shared.firestore
+//            .collection(MessageConstants.messages)
+//            .document(fromEmail)
+//            .collection(ListingConstants.listings)
+//            .document(listingId)
+//            .collection(toEmail)
+//            .order(by: MessageConstants.timestamp)
+//            .addSnapshotListener { querySnapshot, err in
+//                if let err = err {
+//                    print("Error listening for messages: \(err.localizedDescription)")
+//                    print(err)
+//                    return
+//                }
+//
+//                querySnapshot?.documentChanges.forEach({change in
+//                    if change.type == .added {
+//                        guard let message = try? change.document.data(as: ChatMessage.self) else {
+//                            print("Failure codifying ChatMessage object")
+//                            return
+//                        }
+//                        self.chatMessages.append(message)
+//                    }
+//                })
+//
+//                DispatchQueue.main.async {
+//                    self.autoScrollCount += 1
+//                }
+//            }
     }
     
     func handleSend() {

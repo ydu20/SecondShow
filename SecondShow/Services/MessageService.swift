@@ -16,12 +16,37 @@ protocol MessageServiceProtocol {
     
     func removeRecentMessagesListener()
     
+    func fetchChatMessages(counterPartyEmail: String, listingId: String, completion: @escaping(([DocumentChange]?, String?) -> ()))
     
 }
 
 class MessageService: MessageServiceProtocol {
     
     private var recentMessagesListener: ListenerRegistration?
+    private var chatMessagesListener: ListenerRegistration?
+    
+    func fetchChatMessages(counterPartyEmail: String, listingId: String, completion: @escaping(([DocumentChange]?, String?) -> ())) {
+        
+        guard let userEmail = FirebaseManager.shared.currentUser?.email else {return}
+        
+        chatMessagesListener?.remove()
+        
+        chatMessagesListener = FirebaseManager.shared.firestore
+            .collection("messages")
+            .document(userEmail)
+            .collection("listings")
+            .document(listingId)
+            .collection(counterPartyEmail)
+            .order(by: "timestamp")
+            .addSnapshotListener { querySnapshot, err in
+                if let err = err {
+                    completion(nil, "Error listening for messages: \(err.localizedDescription)")
+                    return
+                }
+                
+                completion(querySnapshot?.documentChanges, nil)
+            }
+    }
     
     func fetchRecentMessages(completion: @escaping(([DocumentChange]?, String?) -> ())) {
         guard let userEmail = FirebaseManager.shared.currentUser?.email else {return}

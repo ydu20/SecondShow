@@ -15,11 +15,8 @@ struct ChatView: View {
     
     var body: some View {
         ZStack (alignment: .top) {
-            
             messageView
-            
             descriptionBarView
-            
         }
         .navigationTitle(vm.titleText)
         .navigationBarTitleDisplayMode(.inline)

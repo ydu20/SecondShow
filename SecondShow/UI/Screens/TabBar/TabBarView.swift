@@ -20,8 +20,24 @@ struct TabBarView: View {
     @State private var bannerColor = Color.orange
     @State private var showBanner = false
     
+    var chatViewModel: ChatViewModel
     
-    var chatViewModel = ChatViewModel()
+    init(
+        showLoginView: Binding<Bool>,
+        selectedTab: Binding<Int>,
+        userService: UserService,
+        eventService: EventService,
+        listingService: ListingService,
+        messageService: MessageService
+        ) {
+            _showLoginView = showLoginView
+            _selectedTab = selectedTab
+            self.userService = userService
+            self.eventService = eventService
+            self.listingService = listingService
+            self.messageService = messageService
+            self.chatViewModel = ChatViewModel(messageService: messageService)
+    }
     
     var body: some View {
         ZStack {

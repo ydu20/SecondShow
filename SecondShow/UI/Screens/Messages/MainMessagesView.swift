@@ -9,7 +9,6 @@ import SwiftUI
 
 struct MainMessagesView: View {
     
-    let notifyUser: (String, Color) -> ()
     
     @StateObject private var vm: MainMessagesViewModel
     var chatVm: ChatViewModel
@@ -19,7 +18,6 @@ struct MainMessagesView: View {
     @State private var intraTabNavigation = false
     
     init(chatVm: ChatViewModel, messageService: MessageService, notifyUser: @escaping (String, Color) -> Void) {
-        self.notifyUser = notifyUser
         self.chatVm = chatVm
         _vm = StateObject(wrappedValue: MainMessagesViewModel(chatVm: chatVm, messageService: messageService, notifyUser: notifyUser))
     }
