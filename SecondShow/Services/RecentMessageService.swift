@@ -64,35 +64,6 @@ class RecentMessageService: RecentMessageServiceProtocol {
                 group.notify(queue: .main) {
                     completion(nil)
                 }
-                
-//                for document in querySnapshot!.documents {
-//                    guard let counterpartyEmail = document.get(MessageConstants.counterpartyEmail) as? String else {
-//                        completion("Failure retrieving counterpartyEmail")
-//                        return
-//                    }
-//                    let recentMsgId = document.documentID
-//                    let updateData = deleted ? [MessageConstants.deleted: true] : [MessageConstants.sold: true]
-//
-//                    msgCollectionRef.document(recentMsgId).updateData(updateData) { err in
-//                        if let err = err {
-//                            completion("Failure updating seller's recentMessage: \(err.localizedDescription)")
-//                            return
-//                        }
-//                    }
-//
-//                    FirebaseManager.shared.firestore
-//                        .collection("recent_messages")
-//                        .document(counterpartyEmail)
-//                        .collection("messages")
-//                        .document(listingId + "<->" + userEmail)
-//                        .updateData(updateData) { err in
-//                            if let err = err {
-//                                completion("Failure updating buyer's recentMessage: \(err.localizedDescription)")
-//                                return
-//                            }
-//                        }
-//                }
-//                completion(nil)
             }
         
     }
