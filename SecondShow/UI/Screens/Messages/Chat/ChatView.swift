@@ -76,7 +76,6 @@ struct ChatView: View {
     }
     
     private var messageView: some View {
-
             ScrollView {
                 ScrollViewReader { scrollViewProxy in
                     VStack {

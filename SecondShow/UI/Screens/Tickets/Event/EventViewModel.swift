@@ -81,7 +81,6 @@ class EventViewModel: ObservableObject {
             }
             
             documentChanges.forEach { change in
-                print("INCOMING UPDATEEEEEEEE")
                 if let listing = try? change.document.data(as: Listing.self) {
                     if listing.availableQuantity != 0 && (change.type == .added || change.type == .modified) {
                         if let ind = self.listings.firstIndex(where: {$0.listingNumber <= listing.listingNumber}) {

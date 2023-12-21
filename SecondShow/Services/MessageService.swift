@@ -18,6 +18,12 @@ protocol MessageServiceProtocol {
     
     func fetchChatMessages(counterPartyEmail: String, listingId: String, completion: @escaping(([DocumentChange]?, String?) -> ()))
     
+    func sendMessage(toEmail: String, listingId: String, message: String, timestamp: Date, completion: @escaping((String?) -> ()))
+    
+    func persistRecentMessage(toEmail: String, listingId: String, eventName: String, listingNumber: Int, price: Int, message: String, timestamp: Date, completion: @escaping((String?) -> ()))
+    
+    func removeChatMessagesListener()
+    
 }
 
 class MessageService: MessageServiceProtocol {
@@ -25,11 +31,131 @@ class MessageService: MessageServiceProtocol {
     private var recentMessagesListener: ListenerRegistration?
     private var chatMessagesListener: ListenerRegistration?
     
+    func persistRecentMessage(toEmail: String, listingId: String, eventName: String, listingNumber: Int, price: Int, message: String, timestamp: Date, completion: @escaping((String?) -> ())) {
+        
+        guard let fromEmail = FirebaseManager.shared.currentUser?.email else {return}
+        
+        let group = DispatchGroup()
+        
+        let senderRmData = [
+            ListingConstants.listingId: listingId,
+            ListingConstants.eventName: eventName,
+            MessageConstants.counterpartyEmail: toEmail,
+            ListingConstants.listingNumber: listingNumber,
+            MessageConstants.timestamp: timestamp,
+            MessageConstants.message: message.replacingOccurrences(of: "\n", with: "").prefix(30),
+            MessageConstants.sold: false,
+            MessageConstants.deleted: false,
+            ListingConstants.price: price,
+        ] as [String: Any]
+        
+        let senderRmRef = FirebaseManager.shared.firestore
+            .collection(MessageConstants.recentMessages)
+            .document(fromEmail)
+            .collection(MessageConstants.messages)
+            .document(listingId + "<->" + toEmail)
+        
+        group.enter()
+        senderRmRef.setData(senderRmData) {err in
+            if let err = err {
+                completion("Error saving sender's recent message: \(err.localizedDescription)")
+                return
+            }
+            group.leave()
+        }
+        
+        let recipientRmData = [
+            ListingConstants.listingId: listingId,
+            ListingConstants.eventName: eventName,
+            MessageConstants.counterpartyEmail: fromEmail,
+            ListingConstants.listingNumber: listingNumber,
+            MessageConstants.timestamp: timestamp,
+            MessageConstants.message: message.replacingOccurrences(of: "\n", with: "").prefix(30),
+            MessageConstants.sold: false,
+            MessageConstants.deleted: false,
+            ListingConstants.price: price,
+        ] as [String: Any]
+        
+        let recipientRmRef = FirebaseManager.shared.firestore
+            .collection(MessageConstants.recentMessages)
+            .document(toEmail)
+            .collection(MessageConstants.messages)
+            .document(listingId + "<->" + fromEmail)
+        
+        group.enter()
+        recipientRmRef.setData(recipientRmData) { err in
+            if let err = err {
+                completion("Error saving recipient's recent message: \(err.localizedDescription)")
+                return
+            }
+            group.leave()
+        }
+        
+        group.notify(queue: .main) {
+            completion(nil)
+        }
+    }
+
+    
+    func sendMessage(toEmail: String, listingId: String, message: String, timestamp: Date, completion: @escaping((String?) -> ())) {
+        
+        guard let fromEmail = FirebaseManager.shared.currentUser?.email else {return}
+        
+        let msgData = [
+            ListingConstants.listingId: listingId,
+            MessageConstants.fromEmail: fromEmail,
+            MessageConstants.toEmail: toEmail,
+            MessageConstants.message: message,
+            MessageConstants.timestamp: timestamp
+        ] as [String : Any]
+        
+        let group = DispatchGroup()
+        
+        let outgoingDocRef = FirebaseManager.shared.firestore
+            .collection(MessageConstants.messages)
+            .document(fromEmail)
+            .collection(ListingConstants.listings)
+            .document(listingId)
+            .collection(toEmail)
+            .document()
+        
+        group.enter()
+        outgoingDocRef.setData(msgData) { err in
+            if let err = err {
+                completion("Error saving msg for sender: \(err.localizedDescription)")
+                return
+            }
+            group.leave()
+        }
+        
+        let incomingDocRef = FirebaseManager.shared.firestore
+            .collection(MessageConstants.messages)
+            .document(toEmail)
+            .collection(ListingConstants.listings)
+            .document(listingId)
+            .collection(fromEmail)
+            .document()
+        
+        group.enter()
+        incomingDocRef.setData(msgData) { err in
+            if let err = err {
+                completion("Error saving msg for recipient: \(err.localizedDescription)")
+                return
+            }
+            group.leave()
+        }
+        
+        group.notify(queue: .main) {
+            completion(nil)
+        }
+    }
+
+    
     func fetchChatMessages(counterPartyEmail: String, listingId: String, completion: @escaping(([DocumentChange]?, String?) -> ())) {
         
         guard let userEmail = FirebaseManager.shared.currentUser?.email else {return}
         
-        chatMessagesListener?.remove()
+        removeChatMessagesListener()
         
         chatMessagesListener = FirebaseManager.shared.firestore
             .collection("messages")
@@ -43,9 +169,12 @@ class MessageService: MessageServiceProtocol {
                     completion(nil, "Error listening for messages: \(err.localizedDescription)")
                     return
                 }
-                
                 completion(querySnapshot?.documentChanges, nil)
             }
+    }
+    
+    func removeChatMessagesListener() {
+        self.chatMessagesListener?.remove()
     }
     
     func fetchRecentMessages(completion: @escaping(([DocumentChange]?, String?) -> ())) {

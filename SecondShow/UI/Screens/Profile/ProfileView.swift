@@ -9,15 +9,20 @@ import SwiftUI
 
 struct ProfileView: View {
     
-    let notifyUser: (String, Color) -> ()
+    
     @Binding var showLoginView: Bool
+    @StateObject private var vm: ProfileViewModel
     
     @State private var showOptionsMenu = false;
     @State private var isAlerts = true
     @State private var feedbackInput = ""
 
-    @StateObject private var vm = ProfileViewModel()
 
+    init(showLoginView: Binding<Bool>, eventService: EventService, notifyUser: @escaping (String, Color) -> ()) {
+        _showLoginView = showLoginView
+        _vm = StateObject(wrappedValue: ProfileViewModel(eventService: eventService, notifyUser: notifyUser))
+    }
+    
     var body: some View {
         VStack {
             NavBar(
@@ -58,6 +63,9 @@ struct ProfileView: View {
             Spacer()
         }
         .padding()
+        .onAppear {
+            vm.fetchMyAlerts()
+        }
     }
     
     private func handleLogout() {

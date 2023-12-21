@@ -36,7 +36,6 @@
 		878EE6422B10082700CDCDF3 /* LevenshteinDistance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 878EE6412B10082700CDCDF3 /* LevenshteinDistance.swift */; };
 		8791BD9D2B1511310000D9C9 /* UserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8791BD9C2B1511310000D9C9 /* UserService.swift */; };
 		8791BD9F2B1512610000D9C9 /* EventService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8791BD9E2B1512610000D9C9 /* EventService.swift */; };
-		8791BDA12B1512900000D9C9 /* RecentMessageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8791BDA02B1512900000D9C9 /* RecentMessageService.swift */; };
 		8791BDA32B15129A0000D9C9 /* MessageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8791BDA22B15129A0000D9C9 /* MessageService.swift */; };
 		8791BDA62B1512DB0000D9C9 /* AlertPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8791BDA52B1512DB0000D9C9 /* AlertPopup.swift */; };
 		8791BDA82B1513CF0000D9C9 /* AlertService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8791BDA72B1513CF0000D9C9 /* AlertService.swift */; };
@@ -108,7 +107,6 @@
 		878EE6412B10082700CDCDF3 /* LevenshteinDistance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevenshteinDistance.swift; sourceTree = "<group>"; };
 		8791BD9C2B1511310000D9C9 /* UserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserService.swift; sourceTree = "<group>"; };
 		8791BD9E2B1512610000D9C9 /* EventService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventService.swift; sourceTree = "<group>"; };
-		8791BDA02B1512900000D9C9 /* RecentMessageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentMessageService.swift; sourceTree = "<group>"; };
 		8791BDA22B15129A0000D9C9 /* MessageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageService.swift; sourceTree = "<group>"; };
 		8791BDA52B1512DB0000D9C9 /* AlertPopup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertPopup.swift; sourceTree = "<group>"; };
 		8791BDA72B1513CF0000D9C9 /* AlertService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertService.swift; sourceTree = "<group>"; };
@@ -238,7 +236,6 @@
 				8791BD9E2B1512610000D9C9 /* EventService.swift */,
 				8791BDAB2B17FC1A0000D9C9 /* ListingService.swift */,
 				8791BDA22B15129A0000D9C9 /* MessageService.swift */,
-				8791BDA02B1512900000D9C9 /* RecentMessageService.swift */,
 				8791BDA72B1513CF0000D9C9 /* AlertService.swift */,
 			);
 			path = Services;
@@ -598,7 +595,6 @@
 				87B2D3A62B026E7E003FB28B /* TabBarView.swift in Sources */,
 				87B2D3982B026C81003FB28B /* EventView.swift in Sources */,
 				8791BDAC2B17FC1A0000D9C9 /* ListingService.swift in Sources */,
-				8791BDA12B1512900000D9C9 /* RecentMessageService.swift in Sources */,
 				87587D462B2E43780001509A /* NewListingViewModel.swift in Sources */,
 				8791BD9F2B1512610000D9C9 /* EventService.swift in Sources */,
 				87454DF02B06777C0006600C /* EventConstants.swift in Sources */,

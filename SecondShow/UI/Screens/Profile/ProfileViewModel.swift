@@ -7,6 +7,7 @@
 
 import Foundation
 import FirebaseFirestore
+import SwiftUI
 
 
 class ProfileViewModel: ObservableObject {
@@ -15,20 +16,21 @@ class ProfileViewModel: ObservableObject {
     
     var eventListener: ListenerRegistration?
     
-    init() {
-        fetchMyAlerts()
+    private let eventService: EventService
+    private let notifyUser: (String, Color) -> ()
+    
+    init(eventService: EventService, notifyUser: @escaping (String, Color) -> ()) {
+        self.eventService = eventService
+        self.notifyUser = notifyUser
     }
     
     func deregisterAlert(event: Event) {
-        guard let user = FirebaseManager.shared.currentUser else {return}
         guard let eventId = event.id else {return}
+
         
-        let userRef = FirebaseManager.shared.firestore.collection("users").document(user.email)
-        userRef.updateData([
-            FirebaseConstants.alerts: FieldValue.arrayRemove([eventId])
-        ]) {err in
+        eventService.removeEventAlert(eventId: eventId) { err in
             if let err = err {
-                print(err.localizedDescription)
+                self.notifyUser(err, Color(.systemRed))
                 return
             }
             self.myAlerts.removeAll(where: {$0.id == eventId})
@@ -38,16 +40,14 @@ class ProfileViewModel: ObservableObject {
     func fetchMyAlerts() {
         guard let userAlerts = FirebaseManager.shared.currentUser?.alerts else {return}
         
-        eventListener?.remove()
         myAlerts.removeAll()
-        
-        eventListener = FirebaseManager.shared.firestore.collection("events").addSnapshotListener { snapshot, err in
+
+        eventService.fetchEvents { documentChanges, err in
             if let err = err {
-                print(err.localizedDescription)
+                self.notifyUser(err, Color(.systemRed))
                 return
             }
-            
-            snapshot?.documentChanges.forEach({change in
+            documentChanges?.forEach({change in
                 if let event = try? change.document.data(as: Event.self) {
                     if !userAlerts.contains(where: {$0 == event.id}) {
                         return
