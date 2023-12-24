@@ -14,9 +14,9 @@ class MainTicketsViewModel: ObservableObject {
     private let eventService: EventService
     
     init(eventService: EventService) {
-        print("Initilizing mainTicketsViewModel...")
+        print("Initializing mainTicketsViewModel...")
         self.eventService = eventService
-        fetchEvents()
+//        fetchEvents()
     }
     
     @Published var eventDates = [EventDate]()
@@ -33,7 +33,7 @@ class MainTicketsViewModel: ObservableObject {
     }
 
     func fetchEvents() {
-        eventDates.removeAll()
+//        eventDates.removeAll()
         
         eventService.fetchEvents { documentChanges, err in
             if let err = err {

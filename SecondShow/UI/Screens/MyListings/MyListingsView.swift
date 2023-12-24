@@ -26,7 +26,6 @@ struct MyListingsView: View {
         VStack {
             NavBar<EmptyView>(title: "My Listings", subtitle: nil)
                 .padding(.horizontal)
-            
             ZStack {
                 
                 ScrollView {
@@ -43,9 +42,6 @@ struct MyListingsView: View {
                 }
                 .blur(radius: showSoldPopupView || showDeletePopupView ? 3 : 0)
                 .disabled(showSoldPopupView || showDeletePopupView)
-
-                
-
 
                 if showSoldPopupView || showDeletePopupView {
                     Color.clear
@@ -66,11 +62,11 @@ struct MyListingsView: View {
             }
         }
         .padding(.vertical)
-//        .onDisappear {
-//            vm.myListingListener?.remove()
-//        }
         .onAppear {
             vm.fetchMyListings()
+        }
+        .onDisappear {
+            vm.removeListener()
         }
     }
     

@@ -86,6 +86,12 @@ struct MainTicketsView: View {
                 .environmentObject(vm)
         }
         .padding(.vertical)
+        .onAppear {
+            vm.fetchEvents()
+        }
+        .onDisappear() {
+            vm.removeListener()
+        }
     }
     
     private var eventsList: some View {

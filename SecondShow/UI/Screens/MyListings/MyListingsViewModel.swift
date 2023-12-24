@@ -15,7 +15,6 @@ class MyListingsViewModel: ObservableObject {
     @Published var mySoldOutListings = [Listing]()
     
     var selectedListing: Listing? = nil
-    private var myListingListener: ListenerRegistration?
     let notifyUser: (String, Color) -> ()
     
     private let eventService: EventService
@@ -30,7 +29,7 @@ class MyListingsViewModel: ObservableObject {
         self.notifyUser = notifyUser
         self.messageService = messageService
         
-        fetchMyListings()
+//        fetchMyListings()
     }
     
     func updateListing(numSold: Int) {
@@ -86,10 +85,14 @@ class MyListingsViewModel: ObservableObject {
             }
         }
     }
+    
+    func removeListener() {
+        listingService.removeListingListener()
+    }
 
     func fetchMyListings() {
-        myAvailableListings.removeAll()
-        mySoldOutListings.removeAll()
+//        myAvailableListings.removeAll()
+//        mySoldOutListings.removeAll()
         
         listingService.fetchUserListings { documentChanges, err in
             if let err = err {
@@ -98,39 +101,17 @@ class MyListingsViewModel: ObservableObject {
             }
             documentChanges?.forEach({change in
                 if let myListing = try? change.document.data(as: Listing.self) {
-                    if change.type == .added {
-                        if (myListing.availableQuantity != 0) {
+                    if change.type != .removed {
+                        if myListing.availableQuantity != 0 {
+                            // Listing is still available
                             self.insertInPlace(listing: myListing, listings: &self.myAvailableListings)
                         } else {
+                            // Listing is no longer available
+                            self.myAvailableListings.removeAll(where: {$0.id == myListing.id})
                             self.insertInPlace(listing: myListing, listings: &self.mySoldOutListings)
                         }
-                    }
-                    else if change.type == .modified {
-                        let availableInd = self.myAvailableListings.firstIndex(where: {$0.id == myListing.id})
-                        let soldOutInd = self.mySoldOutListings.firstIndex(where: {$0.id == myListing.id})
-                        
-                        if (myListing.availableQuantity != 0) {
-                            // Listing still available
-                            if let availableInd = availableInd {
-                                self.myAvailableListings[availableInd] = myListing
-                            } else {
-                                self.insertInPlace(listing: myListing, listings: &self.myAvailableListings)
-                            }
-                        } else {
-                            // Listing sold out
-                            if availableInd != nil {
-                                self.myAvailableListings.removeAll(where: {$0.id == myListing.id})
-                                self.insertInPlace(listing: myListing, listings: &self.mySoldOutListings)
-                            } else {
-                                if let soldOutInd = soldOutInd {
-                                    self.mySoldOutListings[soldOutInd] = myListing
-                                } else {
-                                    self.insertInPlace(listing: myListing, listings: &self.mySoldOutListings)
-                                }
-                            }
-                        }
-                    }
-                    else {
+                    } else {
+                        // Remove all signs of listing
                         self.myAvailableListings.removeAll(where: {$0.id == myListing.id})
                         self.mySoldOutListings.removeAll(where: {$0.id == myListing.id})
                     }
@@ -142,8 +123,12 @@ class MyListingsViewModel: ObservableObject {
     }
     
     private func insertInPlace(listing: Listing, listings: inout [Listing]) {
-        if let ind = listings.firstIndex(where: {$0.createTime < listing.createTime}) {
-            listings.insert(listing, at: ind)
+        if let ind = listings.firstIndex(where: {$0.id ?? "0000" <= listing.id ?? "ZZZZ"}) {
+            if (listings[ind].id == listing.id) {
+                listings[ind] = listing
+            } else {
+                listings.insert(listing, at: ind)
+            }
         } else {
             listings.append(listing)
         }

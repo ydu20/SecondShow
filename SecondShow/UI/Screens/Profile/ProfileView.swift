@@ -66,6 +66,9 @@ struct ProfileView: View {
         .onAppear {
             vm.fetchMyAlerts()
         }
+        .onDisappear() {
+            vm.removeListener()
+        }
     }
     
     private func handleLogout() {

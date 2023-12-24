@@ -22,7 +22,7 @@ class ChatViewModel: ObservableObject {
     var listingId, eventName, counterpartyEmail: String?
     var listingNumber, price: Int?
     
-    var messagesListener: ListenerRegistration?
+//    var messagesListener: ListenerRegistration?
     
     var titleText: String {
         return String(counterpartyEmail?.split(separator: "@").first ?? "")
@@ -54,6 +54,10 @@ class ChatViewModel: ObservableObject {
         self.sold = rm.sold
         self.deleted = rm.deleted
         self.price = rm.price
+    }
+    
+    func removeListener() {
+        messageService.removeChatMessagesListener()
     }
     
     func fetchMessages() {

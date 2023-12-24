@@ -15,11 +15,15 @@ protocol EventServiceProtocol {
     
     func fetchEvents(completion: @escaping(([DocumentChange]?, String?) -> ()))
     
+    func fetchEventsForAlerts(completion: @escaping(([DocumentChange]?, String?) -> ()))
+    
     func addEventAlert(eventId: String, completion: @escaping((String?) -> ()))
     
     func removeEventAlert(eventId: String, completion: @escaping((String?) -> ()))
     
     func removeEventListener()
+    
+    func removeEventListenerForAlerts()
     
     func decreaseEventListingCount(eventId: String, completion: @escaping((String?) -> ()))
 }
@@ -27,6 +31,7 @@ protocol EventServiceProtocol {
 class EventService: EventServiceProtocol {
     
     private var eventListener: ListenerRegistration?
+    private var eventListenerForAlerts: ListenerRegistration?
     
     func decreaseEventListingCount(eventId: String, completion: @escaping ((String?) -> ())) {
         let update = [
@@ -68,16 +73,37 @@ class EventService: EventServiceProtocol {
     func fetchEvents(completion: @escaping(([DocumentChange]?, String?) -> ())) {
         removeEventListener()
         
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        
         eventListener = FirebaseManager.shared.firestore
+            .collection("events")
+            .whereField(EventConstants.date, isGreaterThanOrEqualTo: dateFormatter.string(from: Date()))
+            .addSnapshotListener { querySnapshot, error in
+                if let error = error {
+                    completion(nil, error.localizedDescription)
+                    return
+                }
+                completion(querySnapshot?.documentChanges, nil)
+            }
+    }
+    
+    func fetchEventsForAlerts(completion: @escaping(([DocumentChange]?, String?) -> ())) {
+        removeEventListenerForAlerts()
+        
+        eventListenerForAlerts = FirebaseManager.shared.firestore
             .collection("events")
             .addSnapshotListener { querySnapshot, error in
                 if let error = error {
                     completion(nil, error.localizedDescription)
                     return
                 }
-
                 completion(querySnapshot?.documentChanges, nil)
             }
+    }
+    
+    func removeEventListenerForAlerts() {
+        eventListenerForAlerts?.remove()
     }
     
     func addEventAlert(eventId: String, completion: @escaping((String?) -> ())) {

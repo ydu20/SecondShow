@@ -139,7 +139,6 @@ class ListingService: ListingServiceProtocol {
     }
     
     func removeListingListener() {
-        print("REMOVING LISTENER")
         listingListener?.remove()
     }
     
@@ -149,6 +148,7 @@ class ListingService: ListingServiceProtocol {
             return
         }
         
+        let listingId = eventId + "_" + String(listingNumber)
         let listingData = [
             ListingConstants.eventId: eventId,
             ListingConstants.eventName: eventName,
@@ -161,14 +161,13 @@ class ListingService: ListingServiceProtocol {
             ListingConstants.availableQuantity: quantity,
             ListingConstants.popularity: 0,
         ] as [String: Any]
-        
-        // Add listing to event
-        var listingRef: DocumentReference? = nil
-        listingRef = FirebaseManager.shared.firestore
+         
+        FirebaseManager.shared.firestore
             .collection("events")
             .document(eventId)
             .collection("listings")
-            .addDocument(data: listingData) { err in
+            .document(listingId)
+            .setData(listingData) { err in
                 if let err = err {
                     completion(err.localizedDescription)
                     return
@@ -178,7 +177,7 @@ class ListingService: ListingServiceProtocol {
                     .collection("users")
                     .document(user.email)
                     .collection("listings")
-                    .document(listingRef!.documentID)
+                    .document(listingId)
                     .setData(listingData) { err in
                         if let err = err {
                             completion(err.localizedDescription)
@@ -187,5 +186,31 @@ class ListingService: ListingServiceProtocol {
                         completion(nil)
                     }
             }
+        
+        // Add listing to event
+//        var listingRef: DocumentReference? = nil
+//        listingRef = FirebaseManager.shared.firestore
+//            .collection("events")
+//            .document(eventId)
+//            .collection("listings")
+//            .addDocument(data: listingData) { err in
+//                if let err = err {
+//                    completion(err.localizedDescription)
+//                    return
+//                }
+//                // Add listing to user also
+//                FirebaseManager.shared.firestore
+//                    .collection("users")
+//                    .document(user.email)
+//                    .collection("listings")
+//                    .document(listingRef!.documentID)
+//                    .setData(listingData) { err in
+//                        if let err = err {
+//                            completion(err.localizedDescription)
+//                            return
+//                        }
+//                        completion(nil)
+//                    }
+//            }
     }
 }

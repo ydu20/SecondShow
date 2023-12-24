@@ -20,20 +20,24 @@ struct LoginView: View {
     
     var body: some View {
         NavigationView {
-            VStack(spacing: 20) {
-                
-                topBar
-                logoDisplay
-                loginForm
-                
-                Spacer()
+            
+            GeometryReader { _ in
+                VStack(spacing: 20) {
+                    
+                    topBar
+                    logoDisplay
+                    loginForm
+                    
+                    Spacer()
+                }
+                .padding()
             }
-            .padding()
             .navigationBarHidden(true)
             .onAppear {
                 vm.statusMessage = ""
             }
         }
+        
     }
     
     private var topBar: some View {
@@ -74,6 +78,7 @@ struct LoginView: View {
             .cornerRadius(10)
             
             Button {
+                dismissKeyboard()
                 vm.loginUser(onSuccess: {
                     showLoginView.toggle()
                 })
@@ -106,6 +111,12 @@ struct LoginView: View {
                 .padding(.top, 5)
                 .padding(.bottom, 26)
         }
+    }
+}
+
+extension View {
+    func dismissKeyboard() {
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
 }
 

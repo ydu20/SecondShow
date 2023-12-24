@@ -38,7 +38,6 @@
 		8791BD9F2B1512610000D9C9 /* EventService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8791BD9E2B1512610000D9C9 /* EventService.swift */; };
 		8791BDA32B15129A0000D9C9 /* MessageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8791BDA22B15129A0000D9C9 /* MessageService.swift */; };
 		8791BDA62B1512DB0000D9C9 /* AlertPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8791BDA52B1512DB0000D9C9 /* AlertPopup.swift */; };
-		8791BDA82B1513CF0000D9C9 /* AlertService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8791BDA72B1513CF0000D9C9 /* AlertService.swift */; };
 		8791BDAA2B152EE70000D9C9 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8791BDA92B152EE70000D9C9 /* LoginViewModel.swift */; };
 		8791BDAC2B17FC1A0000D9C9 /* ListingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8791BDAB2B17FC1A0000D9C9 /* ListingService.swift */; };
 		87B2D35C2B01CA9C003FB28B /* SecondShowApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87B2D35B2B01CA9C003FB28B /* SecondShowApp.swift */; };
@@ -109,7 +108,6 @@
 		8791BD9E2B1512610000D9C9 /* EventService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventService.swift; sourceTree = "<group>"; };
 		8791BDA22B15129A0000D9C9 /* MessageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageService.swift; sourceTree = "<group>"; };
 		8791BDA52B1512DB0000D9C9 /* AlertPopup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertPopup.swift; sourceTree = "<group>"; };
-		8791BDA72B1513CF0000D9C9 /* AlertService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertService.swift; sourceTree = "<group>"; };
 		8791BDA92B152EE70000D9C9 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
 		8791BDAB2B17FC1A0000D9C9 /* ListingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListingService.swift; sourceTree = "<group>"; };
 		87B2D3582B01CA9C003FB28B /* SecondShow.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SecondShow.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -236,7 +234,6 @@
 				8791BD9E2B1512610000D9C9 /* EventService.swift */,
 				8791BDAB2B17FC1A0000D9C9 /* ListingService.swift */,
 				8791BDA22B15129A0000D9C9 /* MessageService.swift */,
-				8791BDA72B1513CF0000D9C9 /* AlertService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -572,7 +569,6 @@
 				878EE6422B10082700CDCDF3 /* LevenshteinDistance.swift in Sources */,
 				87B2D39B2B026CB2003FB28B /* NewListingView.swift in Sources */,
 				8791BD9D2B1511310000D9C9 /* UserService.swift in Sources */,
-				8791BDA82B1513CF0000D9C9 /* AlertService.swift in Sources */,
 				87DBCACF2B0ACB7E0062720A /* SoldPopupView.swift in Sources */,
 				8788CB6D2B03E36900419385 /* FirebaseManager.swift in Sources */,
 				8788CB732B040BCF00419385 /* FirebaseConstants.swift in Sources */,

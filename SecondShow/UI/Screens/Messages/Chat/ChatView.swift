@@ -36,11 +36,12 @@ struct ChatView: View {
             }
         }
         .onAppear {
-            vm.fetchMessages()
             vm.inputText = ""
+            vm.fetchMessages()
         }
         .onDisappear {
-            vm.messagesListener?.remove()
+//            vm.messagesListener?.remove()
+            vm.removeListener()
         }
     }
     

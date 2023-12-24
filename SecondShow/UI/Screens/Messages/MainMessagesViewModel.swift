@@ -30,7 +30,7 @@ class MainMessagesViewModel: ObservableObject {
     }
     
     func fetchRecentMessages() {
-        self.recentMessages.removeAll()
+//        self.recentMessages.removeAll()
         
         print("Fetching recent messages...")
         
@@ -46,11 +46,20 @@ class MainMessagesViewModel: ObservableObject {
                     return
                 }
                 
+                var insert = true
+                
                 if let ind = self.recentMessages.firstIndex(where: {$0.id == recentMessage.id}) {
-                    self.recentMessages.remove(at: ind)
+                    if self.recentMessages[ind].timestamp == recentMessage.timestamp {
+                        insert = false
+                    } else {
+                        self.recentMessages.remove(at: ind)
+                    }
                 }
                 
-                self.recentMessages.insert(recentMessage, at: 0)
+                if insert {
+                    self.recentMessages.insert(recentMessage, at: 0)
+
+                }
                 
                 if recentMessage.listingId == self.chatVm.listingId, recentMessage.counterpartyEmail == self.chatVm.counterpartyEmail {
                     self.chatVm.updateWithRecentMessage(rm: recentMessage)

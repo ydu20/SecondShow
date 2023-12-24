@@ -14,14 +14,18 @@ struct SignupView: View {
     @ObservedObject var vm: LoginViewModel
     
     var body: some View {
-        VStack(spacing: 20) {
+        
+        GeometryReader { _ in
+            VStack(spacing: 20) {
+                
+                signupTitle
+                registerForm
+                
+                Spacer()
+            }
+            .padding()
             
-            signupTitle
-            registerForm
-            
-            Spacer()
         }
-        .padding()
         .alert(isPresented: $vm.showSignupCompleteAlert) {
             Alert(
                 title: Text("Email Verification"),
@@ -34,6 +38,8 @@ struct SignupView: View {
         .onAppear {
             vm.statusMessage = ""
         }
+//        .navigationBarHidden(true)
+        .navigationBarTitleDisplayMode(.inline)
     }
     
     private var registerForm: some View {

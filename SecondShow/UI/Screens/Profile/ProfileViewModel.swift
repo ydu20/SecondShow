@@ -27,7 +27,6 @@ class ProfileViewModel: ObservableObject {
     func deregisterAlert(event: Event) {
         guard let eventId = event.id else {return}
 
-        
         eventService.removeEventAlert(eventId: eventId) { err in
             if let err = err {
                 self.notifyUser(err, Color(.systemRed))
@@ -37,12 +36,16 @@ class ProfileViewModel: ObservableObject {
         }
     }
     
+    func removeListener() {
+        eventService.removeEventListenerForAlerts()
+    }
+    
     func fetchMyAlerts() {
         guard let userAlerts = FirebaseManager.shared.currentUser?.alerts else {return}
         
-        myAlerts.removeAll()
+//        myAlerts.removeAll()
 
-        eventService.fetchEvents { documentChanges, err in
+        eventService.fetchEventsForAlerts { documentChanges, err in
             if let err = err {
                 self.notifyUser(err, Color(.systemRed))
                 return
@@ -53,7 +56,7 @@ class ProfileViewModel: ObservableObject {
                         return
                     }
                     if change.type != .removed {
-                        if let ind = self.myAlerts.firstIndex(where: {$0.date >= event.date}) {
+                        if let ind = self.myAlerts.firstIndex(where: {$0.id ?? "ZZZZ" >= event.id ?? "0000"}) {
                             if (self.myAlerts[ind].id == event.id) {
                                 self.myAlerts[ind] = event
                             } else {

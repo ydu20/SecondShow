@@ -101,7 +101,7 @@ class NewListingViewModel: ObservableObject {
         self.dismissView()
         
         let eventDateStr = dateFormatter.string(from: eventDate)
-        let eventId = eventName.replacingOccurrences(of: " ", with: "_") + "_" + eventDateStr
+        let eventId = eventDateStr + "_" + eventName.replacingOccurrences(of: " ", with: "_")
         
         // Create or update event in firestore
         eventService.createOrUpdateEvent(

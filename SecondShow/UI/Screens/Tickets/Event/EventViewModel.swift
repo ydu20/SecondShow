@@ -26,7 +26,7 @@ class EventViewModel: ObservableObject {
         
     init(eventService: EventService, listingService: ListingService, notifyUser: @escaping (String, Color) -> (), updateChatOnRemoval: @escaping (String, String, Bool) -> ()) {
         
-        print("Initilizing eventViewModel...")
+        print("Initializing eventViewModel...")
         self.eventService = eventService
         self.listingService = listingService
         self.notifyUser = notifyUser
@@ -66,9 +66,7 @@ class EventViewModel: ObservableObject {
             print("Error: event id is nil")
             return
         }
-        
-        print("Fetching listings...")
-        
+                
         listings.removeAll()
         listingService.fetchEventListings(eventId: eventId) { documentChanges, err in
             if let err = err {

@@ -26,6 +26,7 @@ struct MainMessagesView: View {
     var body: some View {
         VStack {
             NavBar<EmptyView>(title: "Messages", subtitle: nil)
+                .padding(.horizontal)
             
             if vm.recentMessages.count == 0 {
                 Text("Message a listing to start a chat!")
@@ -40,16 +41,16 @@ struct MainMessagesView: View {
             }
             .hidden()
         }
-        .padding()
+        .padding(.vertical)
         .onAppear {
             if (!intraTabNavigation) {
-                print("MAIN MESSAGES: FETCHING RECENT")
+//                print("MAIN MESSAGES: FETCHING RECENT")
                 vm.fetchRecentMessages()
             }
         }
         .onDisappear {
             if !(showChatView) {
-                print("MAIN MESSAGES: REMOVING LISTENER")
+//                print("MAIN MESSAGES: REMOVING LISTENER")
                 vm.removeListener()
                 intraTabNavigation = false
             }
@@ -96,12 +97,14 @@ struct MainMessagesView: View {
                         Spacer()
                         Text(recentMessage.timeAgo)
                             .font(.system(size: 14, weight: .semibold))
-                    }.padding(.top, 7)
+                    }
+                    .padding(.top, 7)
+                    .padding(.horizontal)
                 }
                 Divider()
                     .padding(.vertical, 5)
+                    .padding(.horizontal)
             }
-            
         }
     }
 }

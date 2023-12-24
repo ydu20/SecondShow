@@ -34,7 +34,7 @@ class LoginViewModel: ObservableObject {
     func createAccount() {
         // Validation
         if (!signupEmail.hasSuffix("gmail.com")) {
-            self.statusMessage = "Please sign up with an gmail address"
+            self.statusMessage = "Please sign up with a gmail address"
             return
         }
         if (signupPassword.count < 8) {
