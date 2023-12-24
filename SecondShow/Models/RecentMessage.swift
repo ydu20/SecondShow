@@ -16,7 +16,7 @@ struct RecentMessage: Codable, Identifiable {
     let listingNumber, price: Int
     let timestamp: Date
     
-    let sold, deleted: Bool
+    let read, sold, deleted, expired: Bool
     
     var timeAgo: String {
         let formatter = RelativeDateTimeFormatter()

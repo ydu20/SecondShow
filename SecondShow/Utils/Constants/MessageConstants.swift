@@ -16,6 +16,8 @@ struct MessageConstants {
     static let timestamp = "timestamp"
     static let messages = "messages"
     static let recentMessages = "recent_messages"
+    static let read = "read"
     static let sold = "sold"
     static let deleted = "deleted"
+    static let expired = "expired"
 }

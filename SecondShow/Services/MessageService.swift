@@ -22,6 +22,8 @@ protocol MessageServiceProtocol {
     
     func persistRecentMessage(toEmail: String, listingId: String, eventName: String, listingNumber: Int, price: Int, message: String, timestamp: Date, completion: @escaping((String?) -> ()))
     
+    func updateReadStatus(counterPartyEmail: String, listingId: String, completion: @escaping((String?) -> ()))
+    
     func removeChatMessagesListener()
     
 }
@@ -30,6 +32,27 @@ class MessageService: MessageServiceProtocol {
     
     private var recentMessagesListener: ListenerRegistration?
     private var chatMessagesListener: ListenerRegistration?
+    
+    func updateReadStatus(counterPartyEmail: String, listingId: String, completion: @escaping((String?) -> ())) {
+        guard let userEmail = FirebaseManager.shared.currentUser?.email else {return}
+        
+        let updateData = [
+            MessageConstants.read: true
+        ]
+        
+        FirebaseManager.shared.firestore
+            .collection(MessageConstants.recentMessages)
+            .document(userEmail)
+            .collection(MessageConstants.messages)
+            .document(listingId + "<->" + counterPartyEmail)
+            .updateData(updateData) { err in
+                if let err = err {
+                    completion(err.localizedDescription)
+                    return
+                }
+                completion(nil)
+            }
+    }
     
     func persistRecentMessage(toEmail: String, listingId: String, eventName: String, listingNumber: Int, price: Int, message: String, timestamp: Date, completion: @escaping((String?) -> ())) {
         
@@ -44,8 +67,10 @@ class MessageService: MessageServiceProtocol {
             ListingConstants.listingNumber: listingNumber,
             MessageConstants.timestamp: timestamp,
             MessageConstants.message: message.replacingOccurrences(of: "\n", with: "").prefix(30),
+            MessageConstants.read: true,
             MessageConstants.sold: false,
             MessageConstants.deleted: false,
+            MessageConstants.expired: false,
             ListingConstants.price: price,
         ] as [String: Any]
         
@@ -71,8 +96,10 @@ class MessageService: MessageServiceProtocol {
             ListingConstants.listingNumber: listingNumber,
             MessageConstants.timestamp: timestamp,
             MessageConstants.message: message.replacingOccurrences(of: "\n", with: "").prefix(30),
+            MessageConstants.read: false,
             MessageConstants.sold: false,
             MessageConstants.deleted: false,
+            MessageConstants.expired: false,
             ListingConstants.price: price,
         ] as [String: Any]
         

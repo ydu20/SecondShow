@@ -44,13 +44,11 @@ struct MainMessagesView: View {
         .padding(.vertical)
         .onAppear {
             if (!intraTabNavigation) {
-//                print("MAIN MESSAGES: FETCHING RECENT")
                 vm.fetchRecentMessages()
             }
         }
         .onDisappear {
             if !(showChatView) {
-//                print("MAIN MESSAGES: REMOVING LISTENER")
                 vm.removeListener()
                 intraTabNavigation = false
             }
@@ -61,6 +59,7 @@ struct MainMessagesView: View {
         ScrollView {
             ForEach(vm.recentMessages) { recentMessage in
                 Button {
+                    vm.updateReadStatus(rm: recentMessage)
                     chatVm.updateWithRecentMessage(rm: recentMessage)
                     showChatView.toggle()
                     intraTabNavigation = true
@@ -91,7 +90,8 @@ struct MainMessagesView: View {
                                     recentMessage.message
                             )
                                 .font(.system(size: 13))
-                                .foregroundColor(Color(.darkGray))
+                                .foregroundColor(recentMessage.read ? Color(.darkGray) : Color(.black))
+                                .fontWeight(recentMessage.read ? .regular : .semibold)
                                 .multilineTextAlignment(.leading)
                         }
                         Spacer()

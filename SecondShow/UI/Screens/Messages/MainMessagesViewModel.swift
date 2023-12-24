@@ -29,9 +29,16 @@ class MainMessagesViewModel: ObservableObject {
         messageService.removeRecentMessagesListener()
     }
     
+    func updateReadStatus(rm: RecentMessage) {
+        messageService.updateReadStatus(counterPartyEmail: rm.counterpartyEmail, listingId: rm.listingId) { err in
+            if let err = err {
+                self.notifyUser(err, Color(.systemRed))
+                return
+            }
+        }
+    }
+    
     func fetchRecentMessages() {
-//        self.recentMessages.removeAll()
-        
         print("Fetching recent messages...")
         
         messageService.fetchRecentMessages { documentChanges, err in
@@ -50,6 +57,7 @@ class MainMessagesViewModel: ObservableObject {
                 
                 if let ind = self.recentMessages.firstIndex(where: {$0.id == recentMessage.id}) {
                     if self.recentMessages[ind].timestamp == recentMessage.timestamp {
+                        self.recentMessages[ind] = recentMessage
                         insert = false
                     } else {
                         self.recentMessages.remove(at: ind)

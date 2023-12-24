@@ -43,8 +43,6 @@ class ProfileViewModel: ObservableObject {
     func fetchMyAlerts() {
         guard let userAlerts = FirebaseManager.shared.currentUser?.alerts else {return}
         
-//        myAlerts.removeAll()
-
         eventService.fetchEventsForAlerts { documentChanges, err in
             if let err = err {
                 self.notifyUser(err, Color(.systemRed))

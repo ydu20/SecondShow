@@ -186,31 +186,5 @@ class ListingService: ListingServiceProtocol {
                         completion(nil)
                     }
             }
-        
-        // Add listing to event
-//        var listingRef: DocumentReference? = nil
-//        listingRef = FirebaseManager.shared.firestore
-//            .collection("events")
-//            .document(eventId)
-//            .collection("listings")
-//            .addDocument(data: listingData) { err in
-//                if let err = err {
-//                    completion(err.localizedDescription)
-//                    return
-//                }
-//                // Add listing to user also
-//                FirebaseManager.shared.firestore
-//                    .collection("users")
-//                    .document(user.email)
-//                    .collection("listings")
-//                    .document(listingRef!.documentID)
-//                    .setData(listingData) { err in
-//                        if let err = err {
-//                            completion(err.localizedDescription)
-//                            return
-//                        }
-//                        completion(nil)
-//                    }
-//            }
     }
 }

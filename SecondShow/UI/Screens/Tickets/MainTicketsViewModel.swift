@@ -33,8 +33,6 @@ class MainTicketsViewModel: ObservableObject {
     }
 
     func fetchEvents() {
-//        eventDates.removeAll()
-        
         eventService.fetchEvents { documentChanges, err in
             if let err = err {
                 print(err)

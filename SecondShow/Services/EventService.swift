@@ -90,7 +90,7 @@ class EventService: EventServiceProtocol {
     
     func fetchEventsForAlerts(completion: @escaping(([DocumentChange]?, String?) -> ())) {
         removeEventListenerForAlerts()
-        
+
         eventListenerForAlerts = FirebaseManager.shared.firestore
             .collection("events")
             .addSnapshotListener { querySnapshot, error in

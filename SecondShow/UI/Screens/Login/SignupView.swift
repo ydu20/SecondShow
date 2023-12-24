@@ -38,7 +38,6 @@ struct SignupView: View {
         .onAppear {
             vm.statusMessage = ""
         }
-//        .navigationBarHidden(true)
         .navigationBarTitleDisplayMode(.inline)
     }
     

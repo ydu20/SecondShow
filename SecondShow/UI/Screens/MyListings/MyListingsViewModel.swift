@@ -91,9 +91,6 @@ class MyListingsViewModel: ObservableObject {
     }
 
     func fetchMyListings() {
-//        myAvailableListings.removeAll()
-//        mySoldOutListings.removeAll()
-        
         listingService.fetchUserListings { documentChanges, err in
             if let err = err {
                 self.notifyUser(err, Color(.systemRed))
