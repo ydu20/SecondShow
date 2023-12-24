@@ -8,6 +8,7 @@
 import Foundation
 
 struct MessageConstants {
+    static let counterpartyUsername = "counterpartyUsername"
     static let counterpartyEmail = "counterpartyEmail"
     static let counterparties = "counterparties"
     static let fromEmail = "fromEmail"

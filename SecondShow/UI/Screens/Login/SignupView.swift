@@ -44,6 +44,18 @@ struct SignupView: View {
     private var registerForm: some View {
         VStack (spacing: 20) {
             Group {
+                
+                TextField("Username", text: $vm.signupUsername)
+                    .font(.system(size: 18))
+                    .autocapitalization(.none)
+                    .disableAutocorrection(true)
+                    .padding(.vertical, 14)
+                    .padding(.horizontal, 10)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 10)
+                            .stroke(Color(.quaternaryLabel), lineWidth: 2)
+                    )
+                
                 TextField("Email", text: $vm.signupEmail)
                     .font(.system(size: 18))
                     .keyboardType(.emailAddress)
@@ -86,6 +98,7 @@ struct SignupView: View {
                     .background(Color(.systemBlue))
                     .cornerRadius(10)
             }
+            .disabled(vm.disableSubmit)
             
             Text(vm.statusMessage)
                 .foregroundColor(Color(red: 0.8, green: 0, blue: 0))

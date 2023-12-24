@@ -20,7 +20,7 @@ protocol MessageServiceProtocol {
     
     func sendMessage(toEmail: String, listingId: String, message: String, timestamp: Date, completion: @escaping((String?) -> ()))
     
-    func persistRecentMessage(toEmail: String, listingId: String, eventName: String, listingNumber: Int, price: Int, message: String, timestamp: Date, completion: @escaping((String?) -> ()))
+    func persistRecentMessage(toUsername: String, toEmail: String, listingId: String, eventName: String, listingNumber: Int, price: Int, message: String, timestamp: Date, completion: @escaping((String?) -> ()))
     
     func updateReadStatus(counterPartyEmail: String, listingId: String, completion: @escaping((String?) -> ()))
     
@@ -54,8 +54,9 @@ class MessageService: MessageServiceProtocol {
             }
     }
     
-    func persistRecentMessage(toEmail: String, listingId: String, eventName: String, listingNumber: Int, price: Int, message: String, timestamp: Date, completion: @escaping((String?) -> ())) {
+    func persistRecentMessage(toUsername: String, toEmail: String, listingId: String, eventName: String, listingNumber: Int, price: Int, message: String, timestamp: Date, completion: @escaping((String?) -> ())) {
         
+        guard let fromUsername = FirebaseManager.shared.currentUser?.username else {return}
         guard let fromEmail = FirebaseManager.shared.currentUser?.email else {return}
         
         let group = DispatchGroup()
@@ -63,6 +64,7 @@ class MessageService: MessageServiceProtocol {
         let senderRmData = [
             ListingConstants.listingId: listingId,
             ListingConstants.eventName: eventName,
+            MessageConstants.counterpartyUsername: toUsername,
             MessageConstants.counterpartyEmail: toEmail,
             ListingConstants.listingNumber: listingNumber,
             MessageConstants.timestamp: timestamp,
@@ -92,6 +94,7 @@ class MessageService: MessageServiceProtocol {
         let recipientRmData = [
             ListingConstants.listingId: listingId,
             ListingConstants.eventName: eventName,
+            MessageConstants.counterpartyUsername: fromUsername,
             MessageConstants.counterpartyEmail: fromEmail,
             ListingConstants.listingNumber: listingNumber,
             MessageConstants.timestamp: timestamp,
@@ -252,8 +255,9 @@ class MessageService: MessageServiceProtocol {
                         return
                     }
                     let recentMsgId = document.documentID
-                    let updateData = deleted ? [MessageConstants.deleted: true] : [MessageConstants.sold: true]
-                    
+                    var updateData = deleted ? [MessageConstants.deleted: true] : [MessageConstants.sold: true]
+                    updateData[MessageConstants.read] = true
+
                     group.enter()
                     msgCollectionRef.document(recentMsgId).updateData(updateData) { err in
                         if let err = err {

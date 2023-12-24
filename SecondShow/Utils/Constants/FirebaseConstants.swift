@@ -11,6 +11,7 @@ struct FirebaseConstants {
     static let text = "text"
     static let createTime = "createTime"
     static let timestamp = "timestamp"
+    static let username = "username"
     static let email = "email"
     static let uid = "uid"
     static let profileImageUrl = "profileImageUrl"

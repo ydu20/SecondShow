@@ -68,7 +68,7 @@ struct MainMessagesView: View {
                         VStack(alignment: .leading, spacing: 8) {
                             
                             HStack (spacing: 10) {
-                                Text(recentMessage.counterpartyEmail.split(separator: "@").first ?? "")
+                                Text(recentMessage.counterpartyUsername)
                                     .font(.system(size: 18, weight: .bold))
                                     .foregroundColor(Color(.label))
                                 

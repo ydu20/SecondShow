@@ -12,7 +12,7 @@ struct User: Codable, Identifiable {
 
     @DocumentID var id: String?
 
-    let uid, email: String
+    let uid, username, email: String
     let createTime: Date
     let alerts: [String]?
     

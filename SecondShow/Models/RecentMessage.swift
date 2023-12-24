@@ -12,7 +12,7 @@ struct RecentMessage: Codable, Identifiable {
     
     @DocumentID var id: String?
     
-    let listingId, eventName, counterpartyEmail, message: String
+    let listingId, eventName, counterpartyUsername, counterpartyEmail, message: String
     let listingNumber, price: Int
     let timestamp: Date
     

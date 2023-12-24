@@ -99,7 +99,7 @@ class EventViewModel: ObservableObject {
                             self.listings.remove(at: rmInd)
                         }
                         
-                        self.updateChatOnRemoval(listing.id ?? "", listing.creator, change.type == .removed)
+                        self.updateChatOnRemoval(listing.id ?? "", listing.creatorEmail, change.type == .removed)
                     }
                 } else {
                     print("Failure codifying listing object")

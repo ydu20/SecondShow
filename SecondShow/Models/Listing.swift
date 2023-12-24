@@ -15,7 +15,7 @@ struct Listing: Codable, Identifiable {
     let eventId, eventName, eventDate: String
     let listingNumber, price, totalQuantity, availableQuantity, popularity: Int
     let createTime: Date
-    let creator: String
+    let creatorUsername, creatorEmail: String
     
     var eventDateMMMdd: String {
         let formatter = DateFormatter()

@@ -19,13 +19,13 @@ class ChatViewModel: ObservableObject {
     @Published var sold = false
     @Published var deleted = false
     
-    var listingId, eventName, counterpartyEmail: String?
+    var listingId, eventName, counterpartyUsername, counterpartyEmail: String?
     var listingNumber, price: Int?
     
 //    var messagesListener: ListenerRegistration?
     
     var titleText: String {
-        return String(counterpartyEmail?.split(separator: "@").first ?? "")
+        return counterpartyUsername ?? ""
     }
     
     init(messageService: MessageService) {
@@ -39,7 +39,8 @@ class ChatViewModel: ObservableObject {
         self.listingId = listingId
         self.eventName = listing.eventName
         self.listingNumber = listing.listingNumber
-        self.counterpartyEmail = listing.creator
+        self.counterpartyUsername = listing.creatorUsername
+        self.counterpartyEmail = listing.creatorEmail
         self.sold = false
         self.deleted = false
         self.price = listing.price
@@ -50,6 +51,7 @@ class ChatViewModel: ObservableObject {
         self.listingId = rm.listingId
         self.eventName = rm.eventName
         self.listingNumber = rm.listingNumber
+        self.counterpartyUsername = rm.counterpartyUsername
         self.counterpartyEmail = rm.counterpartyEmail
         self.sold = rm.sold
         self.deleted = rm.deleted
@@ -111,6 +113,7 @@ class ChatViewModel: ObservableObject {
     
     private func persistRecentMessage(timestamp: Date) {
         
+        guard let toUsername = self.counterpartyUsername else {return}
         guard let toEmail = self.counterpartyEmail else {return}
         guard let listingId = self.listingId else {return}
         guard let eventName = self.eventName else {return}
@@ -118,6 +121,7 @@ class ChatViewModel: ObservableObject {
         guard let price = self.price else {return}
         
         messageService.persistRecentMessage(
+            toUsername: toUsername,
             toEmail: toEmail,
             listingId: listingId,
             eventName: eventName,

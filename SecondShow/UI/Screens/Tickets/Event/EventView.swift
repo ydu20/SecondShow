@@ -59,7 +59,7 @@ struct EventView: View {
                 Button {
                     guard let userEmail = FirebaseManager.shared.currentUser?.email else {return}
                     
-                    if (listing.creator != userEmail) {
+                    if (listing.creatorEmail != userEmail) {
                         chatVm.updateWithListing(listing: listing)
                         showChatView.toggle()
                     }

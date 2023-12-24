@@ -13,7 +13,7 @@ protocol UserServiceProtocol {
     
     func uploadUser(uid: String, email: String, createTime: Date , completion: @escaping((String?) -> Void))
     
-    func createUser(email: String, password: String, createTime: Date, sendEmailVerification: Bool, completion: @escaping((FirebaseAuth.User?, String?) -> Void))
+    func createUser(username: String, email: String, password: String, createTime: Date, sendEmailVerification: Bool, completion: @escaping((FirebaseAuth.User?, String?) -> Void))
     
     func getUser(email: String, completion: @escaping((User?, String?) -> Void))
     
@@ -32,35 +32,50 @@ class UserService: UserServiceProtocol {
     
     private var userListener: ListenerRegistration?
     
-    func createUser(email: String, password: String, createTime: Date, sendEmailVerification: Bool, completion: @escaping((FirebaseAuth.User?, String?) -> Void)) {
-        FirebaseManager.shared.auth.createUser(withEmail: email, password: password) { result, err in
-            if let err = err  {
-                completion(nil, "Error creating user: \(err.localizedDescription)")
-                return
-            }
-            
-            guard let currentUser = FirebaseManager.shared.auth.currentUser else {
-                completion(nil, "Error creating user: User not saved locally")
-                return
-            }
-            
-            
-            self.uploadUser(uid: currentUser.uid, email: email, createTime: createTime) { err in
+    func createUser(username: String, email: String, password: String, createTime: Date, sendEmailVerification: Bool, completion: @escaping((FirebaseAuth.User?, String?) -> Void)) {
+        
+        FirebaseManager.shared.firestore
+            .collection("user")
+            .whereField(FirebaseConstants.username, isEqualTo: username)
+            .getDocuments{ (querySnapshot, err) in
                 if let err = err {
-                    completion(nil, err)
+                    completion(nil, "Error validating username: \(err.localizedDescription)")
+                    return
+                }
+                if !(querySnapshot?.isEmpty ?? true) {
+                    completion(nil, "Username is already taken")
                     return
                 }
                 
-                // send verification email
-                currentUser.sendEmailVerification() { err in
-                    if let err = err {
-                        completion(nil, "Error sending email verification: \(err.localizedDescription)")
+                FirebaseManager.shared.auth.createUser(withEmail: email, password: password) { result, err in
+                    if let err = err  {
+                        completion(nil, "Error creating user: \(err.localizedDescription)")
                         return
                     }
-                    completion(currentUser, nil)
+                    
+                    guard let currentUser = FirebaseManager.shared.auth.currentUser else {
+                        completion(nil, "Error creating user: User not saved locally")
+                        return
+                    }
+                    
+                    
+                    self.uploadUser(uid: currentUser.uid, email: email, createTime: createTime) { err in
+                        if let err = err {
+                            completion(nil, err)
+                            return
+                        }
+                        
+                        // send verification email
+                        currentUser.sendEmailVerification() { err in
+                            if let err = err {
+                                completion(nil, "Error sending email verification: \(err.localizedDescription)")
+                                return
+                            }
+                            completion(currentUser, nil)
+                        }
+                    }
                 }
             }
-        }
     }
     
     func uploadUser(uid: String, email: String, createTime: Date , completion: @escaping((String?) -> Void)) {
