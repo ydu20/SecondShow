@@ -26,11 +26,35 @@ protocol UserServiceProtocol {
     func attachUserListener(completion: @escaping((User?, String?) -> Void))
     
     func removeUserListener()
+    
+    func submitFeedback(feedback: String, completion: @escaping ((String?) -> Void))
 }
 
 class UserService: UserServiceProtocol {
     
     private var userListener: ListenerRegistration?
+    
+    func submitFeedback(feedback: String, completion: @escaping ((String?) -> Void)) {
+        guard let uid = FirebaseManager.shared.currentUser?.uid else {
+            completion("Error submitting feedback: User not logged in")
+            return
+        }
+        
+        let feedbackData = [
+            FirebaseConstants.uid: uid,
+            FirebaseConstants.feedback: feedback,
+        ]
+        
+        FirebaseManager.shared.firestore.collection(FirebaseConstants.feedback)
+            .addDocument(data: feedbackData) { err in
+                if let err = err {
+                    completion("Error submitting feedback: \(err.localizedDescription)")
+                    return
+                }
+                completion(nil)
+            }
+    }
+
     
     func createUser(username: String, email: String, password: String, createTime: Date, sendEmailVerification: Bool, completion: @escaping((FirebaseAuth.User?, String?) -> Void)) {
         

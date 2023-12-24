@@ -13,15 +13,39 @@ import SwiftUI
 class ProfileViewModel: ObservableObject {
     
     @Published var myAlerts = [Event]()
+    @Published var feedbackInput = ""
+    @Published var feedbackStatusMsg = ""
+    @Published var feedbackError = true
     
     var eventListener: ListenerRegistration?
     
     private let eventService: EventService
+    private let userService: UserService
     private let notifyUser: (String, Color) -> ()
     
-    init(eventService: EventService, notifyUser: @escaping (String, Color) -> ()) {
+    init(eventService: EventService, userService: UserService, notifyUser: @escaping (String, Color) -> ()) {
         self.eventService = eventService
+        self.userService = userService
         self.notifyUser = notifyUser
+    }
+    
+    func submitFeedback() {
+        if feedbackInput.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            feedbackError = true
+            feedbackStatusMsg = "Please enter feedback"
+            return
+        }
+        
+        userService.submitFeedback(feedback: feedbackInput) { err in
+            if let err = err {
+                self.feedbackError = true
+                self.feedbackStatusMsg = err
+                return
+            }
+            self.feedbackError = false
+            self.feedbackInput = ""
+            self.feedbackStatusMsg = "Thank you for your feedback!"
+        }
     }
     
     func deregisterAlert(event: Event) {

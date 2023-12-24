@@ -90,6 +90,7 @@ struct LoginView: View {
                     .background(Color(.systemBlue))
                     .cornerRadius(10)
             }
+            .disabled(vm.disableSubmit)
             
             Text(vm.statusMessage)
                 .foregroundColor(Color(red: 0.8, green: 0, blue: 0))

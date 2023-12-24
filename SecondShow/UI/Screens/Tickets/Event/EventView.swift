@@ -64,10 +64,10 @@ struct EventView: View {
                         showChatView.toggle()
                     }
                 } label: {
-                    HStack(spacing: 10) {
+                    HStack(spacing: 15) {
                         Text("# \(String(listing.listingNumber))")
                             .font(.system(size: 20, weight: .semibold))
-                            .padding(.trailing, 6)
+//                            .padding(.trailing, 6)
 
                         HStack(spacing: 3) {
                             Image(systemName: "flame")
@@ -77,6 +77,13 @@ struct EventView: View {
                         }
 
                         Text("x \(String(listing.availableQuantity))/\(String(listing.totalQuantity))")
+                        
+                        HStack(spacing: 3) {
+                            Image(systemName: "person.fill")
+                                .font(.system(size: 16))
+                                .foregroundColor(Color(.gray))
+                            Text(listing.creatorUsername)
+                        }
 
                         Spacer()
                         Text("$\(String(listing.price))")
@@ -94,12 +101,6 @@ struct EventView: View {
 
 struct EventView_Previews: PreviewProvider {
     static var previews: some View {
-//        TabBarView(
-//            showLoginView: .constant(false),
-//            selectedTab: .constant(0),
-//            userService: UserService(),
-//            eventService: EventService()
-//        )
-        EmptyView()
+        RootView()
     }
 }

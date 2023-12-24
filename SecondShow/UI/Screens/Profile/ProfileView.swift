@@ -15,12 +15,10 @@ struct ProfileView: View {
     
     @State private var showOptionsMenu = false;
     @State private var isAlerts = true
-    @State private var feedbackInput = ""
 
-
-    init(showLoginView: Binding<Bool>, eventService: EventService, notifyUser: @escaping (String, Color) -> ()) {
+    init(showLoginView: Binding<Bool>, eventService: EventService, userService: UserService, notifyUser: @escaping (String, Color) -> ()) {
         _showLoginView = showLoginView
-        _vm = StateObject(wrappedValue: ProfileViewModel(eventService: eventService, notifyUser: notifyUser))
+        _vm = StateObject(wrappedValue: ProfileViewModel(eventService: eventService, userService: userService, notifyUser: notifyUser))
     }
     
     var body: some View {
@@ -84,16 +82,27 @@ struct ProfileView: View {
                 .font(.system(size: 24, weight: .bold))
                 .padding(.bottom, 10)
 
-            TextEditor(text: $feedbackInput)
+            TextEditor(text: $vm.feedbackInput)
                 .overlay(
                     RoundedRectangle(cornerRadius: 8) // Use RoundedRectangle for rounded corners
                         .stroke(Color(.secondarySystemFill), lineWidth: 1)
                 )
                 .padding(.bottom, 10)
             
+            HStack {
+                Spacer()
+                Text(vm.feedbackStatusMsg)
+                    .foregroundColor(
+                        vm.feedbackError ? Color(red: 0.8, green: 0, blue: 0) : Color(red: 0, green: 0.4, blue: 0)
+                    )
+                    .onDisappear {
+                        vm.feedbackStatusMsg = ""
+                    }
+                Spacer()
+            }
+            
             Button {
-                //TODO
-                
+                vm.submitFeedback()
             } label: {
                 Text("Submit")
                     .frame(height: 45)

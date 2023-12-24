@@ -66,7 +66,7 @@ class EventViewModel: ObservableObject {
             print("Error: event id is nil")
             return
         }
-                
+
         listings.removeAll()
         listingService.fetchEventListings(eventId: eventId) { documentChanges, err in
             if let err = err {

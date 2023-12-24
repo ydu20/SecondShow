@@ -72,6 +72,7 @@ struct TabBarView: View {
                     ProfileView(
                         showLoginView: $showLoginView,
                         eventService: eventService,
+                        userService: userService,
                         notifyUser: notifyUser
                     )
                         .tabItem {Image(systemName: "person")}
