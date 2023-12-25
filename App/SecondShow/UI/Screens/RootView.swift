@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import FirebaseMessaging
 
 struct RootView: View {
     
@@ -32,18 +33,25 @@ struct RootView: View {
         }
         .onAppear {
             // Verify login status & attach listener
-            userService.verifyLoginStatus { loggedIn in
-                if !loggedIn {
-                    showLoginView = true
-                } else {
-                    userService.attachUserListener { updatedUser, err in
+            if (FirebaseManager.shared.auth.currentUser != nil) {
+                if let fcmToken = Messaging.messaging().fcmToken {
+                    userService.updateFcmToken(fcmToken: fcmToken) { err in
                         if let err = err {
                             print(err)
                             return
                         }
-                        FirebaseManager.shared.currentUser = updatedUser
                     }
                 }
+                
+                userService.attachUserListener { updatedUser, err in
+                    if let err = err {
+                        print(err)
+                        return
+                    }
+                    FirebaseManager.shared.currentUser = updatedUser
+                }
+            } else {
+                showLoginView = true
             }
         }
         .fullScreenCover(isPresented: $showLoginView) {

@@ -14,6 +14,7 @@ class FirebaseManager: NSObject {
     
     let auth: Auth
     let firestore: Firestore
+    let temp = "HI"
     
     var currentUser: User?
     

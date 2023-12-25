@@ -21,27 +21,45 @@ protocol UserServiceProtocol {
     
     func logoutUser()
     
-    func verifyLoginStatus(completion: @escaping((Bool) -> Void))
+//    func verifyLoginStatus(completion: @escaping((Bool) -> Void))
     
     func attachUserListener(completion: @escaping((User?, String?) -> Void))
     
     func removeUserListener()
     
     func submitFeedback(feedback: String, completion: @escaping ((String?) -> Void))
+    
+    func updateFcmToken(fcmToken: String, completion: @escaping ((String?) -> Void))
 }
 
 class UserService: UserServiceProtocol {
     
     private var userListener: ListenerRegistration?
     
+    func updateFcmToken(fcmToken: String, completion: @escaping ((String?) -> Void)) {
+        guard let email = FirebaseManager.shared.auth.currentUser?.email else { return }
+        
+        FirebaseManager.shared.firestore
+            .collection("users")
+            .document(email)
+            .updateData([FirebaseConstants.fcmToken: fcmToken]) { err in
+                if let err = err {
+                    completion("Error updating fcm token: \(err.localizedDescription)")
+                    return
+                }
+                completion(nil)
+            }
+    }
+
+    
     func submitFeedback(feedback: String, completion: @escaping ((String?) -> Void)) {
-        guard let uid = FirebaseManager.shared.currentUser?.uid else {
+        guard let email = FirebaseManager.shared.currentUser?.email else {
             completion("Error submitting feedback: User not logged in")
             return
         }
         
         let feedbackData = [
-            FirebaseConstants.uid: uid,
+            FirebaseConstants.email: email,
             FirebaseConstants.feedback: feedback,
         ]
         
@@ -172,33 +190,33 @@ class UserService: UserServiceProtocol {
         try? FirebaseManager.shared.auth.signOut()
     }
     
-    func verifyLoginStatus(completion: @escaping((Bool) -> Void)) {
-        guard let authCurrUserEmail = FirebaseManager.shared.auth.currentUser?.email else {
-            completion(false)
-            return
-        }
-        
-        if (FirebaseManager.shared.currentUser == nil) {
-            self.getUser(email: authCurrUserEmail) { currUser, err in
-                if let err = err {
-                    print(err)
-                    self.logoutUser()
-                    completion(false)
-                    return
-                }
-                FirebaseManager.shared.currentUser = currUser
-                completion(true)
-            }
-        } else {
-            completion(true)
-        }
-    }
+//    func verifyLoginStatus(completion: @escaping((Bool) -> Void)) {
+//        guard let authCurrUserEmail = FirebaseManager.shared.auth.currentUser?.email else {
+//            completion(false)
+//            return
+//        }
+//
+//        if (FirebaseManager.shared.currentUser == nil) {
+//            self.getUser(email: authCurrUserEmail) { currUser, err in
+//                if let err = err {
+//                    print(err)
+//                    self.logoutUser()
+//                    completion(false)
+//                    return
+//                }
+//                FirebaseManager.shared.currentUser = currUser
+//                completion(true)
+//            }
+//        } else {
+//            completion(true)
+//        }
+//    }
     
     func attachUserListener(completion: @escaping((User?, String?) -> Void)) {
-        guard let currentUser = FirebaseManager.shared.currentUser else {return}
+        guard let email = FirebaseManager.shared.auth.currentUser?.email else {return}
         
         removeUserListener()
-        FirebaseManager.shared.firestore.collection("users").document(currentUser.email).addSnapshotListener{ snapshot, err in
+        FirebaseManager.shared.firestore.collection("users").document(email).addSnapshotListener{ snapshot, err in
             if let err = err {
                 completion(nil, "Snapshot error: \(err.localizedDescription)")
                 return

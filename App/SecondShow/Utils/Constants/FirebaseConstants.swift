@@ -20,4 +20,5 @@ struct FirebaseConstants {
     static let recentMessages = "recent_messages"
     static let alerts = "alerts"
     static let feedback = "feedback"
+    static let fcmToken = "fcm_token"
 }
