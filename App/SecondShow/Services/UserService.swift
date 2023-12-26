@@ -190,28 +190,6 @@ class UserService: UserServiceProtocol {
         try? FirebaseManager.shared.auth.signOut()
     }
     
-//    func verifyLoginStatus(completion: @escaping((Bool) -> Void)) {
-//        guard let authCurrUserEmail = FirebaseManager.shared.auth.currentUser?.email else {
-//            completion(false)
-//            return
-//        }
-//
-//        if (FirebaseManager.shared.currentUser == nil) {
-//            self.getUser(email: authCurrUserEmail) { currUser, err in
-//                if let err = err {
-//                    print(err)
-//                    self.logoutUser()
-//                    completion(false)
-//                    return
-//                }
-//                FirebaseManager.shared.currentUser = currUser
-//                completion(true)
-//            }
-//        } else {
-//            completion(true)
-//        }
-//    }
-    
     func attachUserListener(completion: @escaping((User?, String?) -> Void)) {
         guard let email = FirebaseManager.shared.auth.currentUser?.email else {return}
         

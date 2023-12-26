@@ -45,16 +45,6 @@ class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate, UNUserNot
                     .updateData([FirebaseConstants.fcmToken: fcm])
             }
         }
-//        print("AT MESSAGING FCM TOKEN FUNC")
-//        if let fcm = Messaging.messaging().fcmToken {
-//            print("fcm token:\(fcm)")
-//        } else {
-//            print("fcm token is nil")
-//        }
-//        guard let uid = FirebaseManager.shared.currentUser?.uid else { return }
-//        let fcm = Messaging.messaging().fcmToken
-//
-//        FirebaseManager.shared.firestore.collection("users").document(uid).updateData(["fcmToken": fcmToken ?? ""])
     }
 }
 

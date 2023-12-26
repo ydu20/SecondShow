@@ -109,17 +109,41 @@ class EventService: EventServiceProtocol {
     func addEventAlert(eventId: String, completion: @escaping((String?) -> ())) {
         guard let user = FirebaseManager.shared.currentUser else {return}
         
-        let userRef = FirebaseManager.shared.firestore
+        let group = DispatchGroup()
+        
+        group.enter()
+        FirebaseManager.shared.firestore
             .collection("users")
             .document(user.email)
-        
-        userRef.updateData([
-            FirebaseConstants.alerts: FieldValue.arrayUnion([eventId])
-        ]) {err in
-            if let err = err {
-                completion(err.localizedDescription)
-                return
+            .updateData([
+                FirebaseConstants.alerts: FieldValue.arrayUnion([eventId])
+            ]) {err in
+                if let err = err {
+                    completion(err.localizedDescription)
+                    return
+                }
+                group.leave()
             }
+        
+        let subscriberData = [
+            "subscribed": true
+        ]
+        
+        group.enter()
+        FirebaseManager.shared.firestore
+            .collection("events")
+            .document(eventId)
+            .collection("subscribers")
+            .document(user.email)
+            .setData(subscriberData) { err in
+                if let err = err {
+                    completion(err.localizedDescription)
+                    return
+                }
+                group.leave()
+            }
+        
+        group.notify(queue: .main) {
             completion(nil)
         }
     }
@@ -127,17 +151,37 @@ class EventService: EventServiceProtocol {
     func removeEventAlert(eventId: String, completion: @escaping((String?) -> ())) {
         guard let user = FirebaseManager.shared.currentUser else {return}
         
-        let userRef = FirebaseManager.shared.firestore
+        let group = DispatchGroup()
+        
+        group.enter()
+        FirebaseManager.shared.firestore
             .collection("users")
             .document(user.email)
-        
-        userRef.updateData([
-            FirebaseConstants.alerts: FieldValue.arrayRemove([eventId])
-        ]) {err in
-            if let err = err {
-                completion(err.localizedDescription)
-                return
+            .updateData([
+                FirebaseConstants.alerts: FieldValue.arrayRemove([eventId])
+            ]) {err in
+                if let err = err {
+                    completion(err.localizedDescription)
+                    return
+                }
+                group.leave()
             }
+        
+        group.enter()
+        FirebaseManager.shared.firestore
+            .collection("events")
+            .document(eventId)
+            .collection("subscribers")
+            .document(user.email)
+            .delete() { err in
+                if let err = err {
+                    completion(err.localizedDescription)
+                    return
+                }
+                group.leave()
+            }
+        
+        group.notify(queue: .main) {
             completion(nil)
         }
     }
