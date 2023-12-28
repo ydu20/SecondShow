@@ -95,7 +95,7 @@ struct SignupView: View {
                     .frame(height: 45)
                     .frame(maxWidth: .infinity)
                     .foregroundColor(Color(.white))
-                    .background(Color(.systemBlue))
+                    .background(Color("SecondShowMain"))
                     .cornerRadius(10)
             }
             .disabled(vm.disableSubmit)

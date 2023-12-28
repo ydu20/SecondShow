@@ -40,7 +40,7 @@ struct EventView: View {
                 } label: {
                     Image(systemName: self.vm.eventAlerts ? "bell.fill" : "bell")
                         .font(.system(size: 14))
-                        .foregroundColor(self.vm.eventAlerts ? Color(.systemBlue) : Color(.secondaryLabel))
+                        .foregroundColor(self.vm.eventAlerts ? Color("SecondShowMain") : Color(.secondaryLabel))
                 }
             }
         }

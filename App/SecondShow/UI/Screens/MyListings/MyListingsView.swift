@@ -138,7 +138,7 @@ struct MyListingsView: View {
                 .foregroundColor(Color(.white))
                 .padding(.horizontal, 15)
                 .padding(.vertical, 10)
-                .background(Color(.systemBlue))
+                .background(Color("SecondShowMain"))
                 .cornerRadius(10)
             }
             .padding(.vertical, 3)
@@ -184,14 +184,14 @@ struct MyListingsView: View {
                         .foregroundColor(Color.white)
                         .frame(height: 24)
                         .frame(width: 78)
-                        .background(Color.black.opacity(0.15))
+                        .background(Color("SecondShowSecondary"))
                         .cornerRadius(6)
 
                 }
                 .foregroundColor(Color(.white))
                 .padding(.horizontal, 15)
                 .padding(.vertical, 10)
-                .background(Color.black.opacity(0.3))
+                .background(Color("SecondShowTertiary"))
                 .cornerRadius(10)
             }
             .padding(.vertical, 3)

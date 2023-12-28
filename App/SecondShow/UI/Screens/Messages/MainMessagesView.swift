@@ -69,7 +69,7 @@ struct MainMessagesView: View {
                             
                             HStack (spacing: 10) {
                                 Text(recentMessage.counterpartyUsername)
-                                    .font(.system(size: 18, weight: .bold))
+                                    .font(.system(size: 20, weight: .bold))
                                     .foregroundColor(Color(.label))
                                 
                                 HStack {
@@ -79,7 +79,7 @@ struct MainMessagesView: View {
                                 }
                                 .padding(.horizontal, 8)
                                 .padding(.vertical, 2)
-                                .background(Color(.systemIndigo))
+                                .background(Color("SecondShowBlue"))
                                 .cornerRadius(10)
                                     
                             }
@@ -89,8 +89,9 @@ struct MainMessagesView: View {
                                     recentMessage.deleted ? "The seller has deleted this listing" :
                                     recentMessage.message
                             )
-                                .font(.system(size: 13))
-                                .foregroundColor(recentMessage.read ? Color(.darkGray) : Color(.black))
+                                .font(.system(size: 15))
+                                .foregroundColor(recentMessage.read ? Color("SecondShowSubtext") : Color(.label))
+                                .foregroundColor(Color(.label))
                                 .fontWeight(recentMessage.read ? .regular : .semibold)
                                 .multilineTextAlignment(.leading)
                         }

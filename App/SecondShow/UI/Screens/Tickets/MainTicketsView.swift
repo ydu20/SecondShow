@@ -118,7 +118,7 @@ struct MainTicketsView: View {
                                 .foregroundColor(Color(.label))
                             Spacer()
                             Circle()
-                                .fill(Color(.systemBlue))
+                                .fill(Color("SecondShowMain"))
                                 .frame(width: 25, height: 25)
                                 .overlay(
                                     Text(String(event.listingCount))

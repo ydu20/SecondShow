@@ -82,12 +82,26 @@ struct ProfileView: View {
                 .font(.system(size: 24, weight: .bold))
                 .padding(.bottom, 10)
 
-            TextEditor(text: $vm.feedbackInput)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 8) // Use RoundedRectangle for rounded corners
-                        .stroke(Color(.secondarySystemFill), lineWidth: 1)
-                )
-                .padding(.bottom, 10)
+            if #available(iOS 16.0, *) {
+                TextEditor(text: $vm.feedbackInput)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 8)
+                            .stroke(Color("SecondShowTertiary"), lineWidth: 0.5)
+                    )
+                    .padding(.bottom, 10)
+                    .scrollContentBackground(.hidden)
+            } else {
+                TextEditor(text: $vm.feedbackInput)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 8)
+                            .stroke(Color("SecondShowTertiary"), lineWidth: 0.5)
+                    )
+                    .padding(.bottom, 10)
+                    .onAppear {
+                        UITextView.appearance().backgroundColor = .clear
+                    }
+                    .background(Color(.red))
+            }
             
             HStack {
                 Spacer()
@@ -108,7 +122,7 @@ struct ProfileView: View {
                     .frame(height: 45)
                     .frame(maxWidth: .infinity)
                     .foregroundColor(Color(.white))
-                    .background(Color(.systemBlue))
+                    .background(Color("SecondShowMain"))
                     .cornerRadius(10)
             }
         }
@@ -149,7 +163,7 @@ struct ProfileView: View {
                         .foregroundColor(Color(.white))
                         .padding(.horizontal, 15)
                         .padding(.vertical, 10)
-                        .background(Color(.systemBlue))
+                        .background(Color("SecondShowMain"))
                         .cornerRadius(10)
                     }
                     .padding(.vertical, 3)

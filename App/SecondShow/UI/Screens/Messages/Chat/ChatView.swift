@@ -13,6 +13,13 @@ struct ChatView: View {
     @Environment(\.presentationMode) var presentationMode
     static let emptyScrollToString = "BottomAnchor"
     
+    @State var textEditorHeight : CGFloat = 40
+    var maxHeight : CGFloat = 250
+    
+    init(vm: ChatViewModel) {
+        _vm = StateObject(wrappedValue: vm)
+    }
+    
     var body: some View {
         ZStack (alignment: .top) {
             messageView
@@ -20,27 +27,11 @@ struct ChatView: View {
         }
         .navigationTitle(vm.titleText)
         .navigationBarTitleDisplayMode(.inline)
-        .navigationBarBackButtonHidden(true)
-        .toolbar {
-            ToolbarItem(placement: .navigationBarLeading) {
-                Button(action: {
-                    self.presentationMode.wrappedValue.dismiss()
-                }) {
-                    HStack {
-                        Image(systemName: "chevron.left")
-                            .font(.system(size: 16, weight: .semibold))
-                            .padding(.trailing, -2)
-                        Text("Back")
-                    }
-                }
-            }
-        }
         .onAppear {
             vm.inputText = ""
             vm.fetchMessages()
         }
         .onDisappear {
-//            vm.messagesListener?.remove()
             vm.removeListener()
         }
     }
@@ -55,7 +46,7 @@ struct ChatView: View {
                 }
                 .padding(.horizontal, 8)
                 .padding(.vertical, 2)
-                .background(Color(.systemIndigo))
+                .background(Color("SecondShowBlue"))
                 .cornerRadius(10)
             }
 
@@ -88,24 +79,26 @@ struct ChatView: View {
                                     HStack {
                                         Text(chatMessage.message).foregroundColor(.white)
                                     }
-                                    .padding(12)
-                                    .background(Color.blue)
-                                    .cornerRadius(8)
+                                    .padding(.horizontal, 12)
+                                    .padding(.vertical, 8)
+                                    .background(Color("SecondShowMain"))
+                                    .cornerRadius(18)
                                 }
                                 .padding(.horizontal)
-                                .padding(.vertical, 4)
+                                .padding(.vertical, 3)
                             } else {
                                 HStack {
                                     HStack {
                                         Text(chatMessage.message).foregroundColor(.black)
                                     }
-                                    .padding(12)
+                                    .padding(.horizontal, 12)
+                                    .padding(.vertical, 8)
                                     .background(Color.white)
-                                    .cornerRadius(8)
+                                    .cornerRadius(18)
                                     Spacer()
                                 }
                                 .padding(.horizontal)
-                                .padding(.vertical, 4)
+                                .padding(.vertical, 3)
                             }
                         }
                         
@@ -129,22 +122,55 @@ struct ChatView: View {
                     }
                 }
             }
-            .background(Color(.init(white: 0.95, alpha: 1)))
-        .safeAreaInset(edge: .bottom) {
-            inputDockView
-                .background(Color(.systemBackground).ignoresSafeArea())
-        }
+            .background(Color("SecondShowChatBackground"))
+            .safeAreaInset(edge: .bottom) {
+                inputDockView
+                    .background(Color("SecondShowChatBackground").ignoresSafeArea())
+            }
     }
     
     private var inputDockView: some View {
-        HStack {
-            ZStack {
+        HStack(spacing: 12) {
+            ZStack(alignment: .leading) {
+                
                 DescriptionPlaceholder()
-                TextEditor(text: $vm.inputText)
-                    .opacity(self.vm.inputText.isEmpty ? 0.5 : 1)
-                    .disabled(vm.sold || vm.deleted)
+                    .padding(.horizontal, 8)
+
+                Text(vm.inputText.count == 0 ? " " : vm.inputText)
+                    .foregroundColor(.clear)
+                    .padding(.vertical, 8)
+                    .padding(.horizontal, 14)
+                    .background(GeometryReader {
+                        Color.clear.preference(key: ViewHeightKey.self,
+                           value: $0.frame(in: .local).size.height)
+                    })
+                
+                if #available(iOS 16.0, *) {
+                    TextEditor(text: $vm.inputText)
+                        .frame(height: min(textEditorHeight, maxHeight))
+                        .padding(.horizontal, 8)
+                        .disabled(vm.sold || vm.deleted)
+                        .scrollContentBackground(.hidden)
+                        .background(Color.white)
+                        .foregroundColor(Color.black)
+                        .opacity(self.vm.inputText.isEmpty ? 0.5 : 1)
+                } else {
+                    TextEditor(text: $vm.inputText)
+                        .frame(height: min(textEditorHeight, maxHeight))
+                        .padding(.horizontal, 8)
+                        .disabled(vm.sold || vm.deleted)
+                        .background(Color.white)
+                        .foregroundColor(Color.black)
+                        .opacity(self.vm.inputText.isEmpty ? 0.5 : 1)
+                        .onAppear {
+                            UITextView.appearance().backgroundColor = .clear
+                        }
+                }
+
             }
-            .frame(height: 40)
+            .background(Color(.white))
+            .cornerRadius(18)
+
             Button {
                 vm.handleSend()
             } label: {
@@ -153,12 +179,17 @@ struct ChatView: View {
             }
             .padding(.horizontal)
             .padding(.vertical, 8)
-            .background(!(vm.sold || vm.deleted) ? Color.blue : Color.black.opacity(0.3))
+            .background(!(vm.sold || vm.deleted) ? Color("SecondShowMain") : Color("SecondShowSecondary"))
             .cornerRadius(4)
             .disabled(vm.sold || vm.deleted)
+            .clipShape(Capsule())
         }
         .padding(.horizontal)
-        .padding(.vertical, 16)
+        .padding(.vertical, 6)
+        .onPreferenceChange(ViewHeightKey.self) {
+            textEditorHeight = $0
+        }
+
     }
     
     private struct DescriptionPlaceholder: View {
@@ -168,9 +199,15 @@ struct ChatView: View {
                     .foregroundColor(Color(.gray))
                     .font(.system(size: 17))
                     .padding(.leading, 5)
-                    .padding(.top, -4)
                 Spacer()
             }
+        }
+    }
+    
+    struct ViewHeightKey: PreferenceKey {
+        static var defaultValue: CGFloat { 0 }
+        static func reduce(value: inout Value, nextValue: () -> Value) {
+            value = value + nextValue()
         }
     }
 }
