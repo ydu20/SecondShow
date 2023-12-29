@@ -63,55 +63,6 @@ exports.sendNewListingNotification = onDocumentCreated(
           .doc(event.params.eventId)
           .collection("subscribers");
       const subscribers = await subscribersRef.get();
-
-      console.log("HERE!");
-      //   const tokens = [];
-
-      //   const getToken = async (userEmail) => {
-      //     const userRef = db.collection("users").doc(userEmail);
-      //     const userDoc = await userRef.get();
-      //     if (userDoc.exists && userDoc.data().fcm_token) {
-      //       console.log("In getToken()", userDoc.data().fcm_token);
-      //       tokens.push(userDoc.data().fcm_token);
-      //     }
-      //   };
-
-      //   const promises = [];
-
-      //   subscribers.forEach((doc) => {
-      //     if (doc.data().subscribed) {
-      //       promises.push(getToken(doc.id));
-      //     }
-      //   });
-
-      //   await Promise.all(promises);
-
-      //   console.log("TOKENS>>>>", tokens, "<<<<<<");
-      //   console.log(tokens);
-
-      //   const notification = {
-      //     title: `New Listing for ${listingDoc.eventName}`,
-      //     body: `Open the app to check it out!`,
-      //   };
-
-      //   const message = {
-      //     notification: notification,
-      //     apns: {
-      //       payload: {
-      //         aps: {
-      //           sound: "default",
-      //         },
-      //       },
-      //     },
-      //     tokens: tokens,
-      //   };
-      //   console.log(message);
-
-      //   messaging.sendMulticast(message)
-      //       .catch((err) => {
-      //         error("Error broadcasting new listing", err);
-      //       });
-
       const notification = {
         title: `New Listing for ${listingDoc.eventName}`,
         body: `Open the app to check it out!`,
