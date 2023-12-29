@@ -56,8 +56,8 @@ struct SecondShowApp: App {
         WindowGroup {
             RootView()
                 .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
-//                    print("ROOT ON APPEAR")
                     UNUserNotificationCenter.current().removeAllDeliveredNotifications()
+                    UIApplication.shared.applicationIconBadgeNumber = 0
                 }
         }
     }

@@ -62,8 +62,9 @@ struct LoginView: View {
                     .padding(.horizontal, 10)
                     .overlay(
                         RoundedRectangle(cornerRadius: 10)
-                            .stroke(Color(.quaternaryLabel), lineWidth: 2)
+                            .stroke(Color("SecondShowTertiary"), lineWidth: 1)
                     )
+                    .background(Color("SecondShowTextField"))
                 
                 SecureField("Password", text: $vm.loginPassword)
                     .font(.system(size: 18))
@@ -71,8 +72,9 @@ struct LoginView: View {
                     .padding(.horizontal, 10)
                     .overlay(
                         RoundedRectangle(cornerRadius: 10)
-                            .stroke(Color(.quaternaryLabel), lineWidth: 2)
+                            .stroke(Color("SecondShowTertiary"), lineWidth: 1)
                     )
+                    .background(Color("SecondShowTextField"))
             }
             .background(Color.white)
             .cornerRadius(10)

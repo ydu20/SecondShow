@@ -23,9 +23,11 @@ struct SoldPopupView: View {
                     if (listing.availableQuantity == 1) {
                         Text("Please confirm that you have sold your ticket")
                             .padding(.bottom, 20)
+                            .foregroundColor(Color(.black))
                     } else {
                         Text("How many tickets have you sold?")
                             .padding(.bottom, 15)
+                            .foregroundColor(Color(.black))
                         HStack {
                             Slider(
                                 value: $numSold,
@@ -33,6 +35,7 @@ struct SoldPopupView: View {
                                 step: 1
                             )
                             Text(String(Int(numSold)))
+                                .foregroundColor(Color(.black))
                         }
                         .onAppear {
                             numSold = Double(listing.availableQuantity)
@@ -88,7 +91,7 @@ struct SoldPopupView: View {
         }
         .frame(width: 300)
         .padding(.vertical, 30)
-        .background(Color.white)
+        .background(Color("SecondShowPopupBackground"))
         .cornerRadius(12)
     }
 }

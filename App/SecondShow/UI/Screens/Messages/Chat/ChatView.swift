@@ -16,6 +16,8 @@ struct ChatView: View {
     @State var textEditorHeight : CGFloat = 40
     var maxHeight : CGFloat = 250
     
+    @FocusState private var textEditorIsFocused: Bool
+    
     init(vm: ChatViewModel) {
         _vm = StateObject(wrappedValue: vm)
     }
@@ -101,7 +103,6 @@ struct ChatView: View {
                                 .padding(.vertical, 3)
                             }
                         }
-                        
                         if (vm.deleted) {
                             Text("The seller has deleted this listing")
                                 .foregroundColor(Color.gray)
@@ -116,13 +117,21 @@ struct ChatView: View {
                     }
                     .padding(.top, 34)
                     .onReceive(vm.$autoScrollCount) { _ in
-                        withAnimation(.easeOut(duration: 0.5)) {
-                            scrollViewProxy.scrollTo(Self.emptyScrollToString, anchor: .bottom)
+                        DispatchQueue.main.async {
+                            withAnimation(.easeOut(duration: 0.5)) {
+                                scrollViewProxy.scrollTo(Self.emptyScrollToString, anchor: .bottom)
+                            }
                         }
                     }
                 }
             }
             .background(Color("SecondShowChatBackground"))
+            .onTapGesture {
+                self.hideKeyboard()
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    vm.autoScrollCount += 1
+                }
+            }
             .safeAreaInset(edge: .bottom) {
                 inputDockView
                     .background(Color("SecondShowChatBackground").ignoresSafeArea())
@@ -154,6 +163,7 @@ struct ChatView: View {
                         .background(Color.white)
                         .foregroundColor(Color.black)
                         .opacity(self.vm.inputText.isEmpty ? 0.5 : 1)
+                        .focused($textEditorIsFocused)
                 } else {
                     TextEditor(text: $vm.inputText)
                         .frame(height: min(textEditorHeight, maxHeight))
@@ -165,11 +175,21 @@ struct ChatView: View {
                         .onAppear {
                             UITextView.appearance().backgroundColor = .clear
                         }
+                        .focused($textEditorIsFocused)
                 }
 
             }
             .background(Color(.white))
             .cornerRadius(18)
+            .onChange(of: textEditorIsFocused) { isFocused in
+                if isFocused {
+                    print("EditorIsFocused")
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                        vm.autoScrollCount += 1
+                    }
+                    
+                }
+            }
 
             Button {
                 vm.handleSend()
@@ -209,6 +229,10 @@ struct ChatView: View {
         static func reduce(value: inout Value, nextValue: () -> Value) {
             value = value + nextValue()
         }
+    }
+    
+    private func hideKeyboard() {
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
 }
 

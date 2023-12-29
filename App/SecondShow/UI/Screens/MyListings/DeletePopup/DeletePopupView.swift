@@ -19,11 +19,13 @@ struct DeletePopupView: View {
             if vm.selectedListing != nil {
                 Text("Are you sure you want to delete this listing?")
                     .padding(.bottom, 20)
+                    .foregroundColor(Color(.black))
             } else {
                 Text("Error retrieving listing information")
                     .foregroundColor(Color(.red))
                     .padding(.bottom, 20)
             }
+            
             
             HStack {
                 Button {
@@ -34,10 +36,10 @@ struct DeletePopupView: View {
                     Text("Cancel")
                         .frame(height: 30)
                         .frame(width: 72)
-                        .foregroundColor(Color(.secondaryLabel))
+                        .foregroundColor(Color("SecondShowSecondary"))
                         .overlay(
                             RoundedRectangle(cornerRadius: 10)
-                                .stroke(Color(.secondaryLabel))
+                                .stroke(Color("SecondShowSecondary"))
                         )
                 }
                 if vm.selectedListing != nil {
@@ -67,7 +69,7 @@ struct DeletePopupView: View {
         }
         .frame(width: 300)
         .padding(.vertical, 30)
-        .background(Color.white)
+        .background(Color("SecondShowPopupBackground"))
         .cornerRadius(12)
     }
 }

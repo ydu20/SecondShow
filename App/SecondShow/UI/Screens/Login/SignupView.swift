@@ -53,7 +53,7 @@ struct SignupView: View {
                     .padding(.horizontal, 10)
                     .overlay(
                         RoundedRectangle(cornerRadius: 10)
-                            .stroke(Color(.quaternaryLabel), lineWidth: 2)
+                            .stroke(Color("SecondShowTertiary"), lineWidth: 1)
                     )
                 
                 TextField("Email", text: $vm.signupEmail)
@@ -64,7 +64,7 @@ struct SignupView: View {
                     .padding(.horizontal, 10)
                     .overlay(
                         RoundedRectangle(cornerRadius: 10)
-                            .stroke(Color(.quaternaryLabel), lineWidth: 2)
+                            .stroke(Color("SecondShowTertiary"), lineWidth: 1)
                     )
 
                 SecureField("Password", text: $vm.signupPassword)
@@ -73,7 +73,7 @@ struct SignupView: View {
                     .padding(.horizontal, 10)
                     .overlay(
                         RoundedRectangle(cornerRadius: 10)
-                            .stroke(Color(.quaternaryLabel), lineWidth: 2)
+                            .stroke(Color("SecondShowTertiary"), lineWidth: 1)
                     )
                 
                 SecureField("Confirm password", text: $vm.signupConfirmPassword)
@@ -82,10 +82,10 @@ struct SignupView: View {
                     .padding(.horizontal, 10)
                     .overlay(
                         RoundedRectangle(cornerRadius: 10)
-                            .stroke(Color(.quaternaryLabel), lineWidth: 2)
+                            .stroke(Color("SecondShowTertiary"), lineWidth: 1)
                     )
             }
-            .background(Color.white)
+            .background(Color("SecondShowTextField"))
             .cornerRadius(10)
             
             Button {

@@ -73,7 +73,7 @@ class ChatViewModel: ObservableObject {
                 print(err)
                 return
             }
-            
+                        
             documentChanges?.forEach({change in
                 if change.type == .added {
                     guard let message = try? change.document.data(as: ChatMessage.self) else {
