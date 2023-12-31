@@ -36,7 +36,7 @@ struct TabBarView: View {
             self.eventService = eventService
             self.listingService = listingService
             self.messageService = messageService
-            self.chatViewModel = ChatViewModel(messageService: messageService)
+            self.chatViewModel = ChatViewModel(listingService: listingService, messageService: messageService)
     }
     
     var body: some View {

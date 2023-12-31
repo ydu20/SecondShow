@@ -21,4 +21,5 @@ struct ListingConstants {
     static let creatorUsername = "creatorUsername"
     static let creatorEmail = "creatorEmail"
     static let listings = "listings"
+    static let expired = "expired"
 }

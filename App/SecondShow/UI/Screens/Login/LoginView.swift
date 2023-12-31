@@ -58,7 +58,7 @@ struct LoginView: View {
                     .font(.system(size: 18))
                     .keyboardType(.emailAddress)
                     .autocapitalization(.none)
-                    .padding(.vertical, 14)
+                    .frame(height: 50)
                     .padding(.horizontal, 10)
                     .overlay(
                         RoundedRectangle(cornerRadius: 10)
@@ -68,7 +68,7 @@ struct LoginView: View {
                 
                 SecureField("Password", text: $vm.loginPassword)
                     .font(.system(size: 18))
-                    .padding(.vertical, 14)
+                    .frame(height: 50)
                     .padding(.horizontal, 10)
                     .overlay(
                         RoundedRectangle(cornerRadius: 10)

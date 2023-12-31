@@ -49,7 +49,7 @@ struct SignupView: View {
                     .font(.system(size: 18))
                     .autocapitalization(.none)
                     .disableAutocorrection(true)
-                    .padding(.vertical, 14)
+                    .frame(height: 50)
                     .padding(.horizontal, 10)
                     .overlay(
                         RoundedRectangle(cornerRadius: 10)
@@ -60,7 +60,7 @@ struct SignupView: View {
                     .font(.system(size: 18))
                     .keyboardType(.emailAddress)
                     .autocapitalization(.none)
-                    .padding(.vertical, 14)
+                    .frame(height: 50)
                     .padding(.horizontal, 10)
                     .overlay(
                         RoundedRectangle(cornerRadius: 10)
@@ -69,7 +69,7 @@ struct SignupView: View {
 
                 SecureField("Password", text: $vm.signupPassword)
                     .font(.system(size: 18))
-                    .padding(.vertical, 14)
+                    .frame(height: 50)
                     .padding(.horizontal, 10)
                     .overlay(
                         RoundedRectangle(cornerRadius: 10)
@@ -78,7 +78,7 @@ struct SignupView: View {
                 
                 SecureField("Confirm password", text: $vm.signupConfirmPassword)
                     .font(.system(size: 18))
-                    .padding(.vertical, 14)
+                    .frame(height: 50)
                     .padding(.horizontal, 10)
                     .overlay(
                         RoundedRectangle(cornerRadius: 10)

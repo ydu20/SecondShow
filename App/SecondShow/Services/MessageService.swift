@@ -43,7 +43,7 @@ class MessageService: MessageServiceProtocol {
         FirebaseManager.shared.firestore
             .collection(MessageConstants.recentMessages)
             .document(userEmail)
-            .collection(MessageConstants.messages)
+            .collection(MessageConstants.userRecentMessages)
             .document(listingId + "<->" + counterPartyEmail)
             .updateData(updateData) { err in
                 if let err = err {
@@ -79,7 +79,7 @@ class MessageService: MessageServiceProtocol {
         let senderRmRef = FirebaseManager.shared.firestore
             .collection(MessageConstants.recentMessages)
             .document(fromEmail)
-            .collection(MessageConstants.messages)
+            .collection(MessageConstants.userRecentMessages)
             .document(listingId + "<->" + toEmail)
         
         group.enter()
@@ -109,7 +109,7 @@ class MessageService: MessageServiceProtocol {
         let recipientRmRef = FirebaseManager.shared.firestore
             .collection(MessageConstants.recentMessages)
             .document(toEmail)
-            .collection(MessageConstants.messages)
+            .collection(MessageConstants.userRecentMessages)
             .document(listingId + "<->" + fromEmail)
         
         group.enter()
@@ -215,7 +215,7 @@ class MessageService: MessageServiceProtocol {
         recentMessagesListener = FirebaseManager.shared.firestore
             .collection(MessageConstants.recentMessages)
             .document(userEmail)
-            .collection(MessageConstants.messages)
+            .collection(MessageConstants.userRecentMessages)
             .order(by: MessageConstants.timestamp)
             .addSnapshotListener { querySnapshot, err in
                 if let err = err {

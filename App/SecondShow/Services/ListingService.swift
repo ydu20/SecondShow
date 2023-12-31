@@ -18,6 +18,8 @@ protocol ListingServiceProtocol {
     
     func updateListingAvailability(listing: Listing, numSold: Int, completion: @escaping((String?) -> ()))
     
+    func increaseListingPopularity(creatorEmail: String, listingId: String, completion: @escaping((String?) -> ()))
+    
     func deleteListing(listing: Listing, completion: @escaping((String?) -> ()))
     
     func removeListingListener()
@@ -27,6 +29,41 @@ class ListingService: ListingServiceProtocol {
     
     private var listingListener: ListenerRegistration?
     
+    func increaseListingPopularity(creatorEmail: String, listingId: String, completion: @escaping((String?) -> ())) {
+        guard let lastIndex = listingId.lastIndex(of: "_") else { return }
+        
+        let eventId = String(listingId[..<lastIndex])
+        
+        let updateData = [
+            ListingConstants.popularity: FieldValue.increment(Int64(1))
+        ]
+        
+        
+        FirebaseManager.shared.firestore
+            .collection("events")
+            .document(eventId)
+            .collection("listings")
+            .document(listingId)
+            .updateData(updateData) {err in
+                if let err = err {
+                    completion("Error incrementing listing popularity: \(err.localizedDescription)")
+                    return
+                }
+                FirebaseManager.shared.firestore
+                    .collection("users")
+                    .document(creatorEmail)
+                    .collection("listings")
+                    .document(listingId)
+                    .updateData(updateData) {err in
+                        if let err = err {
+                            completion("Error incrementing user listing popularity: \(err.localizedDescription)")
+                            return
+                        }
+                        completion(nil)
+                    }
+            }
+    }
+
     func deleteListing(listing: Listing, completion: @escaping((String?) -> ())) {
         guard let user = FirebaseManager.shared.currentUser else {
             completion("Error retrieving local user information")
@@ -95,10 +132,9 @@ class ListingService: ListingServiceProtocol {
                 }
                 completion(nil)
             }
-            
         }
     }
-
+    
     
     func fetchUserListings(completion: @escaping([DocumentChange]?, String?) -> ()) {
         guard let user = FirebaseManager.shared.currentUser else {return}
@@ -161,8 +197,9 @@ class ListingService: ListingServiceProtocol {
             ListingConstants.totalQuantity: quantity,
             ListingConstants.availableQuantity: quantity,
             ListingConstants.popularity: 0,
+            ListingConstants.expired: false,
         ] as [String: Any]
-         
+        
         FirebaseManager.shared.firestore
             .collection("events")
             .document(eventId)

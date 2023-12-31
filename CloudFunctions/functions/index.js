@@ -15,10 +15,44 @@ const {
 const {getFirestore} = require("firebase-admin/firestore");
 const {getMessaging} = require("firebase-admin/messaging");
 const {error} = require("firebase-functions/logger");
+const functions = require("firebase-functions");
 
 initializeApp();
 const db = getFirestore();
 const messaging = getMessaging();
+
+exports.updateExpiredListings = functions.pubsub.schedule("5 0 * * *")
+  .timeZone("America/New_York")
+  .onRun(async (context) => {
+    console.log("EXECUTING UPDATE_EXPIRED_LISTINGS");
+    console.log("TIME: " + context.timestamp);
+    
+    const currDay = new Date(context.timestamp);
+    const prevDay = new Date(currDay.getTime() - (24 * 60 * 60 * 1000));
+
+    const year = prevDay.getFullYear();
+    const month = prevDay.getMonth() + 1;
+    const day = prevDay.getDate();
+
+    const formattedMonth = month < 10 ? `0${month}` : month;
+    const formattedDay = day < 10 ? `0${day}` : day;
+
+    const expireDateStr = `${year}-${formattedMonth}-${formattedDay}`;
+
+    console.log("Expiry date: " + expireDateStr);
+
+    const rmSnapshot = await db.collectionGroup("user_recent_messages").get();
+
+    rmSnapshot.forEach(async (doc) => {
+      if (doc.id.startsWith(expireDateStr)) {
+        await doc.ref.update({expired: true});
+      }
+    });
+
+    
+
+  });
+
 
 exports.sendRecentMessageNotification = onDocumentWritten(
     "/recent_messages/{userEmail}/messages/{recentMessage}",

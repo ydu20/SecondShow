@@ -11,7 +11,7 @@ import Firebase
 
 protocol UserServiceProtocol {
     
-    func uploadUser(uid: String, email: String, createTime: Date , completion: @escaping((String?) -> Void))
+    func uploadUser(uid: String, username: String, email: String, createTime: Date , completion: @escaping((String?) -> Void))
     
     func createUser(username: String, email: String, password: String, createTime: Date, sendEmailVerification: Bool, completion: @escaping((FirebaseAuth.User?, String?) -> Void))
     
@@ -76,15 +76,12 @@ class UserService: UserServiceProtocol {
     
     func createUser(username: String, email: String, password: String, createTime: Date, sendEmailVerification: Bool, completion: @escaping((FirebaseAuth.User?, String?) -> Void)) {
         
+        
         FirebaseManager.shared.firestore
-            .collection("user")
-            .whereField(FirebaseConstants.username, isEqualTo: username)
-            .getDocuments{ (querySnapshot, err) in
-                if let err = err {
-                    completion(nil, "Error validating username: \(err.localizedDescription)")
-                    return
-                }
-                if !(querySnapshot?.isEmpty ?? true) {
+            .collection("usernames")
+            .document(username)
+            .getDocument {doc, err in
+                if let doc = doc, doc.exists {
                     completion(nil, "Username is already taken")
                     return
                 }
@@ -101,7 +98,7 @@ class UserService: UserServiceProtocol {
                     }
                     
                     
-                    self.uploadUser(uid: currentUser.uid, email: email, createTime: createTime) { err in
+                    self.uploadUser(uid: currentUser.uid, username: username, email: email, createTime: createTime) { err in
                         if let err = err {
                             completion(nil, err)
                             return
@@ -117,17 +114,36 @@ class UserService: UserServiceProtocol {
                         }
                     }
                 }
+                
             }
     }
     
-    func uploadUser(uid: String, email: String, createTime: Date , completion: @escaping((String?) -> Void)) {
+    func uploadUser(uid: String, username: String, email: String, createTime: Date , completion: @escaping((String?) -> Void)) {
         
         let userData = [
             FirebaseConstants.uid: uid,
+            FirebaseConstants.username: username,
             FirebaseConstants.email: email,
             FirebaseConstants.createTime: createTime,
         ] as [String: Any]
         
+        let group = DispatchGroup()
+        
+        group.enter()
+        FirebaseManager.shared.firestore
+            .collection("usernames")
+            .document(username)
+            .setData([
+                "username": username,
+            ]) { err in
+                if let err = err {
+                    completion("Error uploading username: \(err.localizedDescription)")
+                    return
+                }
+                group.leave()
+            }
+        
+        group.enter()
         FirebaseManager.shared.firestore.collection("users")
             .document(email)
             .setData(userData) {err in
@@ -135,9 +151,12 @@ class UserService: UserServiceProtocol {
                     completion("Error uploading user info: \(err.localizedDescription)")
                     return
                 }
-                
-                completion(nil)
+                group.leave()
             }
+        
+        group.notify(queue: .main) {
+            completion(nil)
+        }
     }
     
     func getUser(email: String, completion: @escaping((User?, String?) -> Void)) {

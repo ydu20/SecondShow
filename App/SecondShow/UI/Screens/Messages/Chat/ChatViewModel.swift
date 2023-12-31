@@ -11,6 +11,7 @@ import SwiftUI
 
 class ChatViewModel: ObservableObject {
     
+    let listingService: ListingService
     let messageService: MessageService
     
     @Published var inputText = ""
@@ -18,6 +19,8 @@ class ChatViewModel: ObservableObject {
     @Published var autoScrollCount = 0
     @Published var sold = false
     @Published var deleted = false
+    
+    private var enteredFromListing = false
     
     var listingId, eventName, counterpartyUsername, counterpartyEmail: String?
     var listingNumber, price: Int?
@@ -28,7 +31,8 @@ class ChatViewModel: ObservableObject {
         return counterpartyUsername ?? ""
     }
     
-    init(messageService: MessageService) {
+    init(listingService: ListingService, messageService: MessageService) {
+        self.listingService = listingService
         self.messageService = messageService
     }
     
@@ -44,6 +48,7 @@ class ChatViewModel: ObservableObject {
         self.sold = false
         self.deleted = false
         self.price = listing.price
+        self.enteredFromListing = true
     }
     
     // This should only be called from the Messages page
@@ -56,6 +61,7 @@ class ChatViewModel: ObservableObject {
         self.sold = rm.sold
         self.deleted = rm.deleted
         self.price = rm.price
+        self.enteredFromListing = false
     }
     
     func removeListener() {
@@ -73,7 +79,7 @@ class ChatViewModel: ObservableObject {
                 print(err)
                 return
             }
-                        
+            
             documentChanges?.forEach({change in
                 if change.type == .added {
                     guard let message = try? change.document.data(as: ChatMessage.self) else {
@@ -98,6 +104,17 @@ class ChatViewModel: ObservableObject {
         guard let toEmail = self.counterpartyEmail else {return}
         guard let listingId = self.listingId else {return}
         let timestamp = Date()
+        
+        if (enteredFromListing && chatMessages.isEmpty) {
+            listingService.increaseListingPopularity(creatorEmail: toEmail, listingId: listingId) { err in
+                if let err = err {
+                    print(err)
+                    return
+                }
+            }
+        }
+        
+
 
         messageService.sendMessage(toEmail: toEmail, listingId: listingId, message: inputText, timestamp: timestamp) { err in
             if let err = err {

@@ -55,10 +55,6 @@ class LoginViewModel: ObservableObject {
             disableSubmit = false
             return
         }
-//        if (signupUsername.contains("[^A-Za-z0-9]")) {
-//            self.statusMessage = "Username cannot contain special characters"
-//            return
-//        }
         
         if (signupUsername.count > 10) {
             self.statusMessage = "Username is too long"
