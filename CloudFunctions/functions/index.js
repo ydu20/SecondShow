@@ -64,7 +64,7 @@ exports.updateExpiredListings = functions.pubsub.schedule("5 0 * * *")
 
 
 exports.sendRecentMessageNotification = onDocumentWritten(
-    "/recent_messages/{userEmail}/messages/{recentMessage}",
+    "/recent_messages/{userEmail}/user_recent_messages/{recentMessage}",
     async (event) => {
       const rmDoc = event.data.after.data();
 
@@ -97,7 +97,7 @@ exports.sendRecentMessageNotification = onDocumentWritten(
 );
 
 exports.sendNewListingNotification = onDocumentCreated(
-    "/events/{eventId}/listings/{newListing}",
+    "/events/{eventId}/event_listings/{newListing}",
     async (event) => {
       if (!event.data) return;
       const listingDoc = event.data.data();
