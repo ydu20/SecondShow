@@ -19,6 +19,7 @@ class ChatViewModel: ObservableObject {
     @Published var autoScrollCount = 0
     @Published var sold = false
     @Published var deleted = false
+    @Published var expired = false
     
     private var enteredFromListing = false
     
@@ -45,8 +46,9 @@ class ChatViewModel: ObservableObject {
         self.listingNumber = listing.listingNumber
         self.counterpartyUsername = listing.creatorUsername
         self.counterpartyEmail = listing.creatorEmail
-        self.sold = false
+        self.sold = listing.availableQuantity == 0
         self.deleted = false
+        self.expired = listing.expired
         self.price = listing.price
         self.enteredFromListing = true
     }
@@ -60,6 +62,7 @@ class ChatViewModel: ObservableObject {
         self.counterpartyEmail = rm.counterpartyEmail
         self.sold = rm.sold
         self.deleted = rm.deleted
+        self.expired = rm.expired
         self.price = rm.price
         self.enteredFromListing = false
     }

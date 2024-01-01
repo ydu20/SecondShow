@@ -22,36 +22,45 @@ const db = getFirestore();
 const messaging = getMessaging();
 
 exports.updateExpiredListings = functions.pubsub.schedule("5 0 * * *")
-  .timeZone("America/New_York")
-  .onRun(async (context) => {
-    console.log("EXECUTING UPDATE_EXPIRED_LISTINGS");
-    console.log("TIME: " + context.timestamp);
-    
-    const currDay = new Date(context.timestamp);
-    const prevDay = new Date(currDay.getTime() - (24 * 60 * 60 * 1000));
+    .timeZone("America/New_York")
+    .onRun(async (context) => {
+      console.log("EXECUTING UPDATE_EXPIRED_LISTINGS");
+      console.log("TIME: " + context.timestamp);
 
-    const year = prevDay.getFullYear();
-    const month = prevDay.getMonth() + 1;
-    const day = prevDay.getDate();
+      const currDay = new Date(context.timestamp);
+      const prevDay = new Date(currDay.getTime() - (24 * 60 * 60 * 1000));
 
-    const formattedMonth = month < 10 ? `0${month}` : month;
-    const formattedDay = day < 10 ? `0${day}` : day;
+      const year = prevDay.getFullYear();
+      const month = prevDay.getMonth() + 1;
+      const day = prevDay.getDate();
 
-    const expireDateStr = `${year}-${formattedMonth}-${formattedDay}`;
+      const formattedMonth = month < 10 ? `0${month}` : month;
+      const formattedDay = day < 10 ? `0${day}` : day;
 
-    console.log("Expiry date: " + expireDateStr);
+      const expireDateStr = `${year}-${formattedMonth}-${formattedDay}`;
 
-    const rmSnapshot = await db.collectionGroup("user_recent_messages").get();
+      console.log("Expiry date: " + expireDateStr);
 
-    rmSnapshot.forEach(async (doc) => {
-      if (doc.id.startsWith(expireDateStr)) {
-        await doc.ref.update({expired: true});
-      }
+      const rmSnapshot = await db
+          .collectionGroup("user_recent_messages")
+          .get();
+
+      rmSnapshot.forEach((doc) => {
+        if (doc.id.startsWith(expireDateStr)) {
+          doc.ref.update({expired: true});
+        }
+      });
+
+      const userListingsSnapshot = await db
+          .collectionGroup("user_listings")
+          .get();
+
+      userListingsSnapshot.forEach((doc) => {
+        if (doc.id.startsWith(expireDateStr)) {
+          doc.ref.update({expired: true});
+        }
+      });
     });
-
-    
-
-  });
 
 
 exports.sendRecentMessageNotification = onDocumentWritten(

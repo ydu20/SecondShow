@@ -142,9 +142,9 @@ class MessageService: MessageServiceProtocol {
         let group = DispatchGroup()
         
         let outgoingDocRef = FirebaseManager.shared.firestore
-            .collection(MessageConstants.messages)
+            .collection("messages")
             .document(fromEmail)
-            .collection(ListingConstants.listings)
+            .collection("message_listings")
             .document(listingId)
             .collection(toEmail)
             .document()
@@ -159,9 +159,9 @@ class MessageService: MessageServiceProtocol {
         }
         
         let incomingDocRef = FirebaseManager.shared.firestore
-            .collection(MessageConstants.messages)
+            .collection("messages")
             .document(toEmail)
-            .collection(ListingConstants.listings)
+            .collection("message_listings")
             .document(listingId)
             .collection(fromEmail)
             .document()
@@ -190,7 +190,7 @@ class MessageService: MessageServiceProtocol {
         chatMessagesListener = FirebaseManager.shared.firestore
             .collection("messages")
             .document(userEmail)
-            .collection("listings")
+            .collection("message_listings")
             .document(listingId)
             .collection(counterPartyEmail)
             .order(by: "timestamp")
@@ -235,9 +235,9 @@ class MessageService: MessageServiceProtocol {
     func updateRmsOnSoldoutOrDelete(userEmail: String, listingId: String, deleted: Bool, completion: @escaping((String?) -> ())) {
         
         let msgCollectionRef = FirebaseManager.shared.firestore
-            .collection("recent_messages")
+            .collection(MessageConstants.recentMessages)
             .document(userEmail)
-            .collection("messages")
+            .collection(MessageConstants.userRecentMessages)
         
         msgCollectionRef
             .whereField(ListingConstants.listingId, isEqualTo: listingId)
@@ -269,9 +269,9 @@ class MessageService: MessageServiceProtocol {
                     
                     group.enter()
                     FirebaseManager.shared.firestore
-                        .collection("recent_messages")
+                        .collection(MessageConstants.recentMessages)
                         .document(counterpartyEmail)
-                        .collection("messages")
+                        .collection(MessageConstants.userRecentMessages)
                         .document(listingId + "<->" + userEmail)
                         .updateData(updateData) { err in
                             if let err = err {

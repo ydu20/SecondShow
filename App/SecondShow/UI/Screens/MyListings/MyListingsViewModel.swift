@@ -12,7 +12,7 @@ import SwiftUI
 class MyListingsViewModel: ObservableObject {
     
     @Published var myAvailableListings = [Listing]()
-    @Published var mySoldOutListings = [Listing]()
+    @Published var myUnavailableListings = [Listing]()
     
     var selectedListing: Listing? = nil
     let notifyUser: (String, Color) -> ()
@@ -67,21 +67,20 @@ class MyListingsViewModel: ObservableObject {
     }
     
     private func handleSoldOutAndDelete(eventId: String, deleted: Bool) {
+        guard let userEmail = FirebaseManager.shared.currentUser?.email else {return}
+        guard let listingId = selectedListing?.id else {return}
         
         eventService.decreaseEventListingCount(eventId: eventId) { err in
             if let err = err {
                 self.notifyUser(err, Color(.systemRed))
                 return
             }
-        }
-        
-        guard let userEmail = FirebaseManager.shared.currentUser?.email else {return}
-        guard let listingId = selectedListing?.id else {return}
-  
-        messageService.updateRmsOnSoldoutOrDelete(userEmail: userEmail, listingId: listingId, deleted: deleted) { err in
-            if let err = err {
-                self.notifyUser(err, Color(.systemRed))
-                return
+      
+            self.messageService.updateRmsOnSoldoutOrDelete(userEmail: userEmail, listingId: listingId, deleted: deleted) { err in
+                if let err = err {
+                    self.notifyUser(err, Color(.systemRed))
+                    return
+                }
             }
         }
     }
@@ -99,18 +98,18 @@ class MyListingsViewModel: ObservableObject {
             documentChanges?.forEach({change in
                 if let myListing = try? change.document.data(as: Listing.self) {
                     if change.type != .removed {
-                        if myListing.availableQuantity != 0 {
+                        if myListing.availableQuantity != 0 && !myListing.expired {
                             // Listing is still available
                             self.insertInPlace(listing: myListing, listings: &self.myAvailableListings)
                         } else {
                             // Listing is no longer available
                             self.myAvailableListings.removeAll(where: {$0.id == myListing.id})
-                            self.insertInPlace(listing: myListing, listings: &self.mySoldOutListings)
+                            self.insertInPlace(listing: myListing, listings: &self.myUnavailableListings)
                         }
                     } else {
                         // Remove all signs of listing
                         self.myAvailableListings.removeAll(where: {$0.id == myListing.id})
-                        self.mySoldOutListings.removeAll(where: {$0.id == myListing.id})
+                        self.myUnavailableListings.removeAll(where: {$0.id == myListing.id})
                     }
                 } else {
                     print("Failure codifying listing object")

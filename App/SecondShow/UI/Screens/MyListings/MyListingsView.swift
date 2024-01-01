@@ -29,14 +29,14 @@ struct MyListingsView: View {
             ZStack {
                 
                 ScrollView {
-                    if vm.myAvailableListings.count == 0, vm.mySoldOutListings.count == 0 {
+                    if vm.myAvailableListings.count == 0, vm.myUnavailableListings.count == 0 {
                         Text("Create a new listing to sell your tickets.")
                             .padding(.top, 200)
                         Spacer()
                     } else {
                         myAvailableListingsView
                             .padding(.horizontal)
-                        mySoldOutListingsView
+                        myUnavailableListingsView
                             .padding(.horizontal)
                     }
                 }
@@ -145,8 +145,8 @@ struct MyListingsView: View {
         }
     }
     
-    private var mySoldOutListingsView: some View {
-        ForEach(self.vm.mySoldOutListings) { listing in
+    private var myUnavailableListingsView: some View {
+        ForEach(self.vm.myUnavailableListings) { listing in
             HStack {
                 HStack(spacing: 15) {
                     VStack(alignment: .leading, spacing: 8) {
@@ -179,7 +179,7 @@ struct MyListingsView: View {
                         }
                     }
                     Spacer()
-                    Text("Sold Out")
+                    Text(listing.expired ? "Expired" : "Sold Out")
                         .font(.system(size: 15))
                         .foregroundColor(Color.white)
                         .frame(height: 24)

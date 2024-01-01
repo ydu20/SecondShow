@@ -106,9 +106,11 @@ struct ChatView: View {
                         if (vm.deleted) {
                             Text("The seller has deleted this listing")
                                 .foregroundColor(Color.gray)
-                        }
-                        if (vm.sold) {
+                        } else if (vm.sold) {
                             Text("This listing has been sold")
+                                .foregroundColor(Color.gray)
+                        } else if (vm.expired) {
+                            Text("This listing has expired")
                                 .foregroundColor(Color.gray)
                         }
                         
@@ -158,7 +160,7 @@ struct ChatView: View {
                     TextEditor(text: $vm.inputText)
                         .frame(height: min(textEditorHeight, maxHeight))
                         .padding(.horizontal, 8)
-                        .disabled(vm.sold || vm.deleted)
+                        .disabled(vm.sold || vm.deleted || vm.expired)
                         .scrollContentBackground(.hidden)
                         .background(Color.white)
                         .foregroundColor(Color.black)
@@ -168,7 +170,7 @@ struct ChatView: View {
                     TextEditor(text: $vm.inputText)
                         .frame(height: min(textEditorHeight, maxHeight))
                         .padding(.horizontal, 8)
-                        .disabled(vm.sold || vm.deleted)
+                        .disabled(vm.sold || vm.deleted || vm.expired)
                         .background(Color.white)
                         .foregroundColor(Color.black)
                         .opacity(self.vm.inputText.isEmpty ? 0.5 : 1)
@@ -199,9 +201,9 @@ struct ChatView: View {
             }
             .padding(.horizontal)
             .padding(.vertical, 8)
-            .background(!(vm.sold || vm.deleted) ? Color("SecondShowMain") : Color("SecondShowSecondary"))
+            .background(!(vm.sold || vm.deleted || vm.expired) ? Color("SecondShowMain") : Color("SecondShowSecondary"))
             .cornerRadius(4)
-            .disabled(vm.sold || vm.deleted)
+            .disabled(vm.sold || vm.deleted || vm.expired)
             .clipShape(Capsule())
         }
         .padding(.horizontal)

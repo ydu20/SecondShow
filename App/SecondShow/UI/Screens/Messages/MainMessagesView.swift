@@ -87,6 +87,7 @@ struct MainMessagesView: View {
                             Text(
                                 recentMessage.sold ? "This listing has been sold" :
                                     recentMessage.deleted ? "The seller has deleted this listing" :
+                                    recentMessage.expired ? "This listing has expired" :
                                     recentMessage.message
                             )
                                 .font(.system(size: 15))

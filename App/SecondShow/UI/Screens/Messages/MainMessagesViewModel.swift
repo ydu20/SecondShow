@@ -17,7 +17,6 @@ class MainMessagesViewModel: ObservableObject {
     let notifyUser: (String, Color) -> ()
     
     init(chatVm: ChatViewModel, messageService: MessageService, notifyUser: @escaping (String, Color) -> Void) {
-        
         self.chatVm = chatVm
         self.messageService = messageService
         self.notifyUser = notifyUser

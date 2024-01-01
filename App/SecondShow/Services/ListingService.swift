@@ -42,7 +42,7 @@ class ListingService: ListingServiceProtocol {
         FirebaseManager.shared.firestore
             .collection("events")
             .document(eventId)
-            .collection("listings")
+            .collection("event_listings")
             .document(listingId)
             .updateData(updateData) {err in
                 if let err = err {
@@ -52,7 +52,7 @@ class ListingService: ListingServiceProtocol {
                 FirebaseManager.shared.firestore
                     .collection("users")
                     .document(creatorEmail)
-                    .collection("listings")
+                    .collection("user_listings")
                     .document(listingId)
                     .updateData(updateData) {err in
                         if let err = err {
@@ -73,12 +73,12 @@ class ListingService: ListingServiceProtocol {
         let listingRef = FirebaseManager.shared.firestore
             .collection("events")
             .document(listing.eventId)
-            .collection("listings")
+            .collection("event_listings")
             .document(listing.id ?? "")
         let userListingRef = FirebaseManager.shared.firestore
             .collection("users")
             .document(user.email)
-            .collection("listings")
+            .collection("user_listings")
             .document(listing.id ?? "")
         
         listingRef.delete {err in
@@ -110,12 +110,12 @@ class ListingService: ListingServiceProtocol {
         let listingRef = FirebaseManager.shared.firestore
             .collection("events")
             .document(listing.eventId)
-            .collection("listings")
+            .collection("event_listings")
             .document(listing.id ?? "")
         let userListingRef = FirebaseManager.shared.firestore
             .collection("users")
             .document(user.email)
-            .collection("listings")
+            .collection("user_listings")
             .document(listing.id ?? "")
         
         listingRef.updateData(listingUpdate) {err in
@@ -144,7 +144,7 @@ class ListingService: ListingServiceProtocol {
         listingListener = FirebaseManager.shared.firestore
             .collection("users")
             .document(user.email)
-            .collection("listings")
+            .collection("user_listings")
             .addSnapshotListener { querySnapshot, err in
                 if let err = err {
                     completion(nil, err.localizedDescription)
@@ -159,7 +159,7 @@ class ListingService: ListingServiceProtocol {
         listingListener = FirebaseManager.shared.firestore
             .collection("events")
             .document(eventId)
-            .collection("listings")
+            .collection("event_listings")
             .order(by: "listingNumber", descending: false)
             .addSnapshotListener { querySnapshot, error in
                 if let error = error {
@@ -203,7 +203,7 @@ class ListingService: ListingServiceProtocol {
         FirebaseManager.shared.firestore
             .collection("events")
             .document(eventId)
-            .collection("listings")
+            .collection("event_listings")
             .document(listingId)
             .setData(listingData) { err in
                 if let err = err {
@@ -214,7 +214,7 @@ class ListingService: ListingServiceProtocol {
                 FirebaseManager.shared.firestore
                     .collection("users")
                     .document(user.email)
-                    .collection("listings")
+                    .collection("user_listings")
                     .document(listingId)
                     .setData(listingData) { err in
                         if let err = err {
