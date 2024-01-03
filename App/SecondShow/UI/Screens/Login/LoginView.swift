@@ -12,6 +12,7 @@ struct LoginView: View {
     
     @Binding var showLoginView: Bool
     @StateObject private var vm: LoginViewModel
+    @Environment(\.colorScheme) var colorScheme
     
     init(showLoginView: Binding<Bool>, userService: UserService) {
         self._showLoginView = showLoginView
@@ -106,13 +107,15 @@ struct LoginView: View {
     
     private var logoDisplay: some View {
         VStack (spacing: 20) {
-            Text("Second Show")
-                .font(.system(size: 38, weight: .bold))
-                .padding(.top, 25)
+            Image(colorScheme == .light ? "LogoNoBg" : "LogoNoBgLight")
+                .resizable()
+                .scaledToFit()
+                .frame(height: 100)
+                .padding(0)
             Text("Your second chance at that show")
                 .font(.system(size: 16, weight: .thin))
                 .padding(.top, 5)
-                .padding(.bottom, 26)
+                .padding(.bottom, 16)
         }
     }
 }

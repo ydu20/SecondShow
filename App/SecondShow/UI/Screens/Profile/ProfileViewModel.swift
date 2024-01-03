@@ -72,12 +72,17 @@ class ProfileViewModel: ObservableObject {
                 self.notifyUser(err, Color(.systemRed))
                 return
             }
+            var listenedSet = Set<String>()
+            
             documentChanges?.forEach({change in
                 if let event = try? change.document.data(as: Event.self) {
                     if !userAlerts.contains(where: {$0 == event.id}) {
                         return
                     }
                     if change.type != .removed {
+                        if let eventId = event.id {
+                            listenedSet.insert(eventId)
+                        }
                         if let ind = self.myAlerts.firstIndex(where: {$0.id ?? "ZZZZ" >= event.id ?? "0000"}) {
                             if (self.myAlerts[ind].id == event.id) {
                                 self.myAlerts[ind] = event
@@ -93,6 +98,8 @@ class ProfileViewModel: ObservableObject {
                     }
                 }
             })
+            
+            self.myAlerts = self.myAlerts.filter { listenedSet.contains($0.id ?? "_")}
         }
     }
 }

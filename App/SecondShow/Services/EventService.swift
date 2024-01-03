@@ -91,8 +91,12 @@ class EventService: EventServiceProtocol {
     func fetchEventsForAlerts(completion: @escaping(([DocumentChange]?, String?) -> ())) {
         removeEventListenerForAlerts()
 
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+
         eventListenerForAlerts = FirebaseManager.shared.firestore
             .collection("events")
+            .whereField(EventConstants.date, isGreaterThanOrEqualTo: dateFormatter.string(from: Date()))
             .addSnapshotListener { querySnapshot, error in
                 if let error = error {
                     completion(nil, error.localizedDescription)
