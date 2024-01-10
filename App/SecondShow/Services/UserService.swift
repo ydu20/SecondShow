@@ -30,11 +30,46 @@ protocol UserServiceProtocol {
     func submitFeedback(feedback: String, completion: @escaping ((String?) -> Void))
     
     func updateFcmToken(fcmToken: String, completion: @escaping ((String?) -> Void))
+    
+    func removeFcmToken(completion: @escaping ((String?) -> Void))
+    
+    func removeUserData(completion: @escaping((String?) -> Void))
 }
 
 class UserService: UserServiceProtocol {
     
     private var userListener: ListenerRegistration?
+    
+    func removeUserData(completion: @escaping ((String?) -> Void)) {
+        guard let email = FirebaseManager.shared.currentUser?.email else {
+            completion("Error deleting account: User not logged in")
+            return
+        }
+        FirebaseManager.shared.firestore
+            .collection("users")
+            .document(email)
+            .delete() { err in
+            if let err = err {
+                completion("Error deleting account: \(err.localizedDescription)")
+                return
+            }
+            completion(nil)
+        }
+    }
+    
+    func removeFcmToken(completion: @escaping ((String?) -> Void)) {
+        guard let email = FirebaseManager.shared.auth.currentUser?.email else { return }
+        FirebaseManager.shared.firestore
+            .collection("users")
+            .document(email)
+            .updateData([FirebaseConstants.fcmToken: FieldValue.delete()]) { err in
+                if let err = err {
+                    completion("Error deleting fcm token: \(err.localizedDescription)")
+                    return
+                }
+                completion(nil)
+            }
+    }
     
     func updateFcmToken(fcmToken: String, completion: @escaping ((String?) -> Void)) {
         guard let email = FirebaseManager.shared.auth.currentUser?.email else { return }
@@ -75,7 +110,6 @@ class UserService: UserServiceProtocol {
 
     
     func createUser(username: String, email: String, password: String, createTime: Date, sendEmailVerification: Bool, completion: @escaping((FirebaseAuth.User?, String?) -> Void)) {
-        
         
         FirebaseManager.shared.firestore
             .collection("usernames")

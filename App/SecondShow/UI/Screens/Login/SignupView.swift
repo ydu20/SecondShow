@@ -24,7 +24,10 @@ struct SignupView: View {
                 Spacer()
             }
             .padding()
-            
+            .background(Color.white.opacity(0.0000001))
+            .onTapGesture {
+                self.hideKeyboard()
+            }
         }
         .alert(isPresented: $vm.showSignupCompleteAlert) {
             Alert(
@@ -38,6 +41,7 @@ struct SignupView: View {
         .onAppear {
             vm.statusMessage = ""
         }
+
         .navigationBarTitleDisplayMode(.inline)
     }
     
@@ -56,7 +60,7 @@ struct SignupView: View {
                             .stroke(Color("SecondShowTertiary"), lineWidth: 1)
                     )
                 
-                TextField("Email", text: $vm.signupEmail)
+                TextField(vm.requirePennEmail ? "UPenn Email" : "Email", text: $vm.signupEmail)
                     .font(.system(size: 18))
                     .keyboardType(.emailAddress)
                     .autocapitalization(.none)
@@ -112,6 +116,10 @@ struct SignupView: View {
             Spacer()
         }
         .padding(.bottom, 20)
+    }
+    
+    private func hideKeyboard() {
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
 }
 

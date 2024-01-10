@@ -31,14 +31,17 @@ struct LoginView: View {
                     
                     Spacer()
                 }
+                .background(Color.white.opacity(0.0000001))
                 .padding()
+                .onTapGesture{
+                    self.hideKeyboard()
+                }
             }
             .navigationBarHidden(true)
             .onAppear {
                 vm.statusMessage = ""
             }
         }
-        
     }
     
     private var topBar: some View {
@@ -56,8 +59,9 @@ struct LoginView: View {
         VStack (spacing: 20) {
             Group {
                 TextField("Email", text: $vm.loginEmail)
-                    .font(.system(size: 18))
                     .keyboardType(.emailAddress)
+                    .disableAutocorrection(true)
+                    .font(.system(size: 18))
                     .autocapitalization(.none)
                     .frame(height: 50)
                     .padding(.horizontal, 10)
@@ -117,6 +121,10 @@ struct LoginView: View {
                 .padding(.top, 5)
                 .padding(.bottom, 16)
         }
+    }
+    
+    private func hideKeyboard() {
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
 }
 

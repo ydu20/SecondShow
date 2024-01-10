@@ -13,12 +13,14 @@ struct ProfileView: View {
     @Binding var showLoginView: Bool
     @StateObject private var vm: ProfileViewModel
     
-    @State private var showOptionsMenu = false;
+    @State private var showOptionsMenu = false
     @State private var isAlerts = true
+    @State private var showPrivatePolicy = false
+    @State private var showDeleteAccountAlert = false
 
-    init(showLoginView: Binding<Bool>, eventService: EventService, userService: UserService, notifyUser: @escaping (String, Color) -> ()) {
+    init(showLoginView: Binding<Bool>, eventService: EventService, listingService: ListingService, messageService: MessageService, userService: UserService, notifyUser: @escaping (String, Color) -> ()) {
         _showLoginView = showLoginView
-        _vm = StateObject(wrappedValue: ProfileViewModel(eventService: eventService, userService: userService, notifyUser: notifyUser))
+        _vm = StateObject(wrappedValue: ProfileViewModel(eventService: eventService, listingService: listingService, messageService: messageService, userService: userService, notifyUser: notifyUser))
     }
     
     var body: some View {
@@ -37,7 +39,15 @@ struct ProfileView: View {
             )
             .confirmationDialog("Settings", isPresented: $showOptionsMenu) {
                 Button ("Log Out", role: .destructive) {
-                    handleLogout()
+                    vm.handleLogout(completion: {
+                        showLoginView.toggle()
+                    })
+                }
+                Button("Delete My Account", role: .destructive) {
+                    showDeleteAccountAlert.toggle()
+                }
+                Button("Privacy Policy") {
+                    showPrivatePolicy.toggle()
                 }
                 Button ("Cancel", role: .cancel) {}
             } message: {
@@ -57,6 +67,10 @@ struct ProfileView: View {
                 alertsList
             } else {
                 feedbackForm
+                    .background(Color.white.opacity(0.0000001))
+                    .onTapGesture {
+                        self.hideKeyboard()
+                    }
             }
             Spacer()
         }
@@ -67,12 +81,23 @@ struct ProfileView: View {
         .onDisappear() {
             vm.removeListener()
         }
-    }
-    
-    private func handleLogout() {
-        try? FirebaseManager.shared.auth.signOut()
-        FirebaseManager.shared.currentUser = nil
-        showLoginView.toggle()
+        .sheet(isPresented: $showPrivatePolicy) {
+            PrivacyPolicyView()
+        }
+        .alert(isPresented: $showDeleteAccountAlert) {
+            Alert(
+                title: Text("Delete Account"),
+                message: Text("Are you sure you want to delete your account?"),
+                primaryButton: .destructive(Text("Delete")) {
+                    vm.deleteAccountMain(completion: {
+                        try? FirebaseManager.shared.auth.signOut()
+                        FirebaseManager.shared.currentUser = nil
+                        showLoginView.toggle()
+                    })
+                },
+                secondaryButton: .cancel()
+            )
+        }
     }
     
     private var feedbackForm: some View {
@@ -180,6 +205,10 @@ struct ProfileView: View {
         .onDisappear {
             vm.eventListener?.remove()
         }
+    }
+    
+    private func hideKeyboard() {
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
 }
 

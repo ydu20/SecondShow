@@ -7,143 +7,191 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "A3AA90DA-A9C5-4B73-BEEE-FBAFB7F87910"
+            uuid = "4C024A46-432D-430E-AE82-359920827A55"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "SecondShow/Services/UserService.swift"
+            filePath = "SecondShow/UI/Screens/Tickets/Event/EventViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "40"
-            endingLineNumber = "40"
-            landmarkName = "updateFcmToken(fcmToken:completion:)"
+            startingLineNumber = "37"
+            endingLineNumber = "37"
+            landmarkName = "registerEventAlerts()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "EBC295F5-A180-4AE4-A346-A330B040B43D"
+            uuid = "D625659A-002F-4B81-823F-689BC0B2CFB0"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "SecondShow/Services/UserService.swift"
+            filePath = "SecondShow/UI/Screens/Tickets/Event/EventView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "46"
-            endingLineNumber = "46"
-            landmarkName = "updateFcmToken(fcmToken:completion:)"
+            startingLineNumber = "49"
+            endingLineNumber = "49"
+            landmarkName = "body"
+            landmarkType = "24">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "E96B5B92-A2DD-4411-8E1D-89D96BB2AD41"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "SecondShow/UI/Screens/Tickets/Event/EventViewModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "29"
+            endingLineNumber = "29"
+            landmarkName = "init(eventService:listingService:notifyUser:updateChatOnRemoval:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "5B43B7B2-EE54-4242-9A14-0B3CB74C0F9E"
+            uuid = "69081BF9-654A-43D4-9EDC-C28D15AEF58B"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "SecondShow/Services/UserService.swift"
+            filePath = "SecondShow/UI/Screens/Tickets/Event/EventViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "50"
-            endingLineNumber = "50"
-            landmarkName = "updateFcmToken(fcmToken:completion:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "D6EAC0DE-7F30-4BEE-B5CB-ED84A4DA71AE"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "SecondShow/UI/Screens/MyListings/MyListingsViewModel.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "70"
-            endingLineNumber = "70"
-            landmarkName = "handleSoldOutAndDelete(eventId:deleted:)"
+            startingLineNumber = "112"
+            endingLineNumber = "112"
+            landmarkName = "setEvent(event:)"
             landmarkType = "7">
             <Locations>
                <Location
-                  uuid = "D6EAC0DE-7F30-4BEE-B5CB-ED84A4DA71AE - 1cc6162ed020c9ba"
-                  shouldBeEnabled = "Yes"
+                  uuid = "69081BF9-654A-43D4-9EDC-C28D15AEF58B - 96b5bfb699446f44"
+                  shouldBeEnabled = "No"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "SecondShow.MyListingsViewModel.handleSoldOutAndDelete(eventId: Swift.String, deleted: Swift.Bool) -&gt; ()"
+                  symbolName = "SecondShow.EventViewModel.setEvent(event: Swift.Optional&lt;SecondShow.Event&gt;) -&gt; ()"
                   moduleName = "SecondShow"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/ydu25/Documents/Xcode%20Projects/SecondShow/App/SecondShow/UI/Screens/MyListings/MyListingsViewModel.swift"
+                  urlString = "file:///Users/ydu25/Documents/Xcode%20Projects/SecondShow/App/SecondShow/UI/Screens/Tickets/Event/EventViewModel.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "70"
-                  endingLineNumber = "70"
-                  offsetFromSymbolStart = "356">
+                  startingLineNumber = "112"
+                  endingLineNumber = "112"
+                  offsetFromSymbolStart = "228">
                </Location>
                <Location
-                  uuid = "D6EAC0DE-7F30-4BEE-B5CB-ED84A4DA71AE - 1cc6162ed020c9ba"
+                  uuid = "69081BF9-654A-43D4-9EDC-C28D15AEF58B - 96b5bfb699446f44"
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "SecondShow.EventViewModel.setEvent(event: Swift.Optional&lt;SecondShow.Event&gt;) -&gt; ()"
+                  moduleName = "SecondShow"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/ydu25/Documents/Xcode%20Projects/SecondShow/App/SecondShow/UI/Screens/Tickets/Event/EventViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "112"
+                  endingLineNumber = "112"
+                  offsetFromSymbolStart = "276">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "197D80F0-EF88-4CCA-8976-AC5E1219D63D"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "SecondShow/Services/UserService.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "247"
+            endingLineNumber = "247"
+            landmarkName = "attachUserListener(completion:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "197D80F0-EF88-4CCA-8976-AC5E1219D63D - acc44fb2fcf10f1"
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "SecondShow.UserService.attachUserListener(completion: (Swift.Optional&lt;SecondShow.User&gt;, Swift.Optional&lt;Swift.String&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "SecondShow"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/ydu25/Documents/Xcode%20Projects/SecondShow/App/SecondShow/Services/UserService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "222"
+                  endingLineNumber = "222"
+                  offsetFromSymbolStart = "76">
+               </Location>
+               <Location
+                  uuid = "197D80F0-EF88-4CCA-8976-AC5E1219D63D - acc44fb2fcf1090"
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "SecondShow.UserService.attachUserListener(completion: (Swift.Optional&lt;SecondShow.User&gt;, Swift.Optional&lt;Swift.String&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "SecondShow"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/ydu25/Documents/Xcode%20Projects/SecondShow/App/SecondShow/Services/UserService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "221"
+                  endingLineNumber = "221"
+                  offsetFromSymbolStart = "88">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "AD18E36C-0C85-46F8-8874-DD23A846D2EB"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "SecondShow/UI/Screens/Profile/ProfileViewModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "59"
+            endingLineNumber = "59"
+            landmarkName = "deleteAccountMain(completion:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "AD18E36C-0C85-46F8-8874-DD23A846D2EB - 80c7958ae5770437"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "SecondShow.MyListingsViewModel.handleSoldOutAndDelete(eventId: Swift.String, deleted: Swift.Bool) -&gt; ()"
+                  symbolName = "closure #1 (Swift.Optional&lt;Swift.Array&lt;__C.FIRDocumentChange&gt;&gt;, Swift.Optional&lt;Swift.String&gt;) -&gt; () in SecondShow.ProfileViewModel.deleteAccountMain(completion: () -&gt; ()) -&gt; ()"
                   moduleName = "SecondShow"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/ydu25/Documents/Xcode%20Projects/SecondShow/App/SecondShow/UI/Screens/MyListings/MyListingsViewModel.swift"
+                  urlString = "file:///Users/ydu25/Documents/Xcode%20Projects/SecondShow/App/SecondShow/UI/Screens/Profile/ProfileViewModel.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "70"
-                  endingLineNumber = "70"
+                  startingLineNumber = "48"
+                  endingLineNumber = "48"
                   offsetFromSymbolStart = "436">
                </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "976B3B51-3B7A-492D-BC26-21C89CFD1213"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "SecondShow/UI/Screens/MyListings/MyListingsViewModel.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "74"
-            endingLineNumber = "74"
-            landmarkName = "handleSoldOutAndDelete(eventId:deleted:)"
-            landmarkType = "7">
-            <Locations>
                <Location
-                  uuid = "976B3B51-3B7A-492D-BC26-21C89CFD1213 - 1386f89bf6b72b03"
+                  uuid = "AD18E36C-0C85-46F8-8874-DD23A846D2EB - 80c7958ae5770437"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (Swift.Optional&lt;Swift.String&gt;) -&gt; () in SecondShow.MyListingsViewModel.handleSoldOutAndDelete(eventId: Swift.String, deleted: Swift.Bool) -&gt; ()"
+                  symbolName = "closure #1 (Swift.Optional&lt;Swift.Array&lt;__C.FIRDocumentChange&gt;&gt;, Swift.Optional&lt;Swift.String&gt;) -&gt; () in SecondShow.ProfileViewModel.deleteAccountMain(completion: () -&gt; ()) -&gt; ()"
                   moduleName = "SecondShow"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/ydu25/Documents/Xcode%20Projects/SecondShow/App/SecondShow/UI/Screens/MyListings/MyListingsViewModel.swift"
+                  urlString = "file:///Users/ydu25/Documents/Xcode%20Projects/SecondShow/App/SecondShow/UI/Screens/Profile/ProfileViewModel.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "74"
-                  endingLineNumber = "74"
-                  offsetFromSymbolStart = "164">
-               </Location>
-               <Location
-                  uuid = "976B3B51-3B7A-492D-BC26-21C89CFD1213 - 1386f89bf6b72b03"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (Swift.Optional&lt;Swift.String&gt;) -&gt; () in SecondShow.MyListingsViewModel.handleSoldOutAndDelete(eventId: Swift.String, deleted: Swift.Bool) -&gt; ()"
-                  moduleName = "SecondShow"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/ydu25/Documents/Xcode%20Projects/SecondShow/App/SecondShow/UI/Screens/MyListings/MyListingsViewModel.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "74"
-                  endingLineNumber = "74"
-                  offsetFromSymbolStart = "344">
+                  startingLineNumber = "48"
+                  endingLineNumber = "48"
+                  offsetFromSymbolStart = "492">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -151,77 +199,47 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "0353206D-8EC3-482D-B7DE-0CA33FEF060F"
+            uuid = "E35E8009-9A58-43B1-8D51-063D89BBBC6F"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "SecondShow/Services/MessageService.swift"
+            filePath = "SecondShow/UI/Screens/Profile/ProfileViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "245"
-            endingLineNumber = "245"
-            landmarkName = "updateRmsOnSoldoutOrDelete(userEmail:listingId:deleted:completion:)"
+            startingLineNumber = "87"
+            endingLineNumber = "87"
+            landmarkName = "deleteAccountMain(completion:)"
             landmarkType = "7">
             <Locations>
                <Location
-                  uuid = "0353206D-8EC3-482D-B7DE-0CA33FEF060F - c88496b12c93f433"
+                  uuid = "E35E8009-9A58-43B1-8D51-063D89BBBC6F - b6b5022bb4f634c"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (Swift.Optional&lt;__C.FIRQuerySnapshot&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in SecondShow.MessageService.updateRmsOnSoldoutOrDelete(userEmail: Swift.String, listingId: Swift.String, deleted: Swift.Bool, completion: (Swift.Optional&lt;Swift.String&gt;) -&gt; ()) -&gt; ()"
+                  symbolName = "SecondShow.ProfileViewModel.deleteAccountAuth(completion: () -&gt; ()) -&gt; ()"
                   moduleName = "SecondShow"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/ydu25/Documents/Xcode%20Projects/SecondShow/App/SecondShow/Services/MessageService.swift"
+                  urlString = "file:///Users/ydu25/Documents/Xcode%20Projects/SecondShow/App/SecondShow/UI/Screens/Profile/ProfileViewModel.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "245"
-                  endingLineNumber = "245"
-                  offsetFromSymbolStart = "552">
+                  startingLineNumber = "76"
+                  endingLineNumber = "76"
+                  offsetFromSymbolStart = "56">
                </Location>
                <Location
-                  uuid = "0353206D-8EC3-482D-B7DE-0CA33FEF060F - c88496b12c93f433"
+                  uuid = "E35E8009-9A58-43B1-8D51-063D89BBBC6F - 241863621a9bca16"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (Swift.Optional&lt;__C.FIRQuerySnapshot&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in SecondShow.MessageService.updateRmsOnSoldoutOrDelete(userEmail: Swift.String, listingId: Swift.String, deleted: Swift.Bool, completion: (Swift.Optional&lt;Swift.String&gt;) -&gt; ()) -&gt; ()"
+                  symbolName = "closure #2 () -&gt; () in closure #1 (Swift.Optional&lt;Swift.Array&lt;__C.FIRDocumentChange&gt;&gt;, Swift.Optional&lt;Swift.String&gt;) -&gt; () in SecondShow.ProfileViewModel.deleteAccountMain(completion: () -&gt; ()) -&gt; ()"
                   moduleName = "SecondShow"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/ydu25/Documents/Xcode%20Projects/SecondShow/App/SecondShow/Services/MessageService.swift"
+                  urlString = "file:///Users/ydu25/Documents/Xcode%20Projects/SecondShow/App/SecondShow/UI/Screens/Profile/ProfileViewModel.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "245"
-                  endingLineNumber = "245"
-                  offsetFromSymbolStart = "664">
-               </Location>
-               <Location
-                  uuid = "0353206D-8EC3-482D-B7DE-0CA33FEF060F - c88496b12c93f433"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (Swift.Optional&lt;__C.FIRQuerySnapshot&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in SecondShow.MessageService.updateRmsOnSoldoutOrDelete(userEmail: Swift.String, listingId: Swift.String, deleted: Swift.Bool, completion: (Swift.Optional&lt;Swift.String&gt;) -&gt; ()) -&gt; ()"
-                  moduleName = "SecondShow"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/ydu25/Documents/Xcode%20Projects/SecondShow/App/SecondShow/Services/MessageService.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "245"
-                  endingLineNumber = "245"
-                  offsetFromSymbolStart = "516">
-               </Location>
-               <Location
-                  uuid = "0353206D-8EC3-482D-B7DE-0CA33FEF060F - c88496b12c93f433"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (Swift.Optional&lt;__C.FIRQuerySnapshot&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in SecondShow.MessageService.updateRmsOnSoldoutOrDelete(userEmail: Swift.String, listingId: Swift.String, deleted: Swift.Bool, completion: (Swift.Optional&lt;Swift.String&gt;) -&gt; ()) -&gt; ()"
-                  moduleName = "SecondShow"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/ydu25/Documents/Xcode%20Projects/SecondShow/App/SecondShow/Services/MessageService.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "245"
-                  endingLineNumber = "245"
-                  offsetFromSymbolStart = "628">
+                  startingLineNumber = "76"
+                  endingLineNumber = "76"
+                  offsetFromSymbolStart = "80">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -229,47 +247,62 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "FBF08AC1-C5F6-416D-B945-D048D0A8EB7C"
+            uuid = "4384EEA4-E9DC-4D25-934A-0CC426FA1776"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "SecondShow/Services/MessageService.swift"
+            filePath = "SecondShow/UI/Screens/Profile/ProfileViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "253"
-            endingLineNumber = "253"
-            landmarkName = "updateRmsOnSoldoutOrDelete(userEmail:listingId:deleted:completion:)"
+            startingLineNumber = "94"
+            endingLineNumber = "94"
+            landmarkName = "deleteAccountAuth(completion:)"
             landmarkType = "7">
             <Locations>
                <Location
-                  uuid = "FBF08AC1-C5F6-416D-B945-D048D0A8EB7C - c88496b12c93f73b"
+                  uuid = "4384EEA4-E9DC-4D25-934A-0CC426FA1776 - 11cc36f6a4d7ebb8"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (Swift.Optional&lt;__C.FIRQuerySnapshot&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in SecondShow.MessageService.updateRmsOnSoldoutOrDelete(userEmail: Swift.String, listingId: Swift.String, deleted: Swift.Bool, completion: (Swift.Optional&lt;Swift.String&gt;) -&gt; ()) -&gt; ()"
+                  symbolName = "closure #1 (Swift.Optional&lt;Swift.Error&gt;) -&gt; () in closure #1 (Swift.Optional&lt;Swift.String&gt;) -&gt; () in SecondShow.ProfileViewModel.deleteAccountAuth(completion: () -&gt; ()) -&gt; ()"
                   moduleName = "SecondShow"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/ydu25/Documents/Xcode%20Projects/SecondShow/App/SecondShow/Services/MessageService.swift"
+                  urlString = "file:///Users/ydu25/Documents/Xcode%20Projects/SecondShow/App/SecondShow/UI/Screens/Profile/ProfileViewModel.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "253"
-                  endingLineNumber = "253"
-                  offsetFromSymbolStart = "1660">
+                  startingLineNumber = "83"
+                  endingLineNumber = "83"
+                  offsetFromSymbolStart = "316">
                </Location>
                <Location
-                  uuid = "FBF08AC1-C5F6-416D-B945-D048D0A8EB7C - c88496b12c93f73b"
+                  uuid = "4384EEA4-E9DC-4D25-934A-0CC426FA1776 - b6b5022bb4f6263"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (Swift.Optional&lt;__C.FIRQuerySnapshot&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in SecondShow.MessageService.updateRmsOnSoldoutOrDelete(userEmail: Swift.String, listingId: Swift.String, deleted: Swift.Bool, completion: (Swift.Optional&lt;Swift.String&gt;) -&gt; ()) -&gt; ()"
+                  symbolName = "SecondShow.ProfileViewModel.deleteAccountAuth(completion: () -&gt; ()) -&gt; ()"
                   moduleName = "SecondShow"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/ydu25/Documents/Xcode%20Projects/SecondShow/App/SecondShow/Services/MessageService.swift"
+                  urlString = "file:///Users/ydu25/Documents/Xcode%20Projects/SecondShow/App/SecondShow/UI/Screens/Profile/ProfileViewModel.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "253"
-                  endingLineNumber = "253"
-                  offsetFromSymbolStart = "1716">
+                  startingLineNumber = "83"
+                  endingLineNumber = "83"
+                  offsetFromSymbolStart = "72">
+               </Location>
+               <Location
+                  uuid = "4384EEA4-E9DC-4D25-934A-0CC426FA1776 - 9ac86df304f66d1b"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Optional&lt;Swift.String&gt;) -&gt; () in SecondShow.ProfileViewModel.deleteAccountAuth(completion: () -&gt; ()) -&gt; ()"
+                  moduleName = "SecondShow"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/ydu25/Documents/Xcode%20Projects/SecondShow/App/SecondShow/UI/Screens/Profile/ProfileViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "83"
+                  endingLineNumber = "83"
+                  offsetFromSymbolStart = "112">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -277,47 +310,62 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "5B8ED2B7-58FE-4492-B439-BE17E50BBF41"
+            uuid = "C16C8570-10E7-4BC0-BB95-9C788E3978E3"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "SecondShow/Services/MessageService.swift"
+            filePath = "SecondShow/UI/Screens/Profile/ProfileViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "263"
-            endingLineNumber = "263"
-            landmarkName = "updateRmsOnSoldoutOrDelete(userEmail:listingId:deleted:completion:)"
+            startingLineNumber = "95"
+            endingLineNumber = "95"
+            landmarkName = "deleteAccountAuth(completion:)"
             landmarkType = "7">
             <Locations>
                <Location
-                  uuid = "5B8ED2B7-58FE-4492-B439-BE17E50BBF41 - 640365becb815aa8"
+                  uuid = "C16C8570-10E7-4BC0-BB95-9C788E3978E3 - 11cc36f6a4d7eb9f"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (Swift.Optional&lt;Swift.Error&gt;) -&gt; () in closure #1 (Swift.Optional&lt;__C.FIRQuerySnapshot&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in SecondShow.MessageService.updateRmsOnSoldoutOrDelete(userEmail: Swift.String, listingId: Swift.String, deleted: Swift.Bool, completion: (Swift.Optional&lt;Swift.String&gt;) -&gt; ()) -&gt; ()"
+                  symbolName = "closure #1 (Swift.Optional&lt;Swift.Error&gt;) -&gt; () in closure #1 (Swift.Optional&lt;Swift.String&gt;) -&gt; () in SecondShow.ProfileViewModel.deleteAccountAuth(completion: () -&gt; ()) -&gt; ()"
                   moduleName = "SecondShow"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/ydu25/Documents/Xcode%20Projects/SecondShow/App/SecondShow/Services/MessageService.swift"
+                  urlString = "file:///Users/ydu25/Documents/Xcode%20Projects/SecondShow/App/SecondShow/UI/Screens/Profile/ProfileViewModel.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "263"
-                  endingLineNumber = "263"
-                  offsetFromSymbolStart = "96">
+                  startingLineNumber = "84"
+                  endingLineNumber = "84"
+                  offsetFromSymbolStart = "324">
                </Location>
                <Location
-                  uuid = "5B8ED2B7-58FE-4492-B439-BE17E50BBF41 - 640365becb815aa8"
+                  uuid = "C16C8570-10E7-4BC0-BB95-9C788E3978E3 - 9ac86df304f66d3c"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (Swift.Optional&lt;Swift.Error&gt;) -&gt; () in closure #1 (Swift.Optional&lt;__C.FIRQuerySnapshot&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in SecondShow.MessageService.updateRmsOnSoldoutOrDelete(userEmail: Swift.String, listingId: Swift.String, deleted: Swift.Bool, completion: (Swift.Optional&lt;Swift.String&gt;) -&gt; ()) -&gt; ()"
+                  symbolName = "closure #1 (Swift.Optional&lt;Swift.String&gt;) -&gt; () in SecondShow.ProfileViewModel.deleteAccountAuth(completion: () -&gt; ()) -&gt; ()"
                   moduleName = "SecondShow"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/ydu25/Documents/Xcode%20Projects/SecondShow/App/SecondShow/Services/MessageService.swift"
+                  urlString = "file:///Users/ydu25/Documents/Xcode%20Projects/SecondShow/App/SecondShow/UI/Screens/Profile/ProfileViewModel.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "263"
-                  endingLineNumber = "263"
-                  offsetFromSymbolStart = "164">
+                  startingLineNumber = "84"
+                  endingLineNumber = "84"
+                  offsetFromSymbolStart = "124">
+               </Location>
+               <Location
+                  uuid = "C16C8570-10E7-4BC0-BB95-9C788E3978E3 - 9ac86df304f66d3c"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Optional&lt;Swift.String&gt;) -&gt; () in SecondShow.ProfileViewModel.deleteAccountAuth(completion: () -&gt; ()) -&gt; ()"
+                  moduleName = "SecondShow"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/ydu25/Documents/Xcode%20Projects/SecondShow/App/SecondShow/UI/Screens/Profile/ProfileViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "84"
+                  endingLineNumber = "84"
+                  offsetFromSymbolStart = "204">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -325,95 +373,77 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "45F6B97F-05E0-43EE-972F-B60597570C36"
+            uuid = "F8BAB564-0C6C-4123-9C42-3CC6E93D8764"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "SecondShow/Services/MessageService.swift"
+            filePath = "SecondShow/UI/Screens/Profile/ProfileViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "277"
-            endingLineNumber = "277"
-            landmarkName = "updateRmsOnSoldoutOrDelete(userEmail:listingId:deleted:completion:)"
+            startingLineNumber = "99"
+            endingLineNumber = "99"
+            landmarkName = "deleteAccountAuth(completion:)"
             landmarkType = "7">
             <Locations>
                <Location
-                  uuid = "45F6B97F-05E0-43EE-972F-B60597570C36 - 60e1bd5cd9ce02f9"
+                  uuid = "F8BAB564-0C6C-4123-9C42-3CC6E93D8764 - 11cc36f6a4d7ec63"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "closure #2 (Swift.Optional&lt;Swift.Error&gt;) -&gt; () in closure #1 (Swift.Optional&lt;__C.FIRQuerySnapshot&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in SecondShow.MessageService.updateRmsOnSoldoutOrDelete(userEmail: Swift.String, listingId: Swift.String, deleted: Swift.Bool, completion: (Swift.Optional&lt;Swift.String&gt;) -&gt; ()) -&gt; ()"
+                  symbolName = "closure #1 (Swift.Optional&lt;Swift.Error&gt;) -&gt; () in closure #1 (Swift.Optional&lt;Swift.String&gt;) -&gt; () in SecondShow.ProfileViewModel.deleteAccountAuth(completion: () -&gt; ()) -&gt; ()"
                   moduleName = "SecondShow"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/ydu25/Documents/Xcode%20Projects/SecondShow/App/SecondShow/Services/MessageService.swift"
+                  urlString = "file:///Users/ydu25/Documents/Xcode%20Projects/SecondShow/App/SecondShow/UI/Screens/Profile/ProfileViewModel.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "277"
-                  endingLineNumber = "277"
-                  offsetFromSymbolStart = "96">
+                  startingLineNumber = "88"
+                  endingLineNumber = "88"
+                  offsetFromSymbolStart = "100">
                </Location>
                <Location
-                  uuid = "45F6B97F-05E0-43EE-972F-B60597570C36 - 60e1bd5cd9ce02f9"
+                  uuid = "F8BAB564-0C6C-4123-9C42-3CC6E93D8764 - 11cc36f6a4d7ec63"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "closure #2 (Swift.Optional&lt;Swift.Error&gt;) -&gt; () in closure #1 (Swift.Optional&lt;__C.FIRQuerySnapshot&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in SecondShow.MessageService.updateRmsOnSoldoutOrDelete(userEmail: Swift.String, listingId: Swift.String, deleted: Swift.Bool, completion: (Swift.Optional&lt;Swift.String&gt;) -&gt; ()) -&gt; ()"
+                  symbolName = "closure #1 (Swift.Optional&lt;Swift.Error&gt;) -&gt; () in closure #1 (Swift.Optional&lt;Swift.String&gt;) -&gt; () in SecondShow.ProfileViewModel.deleteAccountAuth(completion: () -&gt; ()) -&gt; ()"
                   moduleName = "SecondShow"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/ydu25/Documents/Xcode%20Projects/SecondShow/App/SecondShow/Services/MessageService.swift"
+                  urlString = "file:///Users/ydu25/Documents/Xcode%20Projects/SecondShow/App/SecondShow/UI/Screens/Profile/ProfileViewModel.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "277"
-                  endingLineNumber = "277"
-                  offsetFromSymbolStart = "164">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "6E08D23C-CFB6-46D6-9AD1-8D99E11FFB6C"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "SecondShow/UI/Screens/MyListings/MyListingsViewModel.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "80"
-            endingLineNumber = "80"
-            landmarkName = "handleSoldOutAndDelete(eventId:deleted:)"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "6E08D23C-CFB6-46D6-9AD1-8D99E11FFB6C - 3e3d23cd9f4ccceb"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (Swift.Optional&lt;Swift.String&gt;) -&gt; () in closure #1 (Swift.Optional&lt;Swift.String&gt;) -&gt; () in SecondShow.MyListingsViewModel.handleSoldOutAndDelete(eventId: Swift.String, deleted: Swift.Bool) -&gt; ()"
-                  moduleName = "SecondShow"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/ydu25/Documents/Xcode%20Projects/SecondShow/App/SecondShow/UI/Screens/MyListings/MyListingsViewModel.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "80"
-                  endingLineNumber = "80"
-                  offsetFromSymbolStart = "96">
+                  startingLineNumber = "88"
+                  endingLineNumber = "88"
+                  offsetFromSymbolStart = "160">
                </Location>
                <Location
-                  uuid = "6E08D23C-CFB6-46D6-9AD1-8D99E11FFB6C - 3e3d23cd9f4ccceb"
+                  uuid = "F8BAB564-0C6C-4123-9C42-3CC6E93D8764 - b6b5022bb4f65b8"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (Swift.Optional&lt;Swift.String&gt;) -&gt; () in closure #1 (Swift.Optional&lt;Swift.String&gt;) -&gt; () in SecondShow.MyListingsViewModel.handleSoldOutAndDelete(eventId: Swift.String, deleted: Swift.Bool) -&gt; ()"
+                  symbolName = "SecondShow.ProfileViewModel.deleteAccountAuth(completion: () -&gt; ()) -&gt; ()"
                   moduleName = "SecondShow"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/ydu25/Documents/Xcode%20Projects/SecondShow/App/SecondShow/UI/Screens/MyListings/MyListingsViewModel.swift"
+                  urlString = "file:///Users/ydu25/Documents/Xcode%20Projects/SecondShow/App/SecondShow/UI/Screens/Profile/ProfileViewModel.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "80"
-                  endingLineNumber = "80"
-                  offsetFromSymbolStart = "176">
+                  startingLineNumber = "88"
+                  endingLineNumber = "88"
+                  offsetFromSymbolStart = "180">
+               </Location>
+               <Location
+                  uuid = "F8BAB564-0C6C-4123-9C42-3CC6E93D8764 - 9ac86df304f66a65"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Optional&lt;Swift.String&gt;) -&gt; () in SecondShow.ProfileViewModel.deleteAccountAuth(completion: () -&gt; ()) -&gt; ()"
+                  moduleName = "SecondShow"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/ydu25/Documents/Xcode%20Projects/SecondShow/App/SecondShow/UI/Screens/Profile/ProfileViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "93"
+                  endingLineNumber = "93"
+                  offsetFromSymbolStart = "380">
                </Location>
             </Locations>
          </BreakpointContent>

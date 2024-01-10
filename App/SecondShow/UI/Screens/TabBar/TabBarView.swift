@@ -72,6 +72,8 @@ struct TabBarView: View {
                     ProfileView(
                         showLoginView: $showLoginView,
                         eventService: eventService,
+                        listingService: listingService,
+                        messageService: messageService,
                         userService: userService,
                         notifyUser: notifyUser
                     )

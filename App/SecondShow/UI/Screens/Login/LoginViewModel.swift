@@ -7,6 +7,7 @@
 
 import Foundation
 import FirebaseAuth
+import FirebaseMessaging
 
 
 class LoginViewModel: ObservableObject {
@@ -29,10 +30,11 @@ class LoginViewModel: ObservableObject {
     @Published var signupPassword = ""
     @Published var signupConfirmPassword = ""
     
-    @Published var disableSubmit = false;
+    @Published var disableSubmit = false
     
     // Switch to true for production
-    private var requireVerification = false
+    private var requireVerification = true
+    @Published var requirePennEmail = true
     
     
     private func containsOnlyAlphanumericCharacters(in string: String) -> Bool {
@@ -62,8 +64,8 @@ class LoginViewModel: ObservableObject {
             return
         }
         
-        if (!signupEmail.hasSuffix("gmail.com")) {
-            self.statusMessage = "Please sign up with a gmail address"
+        if (requirePennEmail && !signupEmail.hasSuffix("upenn.edu")) {
+            self.statusMessage = "Please enter a UPenn email address"
             disableSubmit = false
             return
         }
@@ -125,6 +127,23 @@ class LoginViewModel: ObservableObject {
             }
             self.statusMessage = ""
             self.disableSubmit = false
+            
+            if let fcmToken = Messaging.messaging().fcmToken {
+                self.userService.updateFcmToken(fcmToken: fcmToken) { err in
+                    if let err = err {
+                        print(err)
+                        return
+                    }
+                }
+            }
+            
+            self.userService.attachUserListener { updatedUser, err in
+                if let err = err {
+                    print(err)
+                    return
+                }
+                FirebaseManager.shared.currentUser = updatedUser
+            }
             onSuccess()
         }
     }

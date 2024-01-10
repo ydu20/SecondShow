@@ -20,13 +20,89 @@ class ProfileViewModel: ObservableObject {
     var eventListener: ListenerRegistration?
     
     private let eventService: EventService
+    private let listingService: ListingService
+    private let messageService: MessageService
     private let userService: UserService
     private let notifyUser: (String, Color) -> ()
     
-    init(eventService: EventService, userService: UserService, notifyUser: @escaping (String, Color) -> ()) {
+    init(eventService: EventService, listingService: ListingService, messageService: MessageService, userService: UserService, notifyUser: @escaping (String, Color) -> ()) {
         self.eventService = eventService
+        self.listingService = listingService
+        self.messageService = messageService
         self.userService = userService
         self.notifyUser = notifyUser
+    }
+    
+    func handleLogout(completion: @escaping () -> ()) {
+        userService.removeFcmToken(completion: {err in
+            if let err = err {
+                print(err)
+            }
+            try? FirebaseManager.shared.auth.signOut()
+            FirebaseManager.shared.currentUser = nil
+            completion()
+        })
+    }
+    
+    func deleteAccountMain(completion: @escaping () -> ()) {
+        guard let userEmail = FirebaseManager.shared.currentUser?.email else {
+            self.deleteAccountAuth(completion: completion)
+            return
+        }
+        listingService.fetchUserListings { documentChanges, err in
+            if let err = err {
+                print(err)
+                self.deleteAccountAuth(completion: completion)
+                return
+            }
+            
+            let group = DispatchGroup()
+            documentChanges?.forEach({change in
+                if change.type != .removed {
+                    guard let listing = try? change.document.data(as: Listing.self) else {return}
+                    guard let listingId = listing.id else {return}
+                    
+                    group.enter()
+                    self.listingService.deleteListing(listing: listing) { err in
+                        if let err = err {
+                            print(err)
+                        }
+                        
+                        self.eventService.decreaseEventListingCount(eventId: listing.eventId) { err in
+                            if let err = err {
+                                print(err)
+                            }
+                            self.messageService.updateRmsOnSoldoutOrDelete(userEmail: userEmail, listingId: listingId, deleted: true) { err in
+                                if let err = err {
+                                    print(err)
+                                }
+                                group.leave()
+                            }
+                        }
+                    }
+                }
+            })
+                        
+            group.notify(queue: .main) {
+                self.deleteAccountAuth(completion: completion)
+            }
+            self.listingService.removeListingListener()
+        }
+    }
+    
+    private func deleteAccountAuth(completion: @escaping () -> ()) {
+        userService.removeUserData() { err in
+            if let err = err {
+                print(err)
+            }
+//            FirebaseManager.shared.auth.currentUser?.delete { err in
+//                if let err = err {
+//                    print(err.localizedDescription)
+//                }
+//                completion()
+//            }
+            completion()
+        }
     }
     
     func submitFeedback() {

@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		871E80072B05C9D90061F357 /* MainTicketsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 871E80062B05C9D90061F357 /* MainTicketsViewModel.swift */; };
 		871E80092B05CBC60061F357 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 871E80082B05CBC60061F357 /* Event.swift */; };
+		872045A42B4ED9A40085BB35 /* PrivacyPolicyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 872045A32B4ED9A40085BB35 /* PrivacyPolicyView.swift */; };
+		872045A72B4EDB5A0085BB35 /* PrivatePolicy.html in Resources */ = {isa = PBXBuildFile; fileRef = 872045A62B4EDB5A0085BB35 /* PrivatePolicy.html */; };
 		873978702B0D6AF100A24D1A /* MessageConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8739786F2B0D6AF100A24D1A /* MessageConstants.swift */; };
 		87454DEC2B0669620006600C /* NotificationBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87454DEB2B0669620006600C /* NotificationBanner.swift */; };
 		87454DF02B06777C0006600C /* EventConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87454DEF2B06777C0006600C /* EventConstants.swift */; };
@@ -83,6 +85,8 @@
 /* Begin PBXFileReference section */
 		871E80062B05C9D90061F357 /* MainTicketsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTicketsViewModel.swift; sourceTree = "<group>"; };
 		871E80082B05CBC60061F357 /* Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
+		872045A32B4ED9A40085BB35 /* PrivacyPolicyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyPolicyView.swift; sourceTree = "<group>"; };
+		872045A62B4EDB5A0085BB35 /* PrivatePolicy.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = PrivatePolicy.html; sourceTree = "<group>"; };
 		8739786F2B0D6AF100A24D1A /* MessageConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageConstants.swift; sourceTree = "<group>"; };
 		87454DEB2B0669620006600C /* NotificationBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationBanner.swift; sourceTree = "<group>"; };
 		87454DEF2B06777C0006600C /* EventConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventConstants.swift; sourceTree = "<group>"; };
@@ -166,6 +170,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		872045A52B4EDADE0085BB35 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				872045A62B4EDB5A0085BB35 /* PrivatePolicy.html */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		8788CB602B03AD1B00419385 /* Login */ = {
 			isa = PBXGroup;
 			children = (
@@ -244,6 +256,7 @@
 		87B2D34F2B01CA9C003FB28B = {
 			isa = PBXGroup;
 			children = (
+				872045A52B4EDADE0085BB35 /* Resources */,
 				87B2D35A2B01CA9C003FB28B /* SecondShow */,
 				87B2D36B2B01CA9E003FB28B /* SecondShowTests */,
 				87B2D3752B01CA9E003FB28B /* SecondShowUITests */,
@@ -379,6 +392,7 @@
 			children = (
 				87B2D3A32B026D69003FB28B /* ProfileView.swift */,
 				87818BE82B0D09BB0053C14E /* ProfileViewModel.swift */,
+				872045A32B4ED9A40085BB35 /* PrivacyPolicyView.swift */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -531,6 +545,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				872045A72B4EDB5A0085BB35 /* PrivatePolicy.html in Resources */,
 				87B2D3632B01CA9E003FB28B /* Preview Assets.xcassets in Resources */,
 				87B2D3602B01CA9E003FB28B /* Assets.xcassets in Resources */,
 				8788CBA62B059BE100419385 /* GoogleService-Info.plist in Resources */,
@@ -570,6 +585,7 @@
 				8747E2B22B06C4EE00CCD723 /* EventDate.swift in Sources */,
 				8788CB7F2B05364600419385 /* User.swift in Sources */,
 				87DBCAC72B0939B00062720A /* ListingIdentifierConstants.swift in Sources */,
+				872045A42B4ED9A40085BB35 /* PrivacyPolicyView.swift in Sources */,
 				8788CB812B05368A00419385 /* ListingIdentifier.swift in Sources */,
 				878EE6422B10082700CDCDF3 /* LevenshteinDistance.swift in Sources */,
 				87B2D39B2B026CB2003FB28B /* NewListingView.swift in Sources */,

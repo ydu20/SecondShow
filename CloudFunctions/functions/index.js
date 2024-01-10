@@ -7,19 +7,33 @@
  * See a full list of supported triggers at https://firebase.google.com/docs/functions
  */
 
-const {initializeApp} = require("firebase-admin/app");
+const admin = require("firebase-admin");
 const {
   onDocumentWritten,
   onDocumentCreated,
+  onDocumentDeleted,
 } = require("firebase-functions/v2/firestore");
 const {getFirestore} = require("firebase-admin/firestore");
 const {getMessaging} = require("firebase-admin/messaging");
 const {error} = require("firebase-functions/logger");
 const functions = require("firebase-functions");
 
-initializeApp();
+admin.initializeApp();
 const db = getFirestore();
 const messaging = getMessaging();
+
+exports.removeUserAuth = onDocumentDeleted(
+    "/users/{userEmail}", async (event) => {
+      const rmDoc = event.data.data();
+      const uid = rmDoc.uid;
+      console.log(uid);
+
+      admin.auth().deleteUser(uid)
+          .catch((err) => {
+            console.error("Error deleting user: ", error);
+          });
+    },
+);
 
 exports.updateExpiredListings = functions.pubsub.schedule("5 0 * * *")
     .timeZone("America/New_York")

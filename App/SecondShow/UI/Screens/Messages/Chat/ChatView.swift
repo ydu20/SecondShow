@@ -106,14 +106,17 @@ struct ChatView: View {
                         if (vm.deleted) {
                             Text("The seller has deleted this listing")
                                 .foregroundColor(Color.gray)
+                                .padding(.top, 6)
                         } else if (vm.sold) {
                             Text("This listing has been sold")
                                 .foregroundColor(Color.gray)
+                                .padding(.top, 6)
                         } else if (vm.expired) {
                             Text("This listing has expired")
                                 .foregroundColor(Color.gray)
+                                .padding(.top, 6)
                         }
-                        
+
                         HStack{Spacer()}
                             .id(Self.emptyScrollToString)
                     }
@@ -189,7 +192,6 @@ struct ChatView: View {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                         vm.autoScrollCount += 1
                     }
-                    
                 }
             }
 

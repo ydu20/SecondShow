@@ -135,7 +135,6 @@ class ListingService: ListingServiceProtocol {
         }
     }
     
-    
     func fetchUserListings(completion: @escaping([DocumentChange]?, String?) -> ()) {
         guard let user = FirebaseManager.shared.currentUser else {return}
         

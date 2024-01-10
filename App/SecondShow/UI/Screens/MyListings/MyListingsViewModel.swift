@@ -28,8 +28,6 @@ class MyListingsViewModel: ObservableObject {
         self.listingService = listingService
         self.notifyUser = notifyUser
         self.messageService = messageService
-        
-//        fetchMyListings()
     }
     
     func updateListing(numSold: Int) {
