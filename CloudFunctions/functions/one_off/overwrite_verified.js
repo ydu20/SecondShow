@@ -1,7 +1,7 @@
 var admin = require("firebase-admin");
 var serviceAccount = require("./secondshow-service-account-key.json");
 
-var email = 'test1@gmail.com'
+var email = 'jhu20@gmail.com'
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)

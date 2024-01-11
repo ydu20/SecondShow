@@ -51,6 +51,9 @@ struct TabBarView: View {
                     )
                         .tabItem {Image(systemName: "ticket")}
                         .tag(0)
+                        .navigationBarTitle("")
+                        .navigationBarBackButtonHidden(true)
+                        .navigationBarHidden(true)
                     
                     MainMessagesView(
                         chatVm: chatViewModel,
@@ -59,6 +62,9 @@ struct TabBarView: View {
                     )
                         .tabItem {Image(systemName: "message")}
                         .tag(1)
+                        .navigationBarTitle("")
+                        .navigationBarBackButtonHidden(true)
+                        .navigationBarHidden(true)
                     
                     MyListingsView(
                         eventService: eventService,
@@ -68,6 +74,9 @@ struct TabBarView: View {
                     )
                         .tabItem {Image(systemName: "list.bullet")}
                         .tag(2)
+                        .navigationBarTitle("")
+                        .navigationBarBackButtonHidden(true)
+                        .navigationBarHidden(true)
                     
                     ProfileView(
                         showLoginView: $showLoginView,
@@ -79,8 +88,12 @@ struct TabBarView: View {
                     )
                         .tabItem {Image(systemName: "person")}
                         .tag(3)
+                        .navigationBarTitle("")
+                        .navigationBarBackButtonHidden(true)
+                        .navigationBarHidden(true)
                 }
             }
+            .navigationViewStyle(StackNavigationViewStyle())
             
             NotificationBanner(bannerText: bannerText, bannerColor: bannerColor)
                 .offset(y: showBanner ?
