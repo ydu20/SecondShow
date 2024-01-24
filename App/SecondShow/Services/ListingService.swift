@@ -136,13 +136,12 @@ class ListingService: ListingServiceProtocol {
     }
     
     func fetchUserListings(completion: @escaping([DocumentChange]?, String?) -> ()) {
-        guard let user = FirebaseManager.shared.currentUser else {return}
+        guard let email = FirebaseManager.shared.auth.currentUser?.email else { return }
         
         removeListingListener()
-        
         listingListener = FirebaseManager.shared.firestore
             .collection("users")
-            .document(user.email)
+            .document(email)
             .collection("user_listings")
             .addSnapshotListener { querySnapshot, err in
                 if let err = err {

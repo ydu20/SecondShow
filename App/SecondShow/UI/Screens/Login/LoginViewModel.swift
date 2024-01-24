@@ -33,7 +33,7 @@ class LoginViewModel: ObservableObject {
     @Published var disableSubmit = false
     
     // Switch to true for production
-    private var requireVerification = true
+//    private var requireVerification = true
     @Published var requirePennEmail = true
     
     
@@ -64,7 +64,7 @@ class LoginViewModel: ObservableObject {
             return
         }
         
-        if (requirePennEmail && !signupEmail.hasSuffix("upenn.edu")) {
+        if (ConfigManager.shared.requirePennEmail && !signupEmail.hasSuffix("upenn.edu")) {
             self.statusMessage = "Please enter a UPenn email address"
             disableSubmit = false
             return
@@ -82,7 +82,7 @@ class LoginViewModel: ObservableObject {
         self.statusMessage = ""
         
         // Create user
-        userService.createUser(username: signupUsername, email: signupEmail, password: signupPassword, createTime: Date(), sendEmailVerification: requireVerification) { _, err in
+        userService.createUser(username: signupUsername, email: signupEmail, password: signupPassword, createTime: Date(), sendEmailVerification: ConfigManager.shared.requireVerification) { _, err in
             if let err = err {
                 self.statusMessage = err
                 // Only want to create user, not sign in
@@ -119,7 +119,7 @@ class LoginViewModel: ObservableObject {
             return
         }
         
-        userService.loginUser(email: loginEmail, password: loginPassword, emailVerificationRequired: requireVerification) { err in
+        userService.loginUser(email: loginEmail, password: loginPassword, emailVerificationRequired: ConfigManager.shared.requireVerification) { err in
             if let err = err {
                 self.statusMessage = err
                 self.disableSubmit = false

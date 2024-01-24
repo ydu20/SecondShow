@@ -82,6 +82,10 @@ exports.sendRecentMessageNotification = onDocumentWritten(
     async (event) => {
       const rmDoc = event.data.after.data();
 
+      if (rmDoc.deleted || rmDoc.expired || rmDoc.sold) {
+        return;
+      }
+
       const userRef = db.collection("users").doc(event.params.userEmail);
       const userDoc = await userRef.get();
       if (userDoc.exists && userDoc.data().fcm_token) {

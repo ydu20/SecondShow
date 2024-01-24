@@ -46,7 +46,6 @@ struct DeletePopupView: View {
                     Spacer()
                     Button {
                         if vm.selectedListing != nil {
-                            // TODO
                             withAnimation(.easeInOut(duration: 0.15)) {
                                 showPopupView.toggle()
                             }

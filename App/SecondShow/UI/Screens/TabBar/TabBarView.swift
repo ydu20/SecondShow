@@ -11,17 +11,22 @@ struct TabBarView: View {
     
     @Binding var showLoginView: Bool
     @Binding var selectedTab: Int
-    let userService: UserService
-    let eventService: EventService
-    let listingService: ListingService
-    let messageService: MessageService
+    private let userService: UserService
+    private let eventService: EventService
+    private let listingService: ListingService
+    private let messageService: MessageService
     
     @State private var bannerText = ""
     @State private var bannerColor = Color.orange
     @State private var showBanner = false
     
-    var chatViewModel: ChatViewModel
+    private var mainTicketsViewModel: MainTicketsViewModel
+    private var mainMessagesViewModel: MainMessagesViewModel
+    private var chatViewModel: ChatViewModel
+    private var myListingsViewModel: MyListingsViewModel
     
+    private static var shared: TabBarView?
+            
     init(
         showLoginView: Binding<Bool>,
         selectedTab: Binding<Int>,
@@ -36,7 +41,25 @@ struct TabBarView: View {
             self.eventService = eventService
             self.listingService = listingService
             self.messageService = messageService
+            
             self.chatViewModel = ChatViewModel(listingService: listingService, messageService: messageService)
+            
+            self.mainTicketsViewModel = MainTicketsViewModel(
+                eventService: eventService
+            )
+            self.mainMessagesViewModel = MainMessagesViewModel(
+                chatVm: self.chatViewModel,
+                messageService: messageService,
+                notifyUser: Self.notifyUser
+            )
+            self.myListingsViewModel = MyListingsViewModel(
+                eventService: eventService,
+                listingService: listingService,
+                messageService: messageService,
+                notifyUser: Self.notifyUser
+            )
+            
+            Self.shared = self
     }
     
     var body: some View {
@@ -44,10 +67,11 @@ struct TabBarView: View {
             NavigationView {
                 TabView(selection: $selectedTab) {
                     MainTicketsView(
+                        mainTicketsViewModel: mainTicketsViewModel,
                         chatVm: chatViewModel,
                         eventService: eventService,
                         listingService: listingService,
-                        notifyUser: notifyUser
+                        notifyUser: Self.notifyUser
                     )
                         .tabItem {Image(systemName: "ticket")}
                         .tag(0)
@@ -56,9 +80,10 @@ struct TabBarView: View {
                         .navigationBarHidden(true)
                     
                     MainMessagesView(
+                        mainMessagesViewModel: mainMessagesViewModel,
                         chatVm: chatViewModel,
                         messageService: messageService,
-                        notifyUser: notifyUser
+                        notifyUser: Self.notifyUser
                     )
                         .tabItem {Image(systemName: "message")}
                         .tag(1)
@@ -67,10 +92,11 @@ struct TabBarView: View {
                         .navigationBarHidden(true)
                     
                     MyListingsView(
+                        myListingsViewModel: myListingsViewModel,
                         eventService: eventService,
                         listingService: listingService,
                         messageService: messageService,
-                        notifyUser: notifyUser
+                        notifyUser: Self.notifyUser
                     )
                         .tabItem {Image(systemName: "list.bullet")}
                         .tag(2)
@@ -84,7 +110,7 @@ struct TabBarView: View {
                         listingService: listingService,
                         messageService: messageService,
                         userService: userService,
-                        notifyUser: notifyUser
+                        notifyUser: Self.notifyUser
                     )
                         .tabItem {Image(systemName: "person")}
                         .tag(3)
@@ -103,16 +129,16 @@ struct TabBarView: View {
         }
     }
     
-    private func notifyUser(notification: String, notificationColor: Color) {
+    private static func notifyUser(notification: String, notificationColor: Color) {
         
-        bannerText = notification
-        bannerColor = notificationColor
+        shared?.bannerText = notification
+        shared?.bannerColor = notificationColor
         withAnimation {
-            showBanner = true
+            shared?.showBanner = true
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
             withAnimation {
-                showBanner = false
+                shared?.showBanner = false
             }
         }
     }

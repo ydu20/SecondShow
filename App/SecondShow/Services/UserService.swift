@@ -41,7 +41,7 @@ class UserService: UserServiceProtocol {
     private var userListener: ListenerRegistration?
     
     func removeUserData(completion: @escaping ((String?) -> Void)) {
-        guard let email = FirebaseManager.shared.currentUser?.email else {
+        guard let email = FirebaseManager.shared.auth.currentUser?.email else {
             completion("Error deleting account: User not logged in")
             return
         }
@@ -88,7 +88,7 @@ class UserService: UserServiceProtocol {
 
     
     func submitFeedback(feedback: String, completion: @escaping ((String?) -> Void)) {
-        guard let email = FirebaseManager.shared.currentUser?.email else {
+        guard let email = FirebaseManager.shared.auth.currentUser?.email else {
             completion("Error submitting feedback: User not logged in")
             return
         }

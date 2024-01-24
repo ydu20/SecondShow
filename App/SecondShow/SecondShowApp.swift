@@ -14,6 +14,8 @@ class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate, UNUserNot
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         
         let _ = FirebaseManager.shared
+        let _ = BackgroundRefreshManager.shared
+        let _ = ConfigManager.shared
         
         Messaging.messaging().delegate = self
         UNUserNotificationCenter.current().delegate = self
@@ -51,6 +53,8 @@ class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate, UNUserNot
 @main
 struct SecondShowApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
+    
+//    @State private var selectedTab: Int = 0
     
     var body: some Scene {
         WindowGroup {

@@ -21,14 +21,16 @@ class MyListingsViewModel: ObservableObject {
     private let listingService: ListingService
     private let messageService: MessageService
     
-    init(eventService: EventService, listingService: ListingService, messageService: MessageService, notifyUser: @escaping (String, Color) -> ()) {
-        print("Initializing MyListingViewModel...")
-        
+    init(eventService: EventService, listingService: ListingService, messageService: MessageService, notifyUser: @escaping (String, Color) -> ()) {        
         self.eventService = eventService
         self.listingService = listingService
         self.notifyUser = notifyUser
         self.messageService = messageService
+        
+        fetchMyListings(oneTime: true)
     }
+
+
     
     func updateListing(numSold: Int) {
         guard let listing = selectedListing else {
@@ -87,7 +89,7 @@ class MyListingsViewModel: ObservableObject {
         listingService.removeListingListener()
     }
 
-    func fetchMyListings() {
+    func fetchMyListings(oneTime: Bool) {
         listingService.fetchUserListings { documentChanges, err in
             if let err = err {
                 self.notifyUser(err, Color(.systemRed))
@@ -111,6 +113,9 @@ class MyListingsViewModel: ObservableObject {
                     }
                 } else {
                     print("Failure codifying listing object")
+                }
+                if oneTime {
+                    self.removeListener()
                 }
             })
         }

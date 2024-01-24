@@ -43,6 +43,8 @@
 		8791BDA62B1512DB0000D9C9 /* AlertPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8791BDA52B1512DB0000D9C9 /* AlertPopup.swift */; };
 		8791BDAA2B152EE70000D9C9 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8791BDA92B152EE70000D9C9 /* LoginViewModel.swift */; };
 		8791BDAC2B17FC1A0000D9C9 /* ListingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8791BDAB2B17FC1A0000D9C9 /* ListingService.swift */; };
+		87A6D32E2B51AA2C001BB1C7 /* BackgroundRefreshManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87A6D32D2B51AA2C001BB1C7 /* BackgroundRefreshManager.swift */; };
+		87AC21BD2B60C1FB000B1D49 /* ConfigManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87AC21BC2B60C1FB000B1D49 /* ConfigManager.swift */; };
 		87B2D35C2B01CA9C003FB28B /* SecondShowApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87B2D35B2B01CA9C003FB28B /* SecondShowApp.swift */; };
 		87B2D3602B01CA9E003FB28B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 87B2D35F2B01CA9E003FB28B /* Assets.xcassets */; };
 		87B2D3632B01CA9E003FB28B /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 87B2D3622B01CA9E003FB28B /* Preview Assets.xcassets */; };
@@ -116,6 +118,8 @@
 		8791BDA52B1512DB0000D9C9 /* AlertPopup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertPopup.swift; sourceTree = "<group>"; };
 		8791BDA92B152EE70000D9C9 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
 		8791BDAB2B17FC1A0000D9C9 /* ListingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListingService.swift; sourceTree = "<group>"; };
+		87A6D32D2B51AA2C001BB1C7 /* BackgroundRefreshManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundRefreshManager.swift; sourceTree = "<group>"; };
+		87AC21BC2B60C1FB000B1D49 /* ConfigManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigManager.swift; sourceTree = "<group>"; };
 		87B2D3582B01CA9C003FB28B /* SecondShow.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SecondShow.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		87B2D35B2B01CA9C003FB28B /* SecondShowApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondShowApp.swift; sourceTree = "<group>"; };
 		87B2D35F2B01CA9E003FB28B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -355,6 +359,8 @@
 				8791BD9A2B150C750000D9C9 /* Constants */,
 				8788CB6C2B03E36900419385 /* FirebaseManager.swift */,
 				878EE6412B10082700CDCDF3 /* LevenshteinDistance.swift */,
+				87A6D32D2B51AA2C001BB1C7 /* BackgroundRefreshManager.swift */,
+				87AC21BC2B60C1FB000B1D49 /* ConfigManager.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -600,11 +606,13 @@
 				8791BDAA2B152EE70000D9C9 /* LoginViewModel.swift in Sources */,
 				87B2D3A02B026D3B003FB28B /* ChatView.swift in Sources */,
 				87DBCACB2B0942140062720A /* MyListingsViewModel.swift in Sources */,
+				87AC21BD2B60C1FB000B1D49 /* ConfigManager.swift in Sources */,
 				8788CB832B0536BC00419385 /* Listing.swift in Sources */,
 				8747E2B02B06BCAD00CCD723 /* EventViewModel.swift in Sources */,
 				878D05762B0BE16B00E1A01D /* DeletePopupView.swift in Sources */,
 				87818BED2B0D5CAF0053C14E /* RecentMessage.swift in Sources */,
 				8791BDA62B1512DB0000D9C9 /* AlertPopup.swift in Sources */,
+				87A6D32E2B51AA2C001BB1C7 /* BackgroundRefreshManager.swift in Sources */,
 				8788CB6F2B03EAEB00419385 /* LoginView.swift in Sources */,
 				87B2D3A82B029FF3003FB28B /* NavBar.swift in Sources */,
 				871E80072B05C9D90061F357 /* MainTicketsViewModel.swift in Sources */,
@@ -794,7 +802,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = ydlabs.SecondShow;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -825,7 +833,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = ydlabs.SecondShow;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;

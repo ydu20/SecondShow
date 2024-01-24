@@ -9,7 +9,7 @@ import SwiftUI
 
 struct EventView: View {
     
-    @StateObject var vm: EventViewModel
+    @ObservedObject var vm: EventViewModel
     var chatVm: ChatViewModel
     
     @State private var showChatView = false

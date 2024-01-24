@@ -14,9 +14,8 @@ class MainTicketsViewModel: ObservableObject {
     private let eventService: EventService
     
     init(eventService: EventService) {
-        print("Initializing mainTicketsViewModel...")
         self.eventService = eventService
-//        fetchEvents()
+        fetchEvents(oneTime: true)
     }
     
     @Published var eventDates = [EventDate]()
@@ -32,7 +31,7 @@ class MainTicketsViewModel: ObservableObject {
         eventService.removeEventListener()
     }
 
-    func fetchEvents() {
+    func fetchEvents(oneTime: Bool) {
         eventService.fetchEvents { documentChanges, err in
             if let err = err {
                 print(err)
@@ -88,12 +87,13 @@ class MainTicketsViewModel: ObservableObject {
                             }
                         }
                     }
-
                 } else {
                     print("Failure codifying event object")
                 }
             })
+            if oneTime {
+                self.removeListener()
+            }
         }
     }
-    
 }

@@ -1,19 +1,19 @@
-var admin = require("firebase-admin");
-var serviceAccount = require("./secondshow-service-account-key.json");
+const admin = require("firebase-admin");
+const serviceAccount = require("./secondshow-service-account-key.json");
 
-var email = 'jhu20@gmail.com'
+const email = "jhu20@gmail.com";
 
 admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
+  credential: admin.credential.cert(serviceAccount),
 });
 
 admin.auth().getUserByEmail(email)
-    .then(userRecord => {
-        return admin.auth().updateUser(userRecord.uid, { emailVerified: true })
+    .then((userRecord) => {
+      return admin.auth().updateUser(userRecord.uid, {emailVerified: true});
     })
     .then(() => {
-        console.log('Successfully modified verification status:', email);
+      console.log("Successfully modified verification status:", email);
     })
-    .catch(error => {
-        console.error('Error modifying verification status:', error);
+    .catch((error) => {
+      console.error("Error modifying verification status:", error);
     });

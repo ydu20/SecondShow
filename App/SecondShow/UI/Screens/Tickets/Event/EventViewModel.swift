@@ -26,7 +26,6 @@ class EventViewModel: ObservableObject {
         
     init(eventService: EventService, listingService: ListingService, notifyUser: @escaping (String, Color) -> (), updateChatOnRemoval: @escaping (String, String, Bool) -> ()) {
         
-        print("Initializing eventViewModel...")
         self.eventService = eventService
         self.listingService = listingService
         self.notifyUser = notifyUser

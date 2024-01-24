@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import FirebaseFirestore
 
 class MainMessagesViewModel: ObservableObject {
     
@@ -21,8 +22,9 @@ class MainMessagesViewModel: ObservableObject {
         self.messageService = messageService
         self.notifyUser = notifyUser
         
-        fetchRecentMessages()
+        fetchRecentMessages(oneTime: true)
     }
+
     
     func removeListener() {
         messageService.removeRecentMessagesListener()
@@ -37,7 +39,7 @@ class MainMessagesViewModel: ObservableObject {
         }
     }
     
-    func fetchRecentMessages() {
+    func fetchRecentMessages(oneTime: Bool) {
         print("Fetching recent messages...")
         
         messageService.fetchRecentMessages { documentChanges, err in
@@ -72,6 +74,9 @@ class MainMessagesViewModel: ObservableObject {
                     self.chatVm.updateWithRecentMessage(rm: recentMessage)
                 }
             })
+            if oneTime {
+                self.removeListener()
+            }
         }
     }
     

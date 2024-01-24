@@ -31,8 +31,8 @@ struct SignupView: View {
         }
         .alert(isPresented: $vm.showSignupCompleteAlert) {
             Alert(
-                title: Text("Email Verification"),
-                message: Text("Thank you for signing up! Please check your email for a verification link."),
+                title: Text(ConfigManager.shared.requireVerification ? "Email Verification" : "Confirmation"),
+                message: Text(ConfigManager.shared.requireVerification ? "Thank you for signing up! Please check your email for a verification link." : "Thanks for signing up! You can now login."),
                 dismissButton: .default(Text("Close")) {
                     presentationMode.wrappedValue.dismiss()
                 }
@@ -60,7 +60,7 @@ struct SignupView: View {
                             .stroke(Color("SecondShowTertiary"), lineWidth: 1)
                     )
                 
-                TextField(vm.requirePennEmail ? "UPenn Email" : "Email", text: $vm.signupEmail)
+                TextField(ConfigManager.shared.requirePennEmail ? "UPenn Email" : "Email", text: $vm.signupEmail)
                     .font(.system(size: 18))
                     .keyboardType(.emailAddress)
                     .autocapitalization(.none)

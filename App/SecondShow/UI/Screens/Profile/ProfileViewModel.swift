@@ -95,12 +95,6 @@ class ProfileViewModel: ObservableObject {
             if let err = err {
                 print(err)
             }
-//            FirebaseManager.shared.auth.currentUser?.delete { err in
-//                if let err = err {
-//                    print(err.localizedDescription)
-//                }
-//                completion()
-//            }
             completion()
         }
     }

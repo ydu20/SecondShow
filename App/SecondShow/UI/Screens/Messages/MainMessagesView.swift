@@ -10,18 +10,16 @@ import SwiftUI
 struct MainMessagesView: View {
     
     
-    @StateObject private var vm: MainMessagesViewModel
+    @ObservedObject private var vm: MainMessagesViewModel
     var chatVm: ChatViewModel
     
     @State private var showChatView = false
-    
     @State private var intraTabNavigation = false
     
-    init(chatVm: ChatViewModel, messageService: MessageService, notifyUser: @escaping (String, Color) -> Void) {
+    init(mainMessagesViewModel: MainMessagesViewModel, chatVm: ChatViewModel, messageService: MessageService, notifyUser: @escaping (String, Color) -> Void) {
         self.chatVm = chatVm
-        _vm = StateObject(wrappedValue: MainMessagesViewModel(chatVm: chatVm, messageService: messageService, notifyUser: notifyUser))
+        self.vm = mainMessagesViewModel
     }
-    
     
     var body: some View {
         VStack {
@@ -44,7 +42,7 @@ struct MainMessagesView: View {
         .padding(.vertical)
         .onAppear {
             if (!intraTabNavigation) {
-                vm.fetchRecentMessages()
+                vm.fetchRecentMessages(oneTime: false)
             }
         }
         .onDisappear {

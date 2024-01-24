@@ -125,7 +125,6 @@ class MessageService: MessageServiceProtocol {
             completion(nil)
         }
     }
-
     
     func sendMessage(toEmail: String, listingId: String, message: String, timestamp: Date, completion: @escaping((String?) -> ())) {
         
@@ -183,7 +182,7 @@ class MessageService: MessageServiceProtocol {
     
     func fetchChatMessages(counterPartyEmail: String, listingId: String, completion: @escaping(([DocumentChange]?, String?) -> ())) {
         
-        guard let userEmail = FirebaseManager.shared.currentUser?.email else {return}
+        guard let userEmail = FirebaseManager.shared.auth.currentUser?.email else {return}
         
         removeChatMessagesListener()
         
@@ -208,7 +207,7 @@ class MessageService: MessageServiceProtocol {
     }
     
     func fetchRecentMessages(completion: @escaping(([DocumentChange]?, String?) -> ())) {
-        guard let userEmail = FirebaseManager.shared.currentUser?.email else {return}
+        guard let userEmail = FirebaseManager.shared.auth.currentUser?.email else {return}
         
         removeRecentMessagesListener()
         

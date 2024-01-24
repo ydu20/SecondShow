@@ -11,15 +11,14 @@ struct MyListingsView: View {
     
     let notifyUser: (String, Color) -> ()
     
-    @StateObject var vm: MyListingsViewModel
+    @ObservedObject var vm: MyListingsViewModel
         
     @State private var showSoldPopupView = false
     @State private var showDeletePopupView = false
-    
-    
-    init(eventService: EventService, listingService: ListingService, messageService: MessageService, notifyUser: @escaping (String, Color) -> ()) {
+        
+    init(myListingsViewModel: MyListingsViewModel, eventService: EventService, listingService: ListingService, messageService: MessageService, notifyUser: @escaping (String, Color) -> ()) {
         self.notifyUser = notifyUser
-        _vm = StateObject(wrappedValue: MyListingsViewModel(eventService: eventService, listingService: listingService, messageService: messageService, notifyUser: notifyUser))
+        self.vm = myListingsViewModel
     }
 
     var body: some View {
@@ -63,7 +62,7 @@ struct MyListingsView: View {
         }
         .padding(.vertical)
         .onAppear {
-            vm.fetchMyListings()
+            vm.fetchMyListings(oneTime: false)
         }
         .onDisappear {
             vm.removeListener()
@@ -186,7 +185,6 @@ struct MyListingsView: View {
                         .frame(width: 78)
                         .background(Color("SecondShowSecondary"))
                         .cornerRadius(6)
-
                 }
                 .foregroundColor(Color(.white))
                 .padding(.horizontal, 15)

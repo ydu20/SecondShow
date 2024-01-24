@@ -15,16 +15,16 @@ struct MainTicketsView: View {
     @State private var showNewListingView = false
     @State private var showEventView = false
     
-    @StateObject private var vm: MainTicketsViewModel
+    @ObservedObject private var vm: MainTicketsViewModel
     var eventVm: EventViewModel
     var chatVm: ChatViewModel
     
     private let eventService: EventService
     private let listingService: ListingService
     
-    init(chatVm: ChatViewModel, eventService: EventService, listingService: ListingService, notifyUser: @escaping (String, Color) -> Void) {
+    init(mainTicketsViewModel: MainTicketsViewModel, chatVm: ChatViewModel, eventService: EventService, listingService: ListingService, notifyUser: @escaping (String, Color) -> Void) {
         self.notifyUser = notifyUser
-        _vm = StateObject(wrappedValue: MainTicketsViewModel(eventService: eventService))
+        self.vm = mainTicketsViewModel
         self.eventVm = EventViewModel(
             eventService: eventService,
             listingService: listingService,
@@ -87,7 +87,7 @@ struct MainTicketsView: View {
         }
         .padding(.vertical)
         .onAppear {
-            vm.fetchEvents()
+            vm.fetchEvents(oneTime: false)
         }
         .onDisappear() {
             vm.removeListener()
@@ -107,7 +107,6 @@ struct MainTicketsView: View {
                 
                 ForEach(eventDate.events) { event in
                     Button {
-                        // TODO
                         self.eventVm.setEvent(event: event)
                         self.eventVm.fetchListings()
                         showEventView.toggle()
